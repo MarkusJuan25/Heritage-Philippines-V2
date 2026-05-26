@@ -4,9 +4,11 @@ import MemberLayout from "../layouts/MemberLayout.jsx";
 import AdminLayout from "../layouts/AdminLayout.jsx";
 import HomePage from "../pages/HomePage.jsx";
 import PackagesPage from "../pages/PackagesPage.jsx";
+import TourPage from "../pages/TourPage.jsx";
 import GalleryPage from "../pages/GalleryPage.jsx";
 import StoriesPage from "../pages/StoriesPage.jsx";
 import AboutPage from "../pages/AboutPage.jsx";
+import ContactPage from "../pages/ContactPage.jsx";
 import MemberHomePage from "../pages/member/MemberHomePage.jsx";
 import JourneyPage from "../pages/member/JourneyPage.jsx";
 import BookingsPage from "../pages/member/BookingsPage.jsx";
@@ -19,9 +21,11 @@ export default function AppRoutes() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/packages" element={<PackagesPage />} />
+        <Route path="/tour" element={<TourPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/stories" element={<StoriesPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Route>
 
       <Route path="/member" element={<MemberLayout />}>
