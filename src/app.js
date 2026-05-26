@@ -18,9 +18,16 @@ import adminRoutes from "./modules/admin/admin.routes.js";
 export const app = express();
 
 app.use(helmet());
+
+const devOrigins =
+  env.nodeEnv !== "production"
+    ? ["http://localhost:5174", "http://127.0.0.1:5174"]
+    : [];
+const allowedOrigins = [env.clientUrl, ...devOrigins];
+
 app.use(
   cors({
-    origin: [env.clientUrl, "http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
