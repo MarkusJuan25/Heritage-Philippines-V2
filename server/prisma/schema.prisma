@@ -1,0 +1,113 @@
+// Heritage Philippines V2 — initial Prisma schema
+// Models cover the planned surface: auth (User, RefreshToken),
+// quote pipeline (QuoteRequest), catalog (Package), and bookings (Booking).
+// Fields are intentionally lean — extend per feature as work lands.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  MEMBER
+  ADMIN
+}
+
+enum QuoteStatus {
+  NEW
+  CONTACTED
+  CONVERTED
+  CLOSED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  fullName      String?
+  role          UserRole       @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  refreshTokens RefreshToken[]
+  quotes        QuoteRequest[]
+  bookings      Booking[]
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Package {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  summary     String?
+  description String?
+  priceCents  Int?
+  durationDays Int?
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  bookings    Booking[]
+}
+
+model QuoteRequest {
+  id              String      @id @default(cuid())
+  referenceNo     String      @unique
+  fullName        String
+  email           String
+  contactNumber   String?
+  numberOfPax     Int?
+  startDate       DateTime?
+  endDate         DateTime?
+  message         String?
+  selectedPrograms Json?
+  status          QuoteStatus @default(NEW)
+  user            User?       @relation(fields: [userId], references: [id])
+  userId          String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  package     Package       @relation(fields: [packageId], references: [id])
+  packageId   String
+  startDate   DateTime
+  endDate     DateTime
+  numberOfPax Int
+  status      BookingStatus @default(PENDING)
+  totalCents  Int?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([packageId])
+}
