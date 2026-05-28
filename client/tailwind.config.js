@@ -16,6 +16,7 @@ export default {
           700: "#5C3A21",
           800: "#44291A",
           900: "#2B1810",
+          950: "#1B120D",
         },
         forest: {
           500: "#3A7567",
@@ -25,8 +26,9 @@ export default {
           900: "#0F2922",
         },
         gold: {
+          200: "#F2D77A",
           300: "#E6C36B",
-          400: "#D9AC4A",
+          400: "#D8B16D",
           500: "#BE8E2B",
           600: "#9C7321",
         },
@@ -38,6 +40,10 @@ export default {
       boxShadow: {
         soft: "0 10px 30px -12px rgba(15, 41, 34, 0.25)",
         ring: "0 0 0 1px rgba(190, 142, 43, 0.35)",
+        nav: "0 22px 70px rgba(0, 0, 0, 0.32)",
+        glow: "0 16px 36px rgba(214, 173, 75, 0.28)",
+        warm: "0 24px 70px rgba(74, 45, 22, 0.14)",
+        premium: "0 30px 90px rgba(32, 24, 15, 0.18)",
       },
       letterSpacing: {
         wider: ".08em",

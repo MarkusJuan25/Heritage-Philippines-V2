@@ -14,55 +14,74 @@ const packages = [
     region: "Northern Luzon",
     days: "5 days",
     note: "Calesa towns, indigo weavers, and coral-stone basilicas.",
+    image: "/images/a-glimpse-of-vigan-city.jpg",
   },
   {
     title: "Vis-Min Spice Route",
     region: "Cebu · Bohol · Negros",
     days: "7 days",
     note: "Cacao farms, dive heritage, and Spanish-era port cities.",
+    image: "/images/chocolate-hills.jpg",
   },
   {
     title: "Cordillera Highland Loop",
     region: "Mountain Province",
     days: "6 days",
     note: "Living rice terraces, woven futures, and forest rituals.",
+    image: "/images/banaue-rice-terreces.jpg",
   },
   {
     title: "Manila Old Town Immersion",
     region: "Metro Manila",
     days: "3 days",
     note: "Intramuros at dawn, Binondo at dusk, and the river between.",
+    image: "/images/townscape-in-night-at-manila.jpg",
   },
 ];
 
 export default function PackagesPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-cream-100">
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold-500 to-transparent"
-        />
-        <div className="container-page py-20 md:py-24">
-          <span className="eyebrow">Curated Journeys</span>
-          <h1 className="section-heading mt-3">Packages</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-coffee-800/90">
+      {/* HERO */}
+      <section className="page-header">
+        <div className="page-header__media">
+          <img
+            src="/images/banaue-rice-terreces.jpg"
+            alt=""
+            className="page-header__image"
+            loading="eager"
+          />
+          <div className="page-header__shade" />
+        </div>
+        <div className="container-page relative pb-16 pt-36 sm:pt-40 md:pb-20 md:pt-44">
+          <p className="eyebrow-light">Curated Journeys</p>
+          <h1 className="mt-4 font-serif text-4xl text-balance text-cream-50 sm:text-5xl lg:text-6xl">
+            Packages designed at the{" "}
+            <span className="italic text-accent-gold">pace of place.</span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream-100/85">
             Hand-built heritage routes across the archipelago. Travel small,
-            travel slowly, and travel with the people who know the land best.
+            travel slowly, and travel with the people who know the land
+            best.
           </p>
         </div>
       </section>
 
-      <section className="container-page py-16">
+      <section className="relative overflow-hidden bg-warm-cream py-16">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-80"
+        />
+        <div className="container-page relative">
         <div className="mb-10 flex flex-wrap items-center gap-3">
           <span className="eyebrow mr-2">Browse by region</span>
           {regions.map((r, i) => (
             <span
               key={r}
-              className={`rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide ${
+              className={`rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide transition ${
                 i === 0
-                  ? "border-forest-700 bg-forest-700 text-cream-50"
-                  : "border-cream-200 bg-white text-coffee-800"
+                  ? "border-forest-700 bg-forest-700 text-cream-50 shadow-soft"
+                  : "border-cream-200 bg-white text-coffee-800 hover:border-gold-400/60"
               }`}
             >
               {r}
@@ -72,44 +91,74 @@ export default function PackagesPage() {
 
         <div className="grid gap-6 md:grid-cols-2">
           {packages.map((p) => (
-            <article key={p.title} className="card flex flex-col">
-              <div className="flex items-center justify-between text-[11px] uppercase tracking-widest text-coffee-700/70">
-                <span>{p.region}</span>
-                <span>{p.days}</span>
+            <article
+              key={p.title}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
+            >
+              <div className="relative h-56 w-full overflow-hidden">
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 to-transparent"
+                />
+                <div className="absolute inset-x-5 top-5 flex items-center justify-between">
+                  <span className="inline-flex items-center rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold-300 backdrop-blur">
+                    {p.region}
+                  </span>
+                  <span className="inline-flex items-center rounded-full bg-gold-400/85 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-coffee-950">
+                    {p.days}
+                  </span>
+                </div>
+                <p className="absolute inset-x-5 bottom-4 font-serif text-2xl text-cream-50">
+                  {p.title}
+                </p>
               </div>
-              <h3 className="mt-3 font-serif text-2xl text-coffee-900">
-                {p.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-coffee-800/80">
-                {p.note}
-              </p>
-              <div className="mt-6 flex items-center justify-between border-t border-cream-200 pt-5">
-                <span className="text-xs uppercase tracking-widest text-coffee-700/70">
-                  Small group
-                </span>
-                <Link
-                  to="/contact"
-                  className="text-sm font-semibold text-forest-700 transition hover:text-forest-800"
-                >
-                  Inquire →
-                </Link>
+              <div className="flex flex-1 flex-col p-6">
+                <p className="text-sm leading-relaxed text-coffee-800/85">
+                  {p.note}
+                </p>
+                <div className="mt-6 flex items-center justify-between border-t border-cream-200 pt-5">
+                  <span className="text-xs uppercase tracking-widest text-coffee-700/70">
+                    Small group
+                  </span>
+                  <Link
+                    to="/contact"
+                    className="text-sm font-semibold text-forest-700 transition group-hover:gap-2 hover:text-forest-800"
+                  >
+                    Inquire →
+                  </Link>
+                </div>
               </div>
             </article>
           ))}
         </div>
 
-        <div className="mt-16 rounded-2xl border border-cream-200 bg-white p-8 text-center shadow-soft md:p-12">
-          <span className="eyebrow">Bespoke Itineraries</span>
+        <div className="relative mt-16 overflow-hidden rounded-3xl border border-cream-200/80 bg-gradient-to-br from-white via-cream-50 to-cream-100 p-8 text-center shadow-warm md:p-12">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-gold-400/12 blur-3xl"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-forest-500/10 blur-3xl"
+          />
+          <span className="eyebrow relative">Bespoke Itineraries</span>
           <h2 className="mt-3 font-serif text-2xl text-coffee-900 sm:text-3xl">
             Don&apos;t see your journey?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-coffee-800/80">
-            Tell us what calls you — a region, a craft, a memory — and we will
-            build the trip around it.
+            Tell us what calls you — a region, a craft, a memory — and we
+            will build the trip around it.
           </p>
           <Link to="/contact" className="btn-outline-dark mt-6">
             Plan with Us
           </Link>
+        </div>
         </div>
       </section>
     </>

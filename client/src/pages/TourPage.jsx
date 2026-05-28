@@ -28,42 +28,67 @@ const included = [
 export default function TourPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-cream-100">
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold-500 to-transparent"
-        />
-        <div className="container-page py-20 md:py-24">
-          <span className="eyebrow">A day on tour</span>
-          <h1 className="section-heading mt-3">Tour</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-coffee-800/90">
-            Every Heritage Philippines tour is paced like a long conversation —
-            rooms with windows, mornings without alarms, and time for the
+      {/* HERO */}
+      <section className="page-header">
+        <div className="page-header__media">
+          <img
+            src="/images/a-festive-that-cant-miss.jpg"
+            alt=""
+            className="page-header__image"
+            loading="eager"
+          />
+          <div className="page-header__shade" />
+        </div>
+        <div className="container-page relative pb-16 pt-36 sm:pt-40 md:pb-20 md:pt-44">
+          <p className="eyebrow-light">A day on tour</p>
+          <h1 className="mt-4 font-serif text-4xl text-balance text-cream-50 sm:text-5xl lg:text-6xl">
+            Mornings without alarms.{" "}
+            <span className="italic text-accent-gold">
+              Conversations without scripts.
+            </span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream-100/85">
+            Every Heritage Philippines tour is paced like a long conversation
+            — rooms with windows, mornings without alarms, and time for the
             stories that don&apos;t fit on a brochure.
           </p>
         </div>
       </section>
 
-      <section className="container-page py-16">
-        <div className="grid gap-6 md:grid-cols-3">
-          {dayPlan.map((d) => (
-            <article key={d.time} className="card">
-              <span className="eyebrow">{d.time}</span>
-              <h3 className="mt-3 font-serif text-xl text-coffee-900">
-                {d.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-coffee-800/80">
-                {d.body}
-              </p>
-            </article>
-          ))}
+      <section className="relative overflow-hidden bg-warm-cream py-16">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-80"
+        />
+        <div className="container-page relative">
+          <div className="grid gap-6 md:grid-cols-3">
+            {dayPlan.map((d) => (
+              <article key={d.time} className="card-warm">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-1 w-10 rounded-full bg-gradient-to-r from-gold-400 to-gold-600"
+                />
+                <span className="eyebrow mt-4 block">{d.time}</span>
+                <h3 className="mt-2 font-serif text-xl text-coffee-900">
+                  {d.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-coffee-800/85">
+                  {d.body}
+                </p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="bg-forest-900 text-cream-50">
-        <div className="container-page grid gap-10 py-20 md:grid-cols-2 md:items-center">
+      <section className="relative overflow-hidden bg-forest-900 text-cream-50">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_85%_18%,rgba(216,177,109,0.22),transparent_55%),radial-gradient(circle_at_10%_90%,rgba(58,117,103,0.4),transparent_60%)]"
+        />
+        <div className="container-page relative grid gap-10 py-20 md:grid-cols-2 md:items-center">
           <div>
-            <span className="eyebrow text-gold-300">What&apos;s included</span>
+            <span className="eyebrow-light">What&apos;s included</span>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
               Everything except the rush.
             </h2>
@@ -72,7 +97,7 @@ export default function TourPage() {
             {included.map((item) => (
               <li
                 key={item}
-                className="rounded-xl border border-cream-50/15 px-4 py-3"
+                className="rounded-xl border border-cream-50/15 bg-cream-50/[0.05] px-4 py-3 backdrop-blur"
               >
                 {item}
               </li>
@@ -81,7 +106,12 @@ export default function TourPage() {
         </div>
       </section>
 
-      <section className="container-page py-20">
+      <section className="relative overflow-hidden bg-warm-cream py-20">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-70"
+        />
+        <div className="container-page relative">
         <figure className="mx-auto max-w-3xl text-center">
           <span
             aria-hidden="true"
@@ -95,6 +125,7 @@ export default function TourPage() {
             Anna &amp; Ben · Cordillera Highland Loop, 2024
           </figcaption>
         </figure>
+        </div>
       </section>
     </>
   );

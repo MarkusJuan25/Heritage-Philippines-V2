@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;750;850&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -18,34 +18,130 @@
   h3 {
     @apply font-serif;
   }
+  ::selection {
+    @apply bg-gold-300/60 text-coffee-900;
+  }
 }
 
 @layer components {
   .container-page {
     @apply mx-auto w-full max-w-7xl px-6 lg:px-10;
   }
+
+  /* Typography */
   .eyebrow {
     @apply inline-block text-xs font-semibold uppercase tracking-widest text-gold-500;
+  }
+  .eyebrow-light {
+    @apply inline-block text-xs font-semibold uppercase tracking-widest text-gold-300;
   }
   .section-heading {
     @apply font-serif text-3xl text-coffee-900 sm:text-4xl lg:text-5xl;
   }
+  .section-heading-light {
+    @apply font-serif text-3xl text-cream-50 sm:text-4xl lg:text-5xl;
+  }
+  .text-accent-gold {
+    @apply bg-gradient-to-r from-gold-200 via-gold-300 to-gold-400 bg-clip-text text-transparent;
+  }
+
+  /* Buttons — V1-inspired pill set */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-gold-500 px-6 py-3 text-sm font-semibold text-coffee-900 shadow-soft transition hover:bg-gold-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-br from-gold-300 via-gold-400 to-gold-500 px-6 py-3 text-sm font-semibold text-coffee-950 shadow-glow transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_rgba(214,173,75,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
+  }
+  .btn-ghost-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-cream-50/30 bg-cream-50/[0.10] px-6 py-3 text-sm font-semibold text-cream-50 backdrop-blur transition hover:-translate-y-0.5 hover:border-gold-300/60 hover:bg-cream-50/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
   }
   .btn-outline-light {
-    @apply inline-flex items-center justify-center rounded-full border border-cream-50/40 px-6 py-3 text-sm font-semibold text-cream-50 transition hover:bg-cream-50 hover:text-forest-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-cream-50/40 px-6 py-3 text-sm font-semibold text-cream-50 transition hover:bg-cream-50 hover:text-forest-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
   }
   .btn-outline-dark {
-    @apply inline-flex items-center justify-center rounded-full border border-forest-700 px-6 py-3 text-sm font-semibold text-forest-700 transition hover:bg-forest-700 hover:text-cream-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-700;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest-700 px-6 py-3 text-sm font-semibold text-forest-700 transition hover:bg-forest-700 hover:text-cream-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-700;
   }
+
+  /* Surfaces */
   .card {
     @apply rounded-2xl border border-cream-200 bg-white p-6 shadow-soft;
   }
+  .card-warm {
+    @apply relative overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-br from-cream-50 via-white to-cream-100 shadow-xl;
+  }
+  .card-premium {
+    @apply relative overflow-hidden rounded-3xl border border-cream-200/80 bg-gradient-to-br from-white via-cream-50 to-cream-100 p-7 shadow-premium;
+  }
+  .gold-rule {
+    @apply block h-px w-full bg-gradient-to-r from-transparent via-gold-400/55 to-transparent;
+  }
+
+  /* Form */
   .field-label {
     @apply mb-1 block text-xs font-semibold uppercase tracking-widest text-coffee-700;
   }
   .field-input {
     @apply w-full rounded-lg border border-cream-200 bg-cream-50 px-4 py-3 text-sm text-coffee-900 placeholder-coffee-700/40 transition focus:border-forest-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-700/20;
+  }
+
+  /* Cinematic hero shell — full-bleed image + warm dark overlay */
+  .cinematic-hero {
+    @apply relative isolate overflow-hidden bg-coffee-950 text-cream-50;
+  }
+  .cinematic-hero__media {
+    @apply pointer-events-none absolute inset-0;
+  }
+  .cinematic-hero__image {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .cinematic-hero__shade {
+    @apply pointer-events-none absolute inset-0;
+    background-image:
+      radial-gradient(circle at 80% 20%, rgba(242, 215, 122, 0.18), transparent 34%),
+      linear-gradient(90deg, rgba(27, 18, 13, 0.92), rgba(27, 18, 13, 0.45)),
+      linear-gradient(to top, rgba(27, 18, 13, 0.9), transparent 48%);
+  }
+
+  /* Internal page header shell — compact cinematic */
+  .page-header {
+    @apply relative isolate overflow-hidden bg-coffee-950 text-cream-50;
+  }
+  .page-header__media {
+    @apply pointer-events-none absolute inset-0;
+  }
+  .page-header__image {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .page-header__shade {
+    @apply pointer-events-none absolute inset-0;
+    background-image:
+      radial-gradient(circle at 85% 20%, rgba(216, 177, 109, 0.22), transparent 42%),
+      linear-gradient(120deg, rgba(15, 12, 8, 0.85), rgba(15, 12, 8, 0.55)),
+      linear-gradient(to top, rgba(15, 12, 8, 0.78), transparent 55%);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .bg-paper {
+    background-image:
+      repeating-linear-gradient(45deg, rgba(139, 90, 56, 0.025) 0 1px, transparent 1px 6px),
+      repeating-linear-gradient(-45deg, rgba(139, 90, 56, 0.02) 0 1px, transparent 1px 8px);
+  }
+
+  /* Warm cream parchment band — replaces flat cream blocks with subtle warmth */
+  .bg-warm-cream {
+    background-color: #fbf7f1;
+    background-image:
+      radial-gradient(ellipse 60% 50% at 0% 0%, rgba(216, 177, 109, 0.10), transparent 60%),
+      radial-gradient(ellipse 65% 55% at 100% 100%, rgba(35, 74, 64, 0.07), transparent 60%),
+      linear-gradient(180deg, #fbf7f1 0%, #f5efe3 100%);
+  }
+
+  /* Soft heritage atmosphere overlay — pairs with bg-warm-cream */
+  .bg-heritage {
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(190, 142, 43, 0.06), transparent 36%),
+      radial-gradient(circle at 88% 92%, rgba(35, 74, 64, 0.05), transparent 38%),
+      repeating-linear-gradient(60deg, rgba(139, 90, 56, 0.022) 0 1px, transparent 1px 26px);
   }
 }

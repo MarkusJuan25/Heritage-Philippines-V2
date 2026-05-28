@@ -10,59 +10,80 @@ const filters = [
 const tiles = [
   {
     caption: "Vigan at first light",
-    classes:
-      "bg-gradient-to-br from-coffee-700 via-coffee-900 to-forest-900 md:col-span-2 md:row-span-2",
+    kicker: "Ilocos Sur",
+    image: "/images/a-glimpse-of-vigan-city.jpg",
+    span: "md:col-span-2 md:row-span-2",
   },
   {
     caption: "Cordillera terraces",
-    classes: "bg-gradient-to-br from-forest-600 to-forest-900",
+    kicker: "Mountain Province",
+    image: "/images/banaue-rice-terreces.jpg",
   },
   {
-    caption: "Paoay basilica",
-    classes: "bg-gradient-to-br from-gold-500 to-coffee-700",
+    caption: "Mayon at dawn",
+    kicker: "Albay",
+    image: "/images/mt-mayon.jpg",
   },
   {
-    caption: "Binondo at dusk",
-    classes: "bg-gradient-to-br from-coffee-800 to-forest-800",
+    caption: "Manila at night",
+    kicker: "Metro Manila",
+    image: "/images/townscape-in-night-at-manila.jpg",
   },
   {
-    caption: "Negros cacao",
-    classes: "bg-gradient-to-br from-coffee-600 to-gold-600",
+    caption: "El Nido sunsets",
+    kicker: "Palawan",
+    image: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
   },
   {
-    caption: "Bohol coast",
-    classes: "bg-gradient-to-br from-forest-700 to-forest-900 md:col-span-2",
+    caption: "Batanes coast",
+    kicker: "Batanes",
+    image: "/images/marlboro-country-batanes-lanscapes.jpg",
+    span: "md:col-span-2",
   },
 ];
 
 export default function GalleryPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-cream-100">
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold-500 to-transparent"
-        />
-        <div className="container-page py-20 md:py-24">
-          <span className="eyebrow">Frames of the archipelago</span>
-          <h1 className="section-heading mt-3">Gallery</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-coffee-800/90">
+      {/* HERO */}
+      <section className="page-header">
+        <div className="page-header__media">
+          <img
+            src="/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg"
+            alt=""
+            className="page-header__image"
+            loading="eager"
+          />
+          <div className="page-header__shade" />
+        </div>
+        <div className="container-page relative pb-16 pt-36 sm:pt-40 md:pb-20 md:pt-44">
+          <p className="eyebrow-light">Frames of the archipelago</p>
+          <h1 className="mt-4 font-serif text-4xl text-balance text-cream-50 sm:text-5xl lg:text-6xl">
+            A visual memory{" "}
+            <span className="italic text-accent-gold">of the islands.</span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream-100/85">
             Moments collected on the road — quiet plazas, working hands, and
             the light that only the Philippines gives.
           </p>
         </div>
       </section>
 
-      <section className="container-page py-16">
+      <section className="relative overflow-hidden bg-warm-cream py-16">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-80"
+        />
+        <div className="container-page relative">
         <div className="mb-8 flex flex-wrap items-center gap-3">
           <span className="eyebrow mr-2">Browse</span>
           {filters.map((f, i) => (
             <span
               key={f}
-              className={`rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide ${
+              className={`rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide transition ${
                 i === 0
-                  ? "border-forest-700 bg-forest-700 text-cream-50"
-                  : "border-cream-200 bg-white text-coffee-800"
+                  ? "border-forest-700 bg-forest-700 text-cream-50 shadow-soft"
+                  : "border-cream-200 bg-white text-coffee-800 hover:border-gold-400/60"
               }`}
             >
               {f}
@@ -70,26 +91,33 @@ export default function GalleryPage() {
           ))}
         </div>
 
-        <div className="grid auto-rows-[180px] gap-4 md:auto-rows-[220px] md:grid-cols-3">
+        <div className="grid auto-rows-[200px] gap-4 md:auto-rows-[240px] md:grid-cols-3">
           {tiles.map((t) => (
             <figure
               key={t.caption}
-              className={`group relative overflow-hidden rounded-2xl shadow-soft ${t.classes}`}
+              className={`group relative overflow-hidden rounded-2xl shadow-soft ring-1 ring-cream-200 transition duration-500 hover:shadow-premium ${t.span ?? ""}`}
             >
+              <img
+                src={t.image}
+                alt={t.caption}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+              />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_60%)]"
+                className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"
               />
-              <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 text-cream-50">
-                <span className="font-serif text-base sm:text-lg">
-                  {t.caption}
+              <figcaption className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5 text-cream-50">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gold-300/90">
+                  {t.kicker}
                 </span>
-                <span className="text-[10px] uppercase tracking-widest text-cream-100/70">
-                  Coming soon
+                <span className="font-serif text-lg sm:text-xl">
+                  {t.caption}
                 </span>
               </figcaption>
             </figure>
           ))}
+        </div>
         </div>
       </section>
     </>

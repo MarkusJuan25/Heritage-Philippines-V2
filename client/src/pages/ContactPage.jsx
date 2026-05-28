@@ -5,38 +5,57 @@ export default function ContactPage() {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-cream-100">
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold-500 to-transparent"
-        />
-        <div className="container-page py-20 md:py-24">
-          <span className="eyebrow">Start the conversation</span>
-          <h1 className="section-heading mt-3">Contact Us</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-coffee-800/90">
-            Tell us a little about the journey you have in mind — a region, a
-            season, a memory you want to chase — and our team will write back
-            with a proposal.
+      {/* HERO */}
+      <section className="page-header">
+        <div className="page-header__media">
+          <img
+            src="/images/fundacion-pacita.jpg"
+            alt=""
+            className="page-header__image"
+            loading="eager"
+          />
+          <div className="page-header__shade" />
+        </div>
+        <div className="container-page relative pb-16 pt-36 sm:pt-40 md:pb-20 md:pt-44">
+          <p className="eyebrow-light">Start the conversation</p>
+          <h1 className="mt-4 font-serif text-4xl text-balance text-cream-50 sm:text-5xl lg:text-6xl">
+            Tell us about the trip{" "}
+            <span className="italic text-accent-gold">
+              you&apos;re imagining.
+            </span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream-100/85">
+            A region, a season, a memory you want to chase — share it with
+            us and our team will write back with a proposal.
           </p>
         </div>
       </section>
 
-      <section className="container-page grid gap-10 py-16 lg:grid-cols-[1.5fr_1fr]">
+      <section className="relative overflow-hidden bg-warm-cream py-16">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-80"
+        />
+        <div className="container-page relative grid gap-10 lg:grid-cols-[1.5fr_1fr]">
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-cream-200 bg-white p-6 shadow-soft md:p-10"
+          className="relative overflow-hidden rounded-3xl border border-cream-200 bg-gradient-to-br from-white via-cream-50 to-cream-100 p-6 shadow-premium md:p-10"
         >
-          <div className="mb-8 flex items-center gap-3">
+          <div
+            aria-hidden="true"
+            className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-gold-400/12 blur-3xl"
+          />
+          <div className="relative mb-8 flex items-center gap-3">
             <span
               aria-hidden="true"
-              className="inline-block h-1 w-10 rounded-full bg-gold-500"
+              className="inline-block h-1 w-12 rounded-full bg-gradient-to-r from-gold-400 to-gold-600"
             />
-            <span className="text-xs font-semibold uppercase tracking-widest text-coffee-700/80">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-coffee-700/85">
               Inquiry · It takes a minute
             </span>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="relative grid gap-5 md:grid-cols-2">
             <div>
               <label htmlFor="fullName" className="field-label">
                 Full Name
@@ -137,8 +156,8 @@ export default function ContactPage() {
               />
             </div>
           </div>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-coffee-700/70">
+          <div className="relative mt-8 flex flex-col gap-3 border-t border-cream-200 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-coffee-700/75">
               We typically reply within two business days.
             </p>
             <button type="submit" className="btn-primary">
@@ -148,17 +167,21 @@ export default function ContactPage() {
         </form>
 
         <aside className="space-y-6">
-          <div className="card">
-            <span className="eyebrow">Studio</span>
-            <h3 className="mt-3 font-serif text-xl text-coffee-900">
+          <div className="card-warm">
+            <span
+              aria-hidden="true"
+              className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold-400/12 blur-2xl"
+            />
+            <span className="eyebrow relative">Studio</span>
+            <h3 className="relative mt-3 font-serif text-xl text-coffee-900">
               Heritage Philippines
             </h3>
-            <p className="mt-3 text-sm leading-relaxed text-coffee-800/80">
+            <p className="relative mt-3 text-sm leading-relaxed text-coffee-800/85">
               By appointment only — our team is most often on the road with
               guests across the archipelago.
             </p>
           </div>
-          <div className="card">
+          <div className="card-warm">
             <span className="eyebrow">Reach us</span>
             <ul className="mt-3 space-y-3 text-sm text-coffee-800/90">
               <li>
@@ -181,33 +204,44 @@ export default function ContactPage() {
               </li>
             </ul>
           </div>
-          <div className="rounded-2xl border border-forest-700/20 bg-forest-900 p-6 text-cream-50 shadow-soft">
-            <span className="eyebrow text-gold-300">Why book direct</span>
-            <ul className="mt-4 space-y-3 text-sm text-cream-100/85">
+          <div className="relative overflow-hidden rounded-2xl border border-cream-50/10 bg-gradient-to-br from-forest-800 via-forest-900 to-coffee-950 p-6 text-cream-50 shadow-soft">
+            <div
+              aria-hidden="true"
+              className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gold-400/20 blur-2xl"
+            />
+            <span className="eyebrow-light">Why book direct</span>
+            <ul className="relative mt-4 space-y-3 text-sm text-cream-100/85">
               <li className="flex gap-3">
                 <span
                   aria-hidden="true"
-                  className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-gold-400"
-                />
+                  className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold-400/20 text-[11px] font-semibold text-gold-300 ring-1 ring-gold-400/40"
+                >
+                  ✓
+                </span>
                 Designed by the same team who guides on the road.
               </li>
               <li className="flex gap-3">
                 <span
                   aria-hidden="true"
-                  className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-gold-400"
-                />
+                  className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold-400/20 text-[11px] font-semibold text-gold-300 ring-1 ring-gold-400/40"
+                >
+                  ✓
+                </span>
                 A direct line to your trip lead — no agency layer.
               </li>
               <li className="flex gap-3">
                 <span
                   aria-hidden="true"
-                  className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-gold-400"
-                />
+                  className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gold-400/20 text-[11px] font-semibold text-gold-300 ring-1 ring-gold-400/40"
+                >
+                  ✓
+                </span>
                 Flexible re-planning if your dates or plans shift.
               </li>
             </ul>
           </div>
         </aside>
+        </div>
       </section>
     </>
   );

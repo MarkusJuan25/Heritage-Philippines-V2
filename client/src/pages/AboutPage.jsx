@@ -22,15 +22,26 @@ const principles = [
 export default function AboutPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-cream-100">
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold-500 to-transparent"
-        />
-        <div className="container-page py-20 md:py-24">
-          <span className="eyebrow">Our intention</span>
-          <h1 className="section-heading mt-3">About Heritage Philippines</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-coffee-800/90">
+      {/* HERO */}
+      <section className="page-header">
+        <div className="page-header__media">
+          <img
+            src="/images/heritage-banner.jpg"
+            alt=""
+            className="page-header__image"
+            loading="eager"
+          />
+          <div className="page-header__shade" />
+        </div>
+        <div className="container-page relative pb-16 pt-36 sm:pt-40 md:pb-20 md:pt-44">
+          <p className="eyebrow-light">Our intention</p>
+          <h1 className="mt-4 font-serif text-4xl text-balance text-cream-50 sm:text-5xl lg:text-6xl">
+            A small studio for a{" "}
+            <span className="italic text-accent-gold">
+              slower kind of trip.
+            </span>
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream-100/85">
             We are a small team of storytellers, historians, and traveling
             cooks who believe the Philippines is best understood slowly —
             over long meals, in old rooms, and on the roads our grandparents
@@ -39,7 +50,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="container-page grid gap-12 py-16 lg:grid-cols-[1fr_1.4fr]">
+      <section className="relative overflow-hidden bg-warm-cream py-16">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-80"
+        />
+        <div className="container-page relative grid gap-12 lg:grid-cols-[1fr_1.4fr]">
         <div>
           <span className="eyebrow">The studio</span>
           <h2 className="section-heading mt-3 text-3xl">
@@ -57,7 +73,7 @@ export default function AboutPage() {
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
           {principles.map((p) => (
-            <article key={p.title} className="card">
+            <article key={p.title} className="card-warm">
               <span
                 aria-hidden="true"
                 className="inline-block h-1 w-10 rounded-full bg-gold-500"
@@ -71,24 +87,27 @@ export default function AboutPage() {
             </article>
           ))}
         </div>
+        </div>
       </section>
 
-      <section className="bg-coffee-900 text-cream-50">
-        <div className="container-page grid gap-8 py-16 md:grid-cols-[2fr_1fr] md:items-center">
+      <section className="relative overflow-hidden bg-coffee-950 text-cream-50">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(58,117,103,0.35),transparent_55%),radial-gradient(circle_at_85%_72%,rgba(216,177,109,0.2),transparent_55%)]"
+        />
+        <div className="container-page relative grid gap-8 py-16 md:grid-cols-[2fr_1fr] md:items-center">
           <div>
-            <span className="eyebrow text-gold-300">
-              Begin the conversation
-            </span>
+            <span className="eyebrow-light">Begin the conversation</span>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
               Tell us where you&apos;d like to go.
             </h2>
-            <p className="mt-4 max-w-xl text-cream-100/80">
+            <p className="mt-4 max-w-xl text-cream-100/85">
               Every Heritage Philippines journey starts with a long
               conversation. Yours can too.
             </p>
           </div>
           <div className="flex md:justify-end">
-            <Link to="/contact" className="btn-outline-light">
+            <Link to="/contact" className="btn-ghost-light">
               Plan with Us
             </Link>
           </div>

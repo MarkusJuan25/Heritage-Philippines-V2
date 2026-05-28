@@ -1,300 +1,458 @@
 import { Link } from "react-router-dom";
 
-const pillars = [
-  { label: "Provinces", value: "27" },
-  { label: "Local Partners", value: "60+" },
-  { label: "Years Curating", value: "12" },
-];
-
-const trust = [
-  "Curated by Filipino travel specialists",
-  "Built for families, groups, and cultural explorers",
-  "Designed for meaningful journeys",
-];
-
-const journeys = [
+const journeyActs = [
   {
-    eyebrow: "Heritage Cities",
-    title: "Ancestral Cities",
-    body: "Walk Vigan, Intramuros, and Silay — colonial-era streets and the families still keeping them alive.",
-    tag: "Architecture · Cuisine",
-    gradient: "from-coffee-700 via-coffee-800 to-coffee-900",
+    numeral: "I",
+    label: "Roots",
+    title: "Where you remember.",
+    body: "Old neighborhoods, ancestral homes, and the quiet corners that hold a family name. Heritage begins where the story first belonged to you.",
+    image: "/images/townscape-in-night-at-manila.jpg",
   },
   {
-    eyebrow: "Islands & Faith",
-    title: "Island Faith & Culture",
-    body: "Coral-stone basilicas, healing wells, and fiestas across the Visayan seas — slow, reverent, and bright with colour.",
-    tag: "Pilgrimage · Sea",
-    gradient: "from-forest-600 via-forest-800 to-forest-900",
+    numeral: "II",
+    label: "Journey",
+    title: "Where you arrive slowly.",
+    body: "Through preserved towns, living traditions, and landscapes shaped by generations — moving at a pace that lets the country speak back.",
+    image: "/images/a-glimpse-of-vigan-city.jpg",
   },
   {
-    eyebrow: "Living Traditions",
-    title: "Living Traditions",
-    body: "Weavers, brass casters, and rice-terrace keepers — heritage you can hold, taste, and learn with your hands.",
-    tag: "Crafts · Highlands",
-    gradient: "from-gold-600 via-coffee-700 to-coffee-900",
+    numeral: "III",
+    label: "Homecoming",
+    title: "Where the story returns.",
+    body: "Long suppers, coastal evenings, and quiet reunions with culture, family, and place. The route ends where every Heritage trip is meant to land.",
+    image: "/images/marlboro-country-batanes-lanscapes.jpg",
   },
 ];
 
-const highlights = [
+const signatureRoutes = [
   {
-    title: "Curated Heritage Routes",
-    body: "Hand-picked itineraries crossing centuries of indigenous, Spanish-era, and revolutionary heritage.",
+    tag: "Manila",
+    title: "Manila Heritage Gateway",
+    text: "Old Manila, food memory, historic streets, and a gentle first return into the story.",
+    image: "/images/townscape-in-night-at-manila.jpg",
   },
   {
-    title: "Local Stewards",
-    body: "Guides who live the stories — keepers of language, ritual, food, and craft.",
+    tag: "Ilocos",
+    title: "Ilocos Ancestral Route",
+    text: "Preserved towns, ancestral homes, church heritage, and northern food traditions.",
+    image: "/images/a-glimpse-of-vigan-city.jpg",
   },
   {
-    title: "Slow, Intentional Travel",
-    body: "Small groups. Generous time. Real conversations. No rushing past the meaning.",
+    tag: "Batanes",
+    title: "Batanes Kinship Route",
+    text: "Stone homes, coastal quiet, island kinship, and landscapes built for reflection.",
+    image: "/images/marlboro-country-batanes-lanscapes.jpg",
   },
+];
+
+const planningHighlights = [
+  "Private route curation",
+  "Hotels, transfers, and travel care",
+  "Regional and provincial tour planning",
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden bg-forest-900 text-cream-50">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(190,142,43,0.28),transparent_55%),radial-gradient(circle_at_82%_82%,rgba(47,93,80,0.7),transparent_60%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-forest-900 via-forest-900/85 to-coffee-900"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-gold-500/10 blur-3xl"
-        />
+      {/* CINEMATIC HERO — V1 inspired */}
+      <section className="cinematic-hero min-h-[100svh]">
+        <div className="cinematic-hero__media">
+          <img
+            src="/images/banner-heritage-optimized.jpg"
+            alt=""
+            className="cinematic-hero__image scale-[1.04]"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div className="cinematic-hero__shade" />
+        </div>
 
-        <div className="container-page relative py-24 md:py-28 lg:py-32">
-          <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
-            {/* Left */}
-            <div>
-              <span className="eyebrow text-gold-300">
-                Heritage Philippines
-              </span>
-              <h1 className="mt-5 max-w-3xl font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl">
-                Walk the stories that shaped a nation.
-              </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-cream-100/85 sm:text-lg">
-                Cinematic, slow-paced journeys through Filipino heritage —
-                coral-stone churches, weaving villages, and ancestral kitchens.
-                Designed for travelers who arrive curious and leave changed.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Link to="/packages" className="btn-primary">
-                  Browse Packages
-                </Link>
-                <Link to="/contact" className="btn-outline-light">
-                  Plan with Us
-                </Link>
-              </div>
-
-              <dl className="mt-14 grid max-w-md grid-cols-3 gap-6 border-t border-cream-50/15 pt-8">
-                {pillars.map((p) => (
-                  <div key={p.label}>
-                    <dt className="text-xs uppercase tracking-widest text-cream-100/60">
-                      {p.label}
-                    </dt>
-                    <dd className="mt-1 font-serif text-3xl text-gold-300">
-                      {p.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            {/* Right — layered visual composition (CSS only) */}
-            <div className="relative hidden h-[500px] lg:block">
-              <div
-                aria-hidden="true"
-                className="absolute right-4 top-12 h-72 w-72 rounded-full bg-gold-500/20 blur-3xl"
-              />
-
-              {/* Main destination card */}
-              <div className="absolute right-0 top-6 h-[420px] w-[330px] overflow-hidden rounded-3xl border border-gold-500/30 bg-gradient-to-br from-forest-600 via-forest-800 to-coffee-900 p-7 shadow-soft">
-                <div
-                  aria-hidden="true"
-                  className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gold-500/15 blur-2xl"
-                />
-                <span className="eyebrow text-gold-300">Featured Journey</span>
-                <h3 className="mt-4 font-serif text-3xl leading-tight text-cream-50">
-                  Vigan & the Ilocos Coast
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-cream-100/80">
-                  Coral-stone churches, calesa mornings, and ancestral
-                  suppers across five unhurried days.
+        <div className="relative z-10 flex min-h-[100svh] flex-col">
+          <div className="container-page flex flex-1 items-end pb-16 pt-36 sm:pb-20 sm:pt-40 lg:pt-44">
+            <div className="grid w-full items-end gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.7fr)]">
+              <div className="max-w-2xl">
+                <p className="eyebrow-light">Heritage Philippines</p>
+                <h1 className="mt-5 font-serif text-[2.4rem] leading-[1.05] text-cream-50 text-balance sm:text-5xl lg:text-[3.85rem]">
+                  A homecoming through{" "}
+                  <span className="italic text-accent-gold">
+                    the Philippines.
+                  </span>
+                </h1>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-cream-100/85 sm:text-lg">
+                  Heritage Philippines creates cinematic, carefully hosted
+                  journeys through ancestral places, living culture, island
+                  landscapes, and the family memories that make a return
+                  meaningful.
                 </p>
-                <div className="absolute inset-x-7 bottom-7 flex items-center justify-between text-[11px] uppercase tracking-widest text-cream-100/70">
-                  <span>5 days · Small group</span>
-                  <span className="text-gold-300">View →</span>
+                <div className="mt-9 flex flex-wrap gap-4">
+                  <Link to="/contact" className="btn-primary">
+                    Plan Your Homecoming
+                  </Link>
+                  <Link to="/tour" className="btn-ghost-light">
+                    Explore Tours
+                  </Link>
                 </div>
               </div>
 
-              {/* Top-left overlay card */}
-              <div className="absolute -left-2 top-0 w-[230px] -rotate-3 rounded-2xl border border-cream-200 bg-cream-50 p-5 text-coffee-900 shadow-soft">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-gold-600">
-                  Now booking
-                </span>
-                <p className="mt-2 font-serif text-base">
-                  Cordillera Highland Loop
-                </p>
-                <p className="mt-1 text-xs text-coffee-700/70">
-                  November departures
-                </p>
-              </div>
+              {/* Right-side cinematic stage card */}
+              <aside className="hidden lg:block">
+                <div className="relative overflow-hidden rounded-[26px] border border-gold-400/30 bg-coffee-950/65 shadow-nav backdrop-blur-xl">
+                  <div className="relative h-44 w-full overflow-hidden">
+                    <img
+                      src="/images/marlboro-country-batanes-lanscapes.jpg"
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-coffee-950 via-coffee-950/40 to-transparent"
+                    />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-200 ring-1 ring-gold-400/35 backdrop-blur">
+                      ★ Featured route
+                    </span>
+                    <span className="absolute right-4 top-4 inline-flex items-center rounded-full bg-gold-400/85 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-coffee-950">
+                      4D3N
+                    </span>
+                  </div>
+                  <div className="relative p-6">
+                    <div
+                      aria-hidden="true"
+                      className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gold-400/15 blur-2xl"
+                    />
+                    <p className="relative text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-300/85">
+                      Cagayan Valley · Batanes
+                    </p>
+                    <h3 className="relative mt-1.5 font-serif text-[1.5rem] leading-tight text-cream-50">
+                      Batanes Kinship Route
+                    </h3>
+                    <p className="relative mt-2.5 text-[13px] leading-relaxed text-cream-100/80">
+                      Stone homes, coastal quiet, and Ivatan landscapes
+                      built for reflection.
+                    </p>
+                    <span aria-hidden="true" className="gold-rule relative mt-5" />
+                    <div className="relative mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-cream-100/65">
+                      <span>Slow island pace</span>
+                      <Link
+                        to="/tour"
+                        className="inline-flex items-center gap-1 font-semibold text-gold-300 transition hover:gap-2 hover:text-gold-200"
+                      >
+                        View route <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
 
-              {/* Bottom-left info pill */}
-              <div className="absolute bottom-16 left-0 rounded-2xl border border-cream-50/15 bg-coffee-900/60 px-4 py-3 backdrop-blur">
-                <span className="text-[10px] uppercase tracking-widest text-cream-100/70">
-                  Next departure
-                </span>
-                <p className="mt-1 font-serif text-sm text-cream-50">
-                  10 March 2026
-                </p>
-              </div>
-
-              {/* Bottom-right gold badge */}
-              <div className="absolute -bottom-2 right-8 rotate-2 rounded-2xl bg-gold-500 px-5 py-4 text-coffee-900 shadow-soft">
-                <span className="block text-[10px] font-semibold uppercase tracking-widest">
-                  Curated since
-                </span>
-                <span className="font-serif text-xl">2013</span>
-              </div>
+          {/* Scroll cue */}
+          <div className="container-page pb-8">
+            <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-cream-100/60">
+              <span aria-hidden="true" className="h-px w-8 bg-cream-100/40" />
+              Scroll · Begin the story
             </div>
           </div>
         </div>
       </section>
 
-      {/* TRUST STRIP */}
-      <section className="border-y border-cream-200 bg-cream-100">
-        <div className="container-page grid gap-6 py-8 md:grid-cols-3">
-          {trust.map((t) => (
-            <div
-              key={t}
-              className="flex items-center justify-center gap-3 text-sm text-coffee-800"
-            >
-              <span
-                aria-hidden="true"
-                className="inline-block h-1.5 w-1.5 rounded-full bg-gold-500"
-              />
-              <span className="text-center md:text-left">{t}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* SIGNATURE JOURNEYS */}
-      <section className="container-page py-20 md:py-24">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div className="max-w-xl">
-            <span className="eyebrow">Signature Heritage Journeys</span>
-            <h2 className="section-heading mt-3">Where the journeys begin.</h2>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-coffee-800/90">
-              Three story-led routes through the country&apos;s richest
-              heritage regions — each designed to be walked slowly, with the
-              people who live them.
-            </p>
-          </div>
-          <Link
-            to="/packages"
-            className="text-sm font-semibold text-forest-700 transition hover:text-forest-800"
-          >
-            View all packages →
-          </Link>
-        </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {journeys.map((j) => (
-            <article
-              key={j.title}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              <div
-                className={`relative h-44 w-full bg-gradient-to-br ${j.gradient}`}
-              >
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.18),transparent_55%)]"
-                />
-                <span className="absolute bottom-4 left-5 inline-flex items-center rounded-full bg-cream-50/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-cream-50 backdrop-blur">
-                  {j.tag}
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col p-6">
-                <span className="eyebrow">{j.eyebrow}</span>
-                <h3 className="mt-3 font-serif text-2xl text-coffee-900">
-                  {j.title}
-                </h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-coffee-800/80">
-                  {j.body}
-                </p>
-                <Link
-                  to="/packages"
-                  className="mt-5 inline-flex text-sm font-semibold text-forest-700 transition hover:text-forest-800"
-                >
-                  Explore journey →
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* WHY HERITAGE */}
-      <section className="bg-cream-100">
-        <div className="container-page py-20">
-          <div className="max-w-2xl">
-            <span className="eyebrow">Why Heritage</span>
-            <h2 className="section-heading mt-3">
-              Tourism that honors the story.
+      {/* THE HERITAGE PATH — brand-story intro */}
+      <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-75"
+        />
+        <div className="container-page relative">
+          <div className="mx-auto max-w-3xl text-center">
+            <span
+              aria-hidden="true"
+              className="mx-auto block h-px w-16 bg-gradient-to-r from-transparent via-gold-500/70 to-transparent"
+            />
+            <p className="eyebrow mt-6">The Heritage Path</p>
+            <h2 className="mt-4 font-serif text-3xl text-coffee-900 text-balance sm:text-[2.25rem] lg:text-[2.6rem] lg:leading-[1.12]">
+              Every journey begins with a{" "}
+              <span className="italic text-gold-600">story.</span>
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-coffee-800/90">
-              Heritage Philippines crafts immersive journeys that move at the
-              pace of the place — built around local scholars, families, and
-              culture-bearers across the islands.
+            <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-coffee-800/85 sm:text-base">
+              For us, travel through the Philippines is not a checklist of
+              destinations. It is a return — to roots that quiet you, to
+              culture that holds you, to the living landscapes and family
+              memories that make a homecoming feel inevitable.
             </p>
+            <span
+              aria-hidden="true"
+              className="mx-auto mt-8 block h-px w-16 bg-gradient-to-r from-transparent via-gold-500/70 to-transparent"
+            />
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {highlights.map((h) => (
-              <article key={h.title} className="card">
+        </div>
+      </section>
+
+      {/* THREE JOURNEY ACTS */}
+      <section className="relative overflow-hidden bg-warm-cream pb-24 pt-4 md:pb-28">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-70"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -left-40 top-1/3 h-72 w-72 rounded-full bg-forest-500/8 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl"
+        />
+        <div className="container-page relative">
+          <div className="mx-auto max-w-xl text-center">
+            <p className="eyebrow">Three Acts</p>
+            <h2 className="mt-3 font-serif text-2xl text-coffee-900 text-balance sm:text-3xl lg:text-[2.1rem]">
+              The shape of a Heritage journey.
+            </h2>
+          </div>
+
+          <div className="mt-14 grid gap-7 md:grid-cols-3">
+            {journeyActs.map((act) => (
+              <article
+                key={act.numeral}
+                className="card-warm group flex flex-col"
+              >
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1 w-10 rounded-full bg-gold-500"
+                  className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold-400/14 blur-2xl"
                 />
-                <h3 className="mt-4 font-serif text-xl text-coffee-900">
-                  {h.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-coffee-800/80">
-                  {h.body}
-                </p>
+                <div className="relative h-40 w-full overflow-hidden">
+                  <img
+                    src={act.image}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-cream-50 via-cream-50/30 to-transparent"
+                  />
+                </div>
+                <div className="relative flex flex-1 flex-col p-7">
+                  <div className="flex items-baseline gap-4">
+                    <span className="font-serif text-[2.4rem] leading-none text-gold-500">
+                      {act.numeral}
+                    </span>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-coffee-700/75">
+                      Act {act.numeral} · {act.label}
+                    </span>
+                  </div>
+                  <span aria-hidden="true" className="gold-rule mt-5 max-w-[2.5rem]" />
+                  <h3 className="mt-4 font-serif text-[1.4rem] leading-tight text-coffee-900">
+                    {act.title}
+                  </h3>
+                  <p className="mt-3 text-[14.5px] leading-[1.7] text-coffee-800/85">
+                    {act.body}
+                  </p>
+                </div>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CINEMATIC FEATURED BAND */}
-      <section className="bg-coffee-900 text-cream-50">
-        <div className="container-page grid gap-10 py-20 md:grid-cols-[2fr_1fr] md:items-center">
-          <div>
-            <span className="eyebrow text-gold-300">Featured Journey</span>
-            <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
-              Ilocos Heritage Trail
-            </h2>
-            <p className="mt-5 max-w-2xl text-cream-100/80">
-              Five unhurried days through Vigan, Paoay, and the highland
-              weaving towns — sunrise calesa rides, candlelit ancestral
-              suppers, and quiet conversations with the keepers of the old
-              crafts.
+      {/* SIGNATURE HERITAGE ROUTES */}
+      <section className="relative overflow-hidden bg-cream-50 py-20 md:py-24">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-50"
+        />
+        <div className="container-page relative">
+          <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
+            <div>
+              <p className="eyebrow">Signature Heritage Routes</p>
+              <h2 className="mt-3 font-serif text-3xl text-coffee-900 text-balance sm:text-4xl lg:text-[2.4rem]">
+                Three curated returns across the archipelago.
+              </h2>
+            </div>
+            <p className="text-[15px] leading-relaxed text-coffee-800/80 md:max-w-md md:justify-self-end">
+              A small, intentional set of journeys — chosen for the way
+              each one carries roots, culture, and the quiet of arriving
+              home.
             </p>
           </div>
-          <div className="flex md:justify-end">
-            <Link to="/packages" className="btn-outline-light">
-              See Itinerary
+
+          <div className="mt-12 grid gap-7 md:grid-cols-3">
+            {signatureRoutes.map((route) => (
+              <article
+                key={route.title}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
+              >
+                <div className="relative h-56 w-full overflow-hidden">
+                  <img
+                    src={route.image}
+                    alt={route.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 to-transparent"
+                  />
+                  <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold-300 backdrop-blur">
+                    {route.tag}
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <h3 className="font-serif text-xl text-coffee-900">
+                    {route.title}
+                  </h3>
+                  <p className="mt-3 flex-1 text-[14.5px] leading-[1.7] text-coffee-800/80">
+                    {route.text}
+                  </p>
+                  <Link
+                    to="/tour"
+                    className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-forest-700 transition group-hover:gap-2 hover:text-forest-800"
+                  >
+                    Explore Route <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link
+              to="/tour"
+              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-coffee-700 transition hover:text-coffee-900"
+            >
+              <span aria-hidden="true" className="h-px w-8 bg-gold-500/60" />
+              See all routes
+              <span aria-hidden="true">→</span>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CUSTOM PLAN — story-led, integrated */}
+      <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-heritage opacity-70"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -right-32 top-1/3 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl"
+        />
+        <div className="container-page relative grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative">
+            <div className="relative overflow-hidden rounded-3xl border border-cream-200 shadow-premium">
+              <img
+                src="/images/a-glimpse-of-vigan-city.jpg"
+                alt="Heritage route planning in the Philippines"
+                loading="lazy"
+                className="h-[24rem] w-full object-cover"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 to-transparent"
+              />
+            </div>
+            <div className="absolute -bottom-5 -right-3 rotate-[2deg] rounded-2xl bg-gradient-to-br from-gold-300 via-gold-400 to-gold-500 px-5 py-4 text-coffee-950 shadow-glow">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.22em]">
+                Tailored
+              </span>
+              <span className="block font-serif text-lg">Heritage Route</span>
+            </div>
+          </div>
+
+          <div>
+            <p className="eyebrow">Custom Heritage Plan</p>
+            <h2 className="mt-3 font-serif text-3xl text-coffee-900 text-balance sm:text-4xl lg:text-[2.4rem] lg:leading-[1.12]">
+              Not every journey starts with a package.{" "}
+              <span className="italic text-gold-600">
+                Some begin with a story.
+              </span>
+            </h2>
+            <p className="mt-5 text-[15px] leading-[1.85] text-coffee-800/85">
+              Tell us the province, family memory, celebration, or pace you
+              have in mind. Our team can shape a route around your schedule,
+              comfort level, and the cultural moments that matter most.
+            </p>
+            <ul className="mt-7 flex flex-wrap gap-x-2.5 gap-y-2.5">
+              {planningHighlights.map((item) => (
+                <li
+                  key={item}
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-cream-200/90 bg-white/90 px-4 py-2 text-[12px] font-semibold text-coffee-800 shadow-warm"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="inline-block h-1.5 w-1.5 rounded-full bg-gold-500"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link to="/contact" className="btn-primary">
+                Start Custom Plan
+              </Link>
+              <Link to="/tour" className="btn-outline-dark">
+                Browse Tours
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONCIERGE TRAVEL-CARE BAND */}
+      <section className="relative overflow-hidden bg-coffee-950 text-cream-50">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(58,117,103,0.38),transparent_55%),radial-gradient(circle_at_85%_80%,rgba(216,177,109,0.22),transparent_55%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/55 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-400/30 to-transparent"
+        />
+        <div className="container-page relative grid gap-12 py-20 md:py-24 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+          <div>
+            <p className="eyebrow-light">Concierge Travel Care</p>
+            <h2 className="mt-3 font-serif text-3xl text-balance sm:text-4xl lg:text-[2.4rem]">
+              Your route, logistics, and support in{" "}
+              <span className="italic text-accent-gold">one calm plan.</span>
+            </h2>
+            <p className="mt-5 max-w-2xl text-cream-100/85">
+              From hotels and transfers to documents, insurance, and route
+              coordination, our team helps shape the practical details
+              around the story.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <ul className="flex flex-wrap gap-x-2.5 gap-y-2.5">
+              {[
+                "Hotels & transfers",
+                "Visa & insurance assistance",
+                "Custom heritage planning",
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-gold-400/25 bg-cream-50/[0.06] px-4 py-2 text-[12px] font-semibold text-cream-100/90 backdrop-blur"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="inline-block h-1.5 w-1.5 rounded-full bg-gold-400"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link to="/contact" className="btn-primary">
+                Plan with Us
+              </Link>
+              <Link to="/gallery" className="btn-ghost-light">
+                View Gallery
+              </Link>
+            </div>
           </div>
         </div>
       </section>
