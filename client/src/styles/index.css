@@ -1,9 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#root {
-  height: 100%;
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-cream-50 text-coffee-900 font-sans antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-6 lg:px-10;
+  }
+  .eyebrow {
+    @apply inline-block text-xs font-semibold uppercase tracking-widest text-gold-500;
+  }
+  .section-heading {
+    @apply font-serif text-3xl text-coffee-900 sm:text-4xl lg:text-5xl;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-gold-500 px-6 py-3 text-sm font-semibold text-coffee-900 shadow-soft transition hover:bg-gold-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
+  }
+  .btn-outline-light {
+    @apply inline-flex items-center justify-center rounded-full border border-cream-50/40 px-6 py-3 text-sm font-semibold text-cream-50 transition hover:bg-cream-50 hover:text-forest-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
+  }
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center rounded-full border border-forest-700 px-6 py-3 text-sm font-semibold text-forest-700 transition hover:bg-forest-700 hover:text-cream-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-700;
+  }
+  .card {
+    @apply rounded-2xl border border-cream-200 bg-white p-6 shadow-soft;
+  }
+  .field-label {
+    @apply mb-1 block text-xs font-semibold uppercase tracking-widest text-coffee-700;
+  }
+  .field-input {
+    @apply w-full rounded-lg border border-cream-200 bg-cream-50 px-4 py-3 text-sm text-coffee-900 placeholder-coffee-700/40 transition focus:border-forest-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-700/20;
+  }
 }
