@@ -67,10 +67,10 @@ export default function PackagesPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16">
+      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-80"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
         <div className="mb-10 flex flex-wrap items-center gap-3">
@@ -80,7 +80,7 @@ export default function PackagesPage() {
               key={r}
               className={`rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide transition ${
                 i === 0
-                  ? "border-forest-700 bg-forest-700 text-cream-50 shadow-soft"
+                  ? "border-forest-700 bg-forest-700 text-cream-50 shadow-warm"
                   : "border-cream-200 bg-white text-coffee-800 hover:border-gold-400/60"
               }`}
             >
@@ -138,16 +138,8 @@ export default function PackagesPage() {
           ))}
         </div>
 
-        <div className="relative mt-16 overflow-hidden rounded-3xl border border-cream-200/80 bg-gradient-to-br from-white via-cream-50 to-cream-100 p-8 text-center shadow-warm md:p-12">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-20 -top-20 h-60 w-60 rounded-full bg-gold-400/12 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-20 -left-20 h-60 w-60 rounded-full bg-forest-500/10 blur-3xl"
-          />
-          <span className="eyebrow relative">Bespoke Itineraries</span>
+        <div className="mt-16 rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 p-8 text-center shadow-warm md:p-12">
+          <span className="eyebrow">Bespoke Itineraries</span>
           <h2 className="mt-3 font-serif text-2xl text-coffee-900 sm:text-3xl">
             Don&apos;t see your journey?
           </h2>

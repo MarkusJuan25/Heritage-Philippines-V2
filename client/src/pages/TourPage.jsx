@@ -55,15 +55,15 @@ export default function TourPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16">
+      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-80"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
           <div className="grid gap-6 md:grid-cols-3">
             {dayPlan.map((d) => (
-              <article key={d.time} className="card-warm">
+              <article key={d.time} className="relative overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 p-6 shadow-warm">
                 <span
                   aria-hidden="true"
                   className="inline-block h-1 w-10 rounded-full bg-gradient-to-r from-gold-400 to-gold-600"
@@ -106,10 +106,10 @@ export default function TourPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-20">
+      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-70"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
         <figure className="mx-auto max-w-3xl text-center">

@@ -140,8 +140,7 @@
   /* Soft heritage atmosphere overlay — pairs with bg-warm-cream */
   .bg-heritage {
     background-image:
-      radial-gradient(circle at 12% 8%, rgba(190, 142, 43, 0.06), transparent 36%),
-      radial-gradient(circle at 88% 92%, rgba(35, 74, 64, 0.05), transparent 38%),
-      repeating-linear-gradient(60deg, rgba(139, 90, 56, 0.022) 0 1px, transparent 1px 26px);
+      radial-gradient(circle at 12% 8%, rgba(190, 142, 43, 0.05), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(35, 74, 64, 0.045), transparent 40%);
   }
 }

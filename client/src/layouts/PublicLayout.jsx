@@ -82,13 +82,6 @@ function FloatingNav() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <Link
-            to="/contact"
-            onClick={close}
-            className="hidden whitespace-nowrap rounded-full bg-gradient-to-br from-gold-300 to-gold-500 px-4 py-2 text-[12px] font-semibold text-coffee-950 shadow-glow transition hover:brightness-105 sm:inline-flex"
-          >
-            Plan with Us
-          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -115,13 +108,6 @@ function FloatingNav() {
               {l.label}
             </NavLink>
           ))}
-          <Link
-            to="/contact"
-            onClick={close}
-            className="mt-1 inline-flex items-center justify-center rounded-full bg-gradient-to-br from-gold-300 to-gold-500 px-4 py-3 text-sm font-semibold text-coffee-950"
-          >
-            Plan with Us
-          </Link>
         </div>
       )}
     </header>

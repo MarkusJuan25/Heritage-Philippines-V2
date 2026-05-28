@@ -26,19 +26,22 @@ const journeyActs = [
 
 const signatureRoutes = [
   {
-    tag: "Manila",
+    index: "01",
+    region: "Metro Manila",
     title: "Manila Heritage Gateway",
     text: "Old Manila, food memory, historic streets, and a gentle first return into the story.",
     image: "/images/townscape-in-night-at-manila.jpg",
   },
   {
-    tag: "Ilocos",
+    index: "02",
+    region: "Ilocos Region",
     title: "Ilocos Ancestral Route",
     text: "Preserved towns, ancestral homes, church heritage, and northern food traditions.",
     image: "/images/a-glimpse-of-vigan-city.jpg",
   },
   {
-    tag: "Batanes",
+    index: "03",
+    region: "Cagayan Valley",
     title: "Batanes Kinship Route",
     text: "Stone homes, coastal quiet, island kinship, and landscapes built for reflection.",
     image: "/images/marlboro-country-batanes-lanscapes.jpg",
@@ -160,7 +163,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-75"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
           <div className="mx-auto max-w-3xl text-center">
@@ -188,18 +191,10 @@ export default function HomePage() {
       </section>
 
       {/* THREE JOURNEY ACTS */}
-      <section className="relative overflow-hidden bg-warm-cream pb-24 pt-4 md:pb-28">
+      <section className="relative overflow-hidden bg-warm-cream pb-20 pt-4 md:pb-24">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-70"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -left-40 top-1/3 h-72 w-72 rounded-full bg-forest-500/8 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
           <div className="mx-auto max-w-xl text-center">
@@ -213,12 +208,8 @@ export default function HomePage() {
             {journeyActs.map((act) => (
               <article
                 key={act.numeral}
-                className="card-warm group flex flex-col"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm"
               >
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold-400/14 blur-2xl"
-                />
                 <div className="relative h-40 w-full overflow-hidden">
                   <img
                     src={act.image}
@@ -228,10 +219,10 @@ export default function HomePage() {
                   />
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-cream-50 via-cream-50/30 to-transparent"
+                    className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent"
                   />
                 </div>
-                <div className="relative flex flex-1 flex-col p-7">
+                <div className="flex flex-1 flex-col p-7">
                   <div className="flex items-baseline gap-4">
                     <span className="font-serif text-[2.4rem] leading-none text-gold-500">
                       {act.numeral}
@@ -258,7 +249,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-cream-50 py-20 md:py-24">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-50"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
           <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
@@ -292,12 +283,15 @@ export default function HomePage() {
                     aria-hidden="true"
                     className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 to-transparent"
                   />
-                  <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold-300 backdrop-blur">
-                    {route.tag}
+                  <span className="absolute left-5 top-5 font-serif text-[1.3rem] leading-none text-cream-50/95 drop-shadow">
+                    {route.index}
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-6">
-                  <h3 className="font-serif text-xl text-coffee-900">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gold-600">
+                    {route.region}
+                  </p>
+                  <h3 className="mt-2 font-serif text-xl text-coffee-900">
                     {route.title}
                   </h3>
                   <p className="mt-3 flex-1 text-[14.5px] leading-[1.7] text-coffee-800/80">
@@ -331,11 +325,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-70"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -right-32 top-1/3 h-72 w-72 rounded-full bg-gold-400/10 blur-3xl"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative">

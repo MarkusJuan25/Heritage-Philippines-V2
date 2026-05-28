@@ -69,10 +69,10 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16">
+      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-80"
+          className="absolute inset-0 bg-heritage"
         />
         <div className="container-page relative">
         <div className="mb-8 flex flex-wrap items-center gap-3">
@@ -82,7 +82,7 @@ export default function GalleryPage() {
               key={f}
               className={`rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide transition ${
                 i === 0
-                  ? "border-forest-700 bg-forest-700 text-cream-50 shadow-soft"
+                  ? "border-forest-700 bg-forest-700 text-cream-50 shadow-warm"
                   : "border-cream-200 bg-white text-coffee-800 hover:border-gold-400/60"
               }`}
             >
@@ -95,7 +95,7 @@ export default function GalleryPage() {
           {tiles.map((t) => (
             <figure
               key={t.caption}
-              className={`group relative overflow-hidden rounded-2xl shadow-soft ring-1 ring-cream-200 transition duration-500 hover:shadow-premium ${t.span ?? ""}`}
+              className={`group relative overflow-hidden rounded-2xl border border-cream-200/80 shadow-warm transition duration-500 hover:shadow-premium ${t.span ?? ""}`}
             >
               <img
                 src={t.image}
