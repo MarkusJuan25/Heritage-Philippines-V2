@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
 const navLinks = [
   { to: "/packages", label: "Packages" },
@@ -11,22 +11,23 @@ const navLinks = [
 ];
 
 const desktopLinkClass = ({ isActive }) =>
-  `relative px-3 py-1 text-[12.5px] font-semibold tracking-[0.06em] transition-colors after:pointer-events-none after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-px after:origin-center after:bg-gradient-to-r after:from-transparent after:via-gold-300 after:to-transparent after:transition-transform after:duration-300 ${
+  `relative px-2.5 pb-1.5 pt-1 text-[11px] font-bold uppercase tracking-[0.14em] transition-[color,letter-spacing] duration-300 after:pointer-events-none after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-6 after:-translate-x-1/2 after:rounded-full after:bg-gradient-to-r after:from-gold-300 after:to-gold-400 after:transition-transform after:duration-300 ${
     isActive
-      ? "text-gold-300 [text-shadow:0_0_14px_rgba(216,177,109,0.35)] after:scale-x-100"
-      : "text-cream-100/80 hover:text-gold-300 after:scale-x-0 hover:after:scale-x-100"
+      ? "text-gold-300 after:scale-x-100"
+      : "text-cream-100/75 hover:tracking-[0.16em] hover:text-gold-300 after:scale-x-0 hover:after:scale-x-100"
   }`;
 
 const mobileLinkClass = ({ isActive }) =>
-  `relative block rounded-full px-4 py-3 text-sm font-semibold tracking-wide transition-colors ${
+  `relative block rounded-full px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] transition-colors ${
     isActive
       ? "bg-cream-50/10 text-gold-300 ring-1 ring-inset ring-gold-400/30"
-      : "text-cream-100/85 hover:bg-cream-50/5 hover:text-gold-300"
+      : "text-cream-100/80 hover:bg-cream-50/5 hover:text-gold-300"
   }`;
 
 function FloatingNav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { pathname } = useLocation();
   const close = () => setOpen(false);
 
   useEffect(() => {
@@ -35,6 +36,12 @@ function FloatingNav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Safety net: ensure the mobile menu is closed after any route change,
+  // even if a tap did not fire the link's onClick (the X button stays manual).
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-4">
@@ -51,7 +58,7 @@ function FloatingNav() {
           aria-label="Heritage Philippines — home"
           className="group flex shrink-0 items-center gap-2.5"
         >
-          <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full bg-cream-50/[0.06] ring-1 ring-gold-400/40">
+          <span className="relative grid h-10 w-10 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
             <img
               src="/images/heritage-logo.png"
               alt=""
@@ -70,7 +77,7 @@ function FloatingNav() {
         </Link>
 
         <nav className="hidden flex-1 lg:block" aria-label="Main">
-          <ul className="flex items-center justify-center gap-1">
+          <ul className="flex items-center justify-end gap-1 pr-1 lg:gap-2">
             {navLinks.map((l) => (
               <li key={l.to}>
                 <NavLink to={l.to} className={desktopLinkClass}>
@@ -126,7 +133,7 @@ export default function PublicLayout() {
       <footer className="relative mt-20 overflow-hidden bg-coffee-950 text-cream-100">
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_12%_25%,rgba(58,117,103,0.25),transparent_55%),radial-gradient(circle_at_88%_85%,rgba(216,177,109,0.18),transparent_55%)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(211,163,86,0.16),transparent_32%),radial-gradient(circle_at_88%_85%,rgba(58,117,103,0.20),transparent_55%),linear-gradient(135deg,#1a100a_0%,#2f1d13_50%,#5a3925_120%)]"
         />
         <div
           aria-hidden="true"
@@ -136,7 +143,7 @@ export default function PublicLayout() {
           <div className="container-page grid gap-12 py-16 md:grid-cols-12">
             <div className="md:col-span-5">
               <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-full bg-cream-50/[0.06] ring-1 ring-gold-400/40">
+                <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
                   <img
                     src="/images/heritage-logo.png"
                     alt=""
@@ -170,7 +177,7 @@ export default function PublicLayout() {
               </div>
             </div>
             <div className="md:col-span-3">
-              <h3 className="font-serif text-base text-cream-50">Explore</h3>
+              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-gold-300">Explore</h3>
               <span
                 aria-hidden="true"
                 className="mt-3 block h-px w-10 bg-gold-400/60"
@@ -194,7 +201,7 @@ export default function PublicLayout() {
               </ul>
             </div>
             <div className="md:col-span-4">
-              <h3 className="font-serif text-base text-cream-50">Discover</h3>
+              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-gold-300">Discover</h3>
               <span
                 aria-hidden="true"
                 className="mt-3 block h-px w-10 bg-gold-400/60"
