@@ -11,16 +11,16 @@ const navLinks = [
 ];
 
 const desktopLinkClass = ({ isActive }) =>
-  `relative px-3 py-1 text-[12.5px] font-semibold tracking-[0.06em] transition-colors ${
+  `relative px-3 py-1 text-[12.5px] font-semibold tracking-[0.06em] transition-colors after:pointer-events-none after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-px after:origin-center after:bg-gradient-to-r after:from-transparent after:via-gold-300 after:to-transparent after:transition-transform after:duration-300 ${
     isActive
-      ? "text-gold-300"
-      : "text-cream-100/80 hover:text-gold-300"
+      ? "text-gold-300 [text-shadow:0_0_14px_rgba(216,177,109,0.35)] after:scale-x-100"
+      : "text-cream-100/80 hover:text-gold-300 after:scale-x-0 hover:after:scale-x-100"
   }`;
 
 const mobileLinkClass = ({ isActive }) =>
-  `block rounded-full px-4 py-3 text-sm font-semibold tracking-wide transition-colors ${
+  `relative block rounded-full px-4 py-3 text-sm font-semibold tracking-wide transition-colors ${
     isActive
-      ? "bg-cream-50/10 text-gold-300"
+      ? "bg-cream-50/10 text-gold-300 ring-1 ring-inset ring-gold-400/30"
       : "text-cream-100/85 hover:bg-cream-50/5 hover:text-gold-300"
   }`;
 
@@ -177,17 +177,17 @@ export default function PublicLayout() {
               />
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <Link to="/packages" className="text-cream-200/80 transition hover:text-gold-300">
+                  <Link to="/packages" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
                     Packages
                   </Link>
                 </li>
                 <li>
-                  <Link to="/tour" className="text-cream-200/80 transition hover:text-gold-300">
+                  <Link to="/tour" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
                     Tour
                   </Link>
                 </li>
                 <li>
-                  <Link to="/gallery" className="text-cream-200/80 transition hover:text-gold-300">
+                  <Link to="/gallery" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
                     Gallery
                   </Link>
                 </li>
@@ -201,17 +201,17 @@ export default function PublicLayout() {
               />
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <Link to="/stories" className="text-cream-200/80 transition hover:text-gold-300">
+                  <Link to="/stories" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
                     Stories
                   </Link>
                 </li>
                 <li>
-                  <Link to="/about" className="text-cream-200/80 transition hover:text-gold-300">
+                  <Link to="/about" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="text-cream-200/80 transition hover:text-gold-300">
+                  <Link to="/contact" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
                     Contact Us
                   </Link>
                 </li>
