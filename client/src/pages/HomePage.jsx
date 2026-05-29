@@ -1,4 +1,11 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
+const heroVideos = [
+  "/videos/Create_a_premium_cinematic_mar.mp4",
+  "/videos/heritage_philippines_v_mp_.mp4",
+  "/videos/heritage-hero.mp4",
+];
 
 const journeyActs = [
   {
@@ -55,18 +62,31 @@ const planningHighlights = [
 ];
 
 export default function HomePage() {
+  const [videoIndex, setVideoIndex] = useState(0);
+  const currentVideo = heroVideos[videoIndex];
+
+  const handleEnded = () => {
+    setVideoIndex((i) => (i + 1) % heroVideos.length);
+  };
+
   return (
     <>
-      {/* CINEMATIC HERO — V1 inspired */}
+      {/* CINEMATIC HERO — V1 inspired, 3-video sequence */}
       <section className="cinematic-hero min-h-[100svh]">
         <div className="cinematic-hero__media">
-          <img
-            src="/images/banner-heritage-optimized.jpg"
-            alt=""
-            className="cinematic-hero__image scale-[1.04]"
-            loading="eager"
-            fetchpriority="high"
-          />
+          <video
+            key={currentVideo}
+            className="cinematic-hero__video"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            poster="/images/heritage-banner.jpg"
+            aria-hidden="true"
+            onEnded={handleEnded}
+          >
+            <source src={currentVideo} type="video/mp4" />
+          </video>
           <div className="cinematic-hero__shade" />
         </div>
 
