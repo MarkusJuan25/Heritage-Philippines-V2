@@ -44,12 +44,12 @@ function FloatingNav() {
   }, [pathname]);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-4">
+    <header className="pointer-events-none fixed inset-x-0 top-3 z-50 px-4 sm:top-4 sm:px-6 lg:px-8">
       <div
-        className={`pointer-events-auto mx-auto flex w-full max-w-[1180px] items-center gap-3 rounded-full border px-3 py-2 backdrop-blur-xl transition-all duration-300 sm:gap-4 sm:px-4 sm:py-2.5 ${
+        className={`pointer-events-auto mx-auto flex w-full max-w-[1360px] items-center gap-3 rounded-full border px-4 py-2 backdrop-blur-xl transition-all duration-300 sm:gap-4 sm:px-5 sm:py-2.5 lg:px-6 ${
           scrolled
-            ? "border-gold-400/30 bg-coffee-950/85 shadow-nav"
-            : "border-gold-400/20 bg-coffee-950/70 shadow-nav"
+            ? "border-gold-400/35 bg-coffee-900/85 shadow-nav"
+            : "border-gold-400/20 bg-coffee-900/70 shadow-nav"
         }`}
       >
         <Link
@@ -66,12 +66,9 @@ function FloatingNav() {
               loading="eager"
             />
           </span>
-          <span className="hidden flex-col leading-tight sm:flex">
+          <span className="hidden leading-tight sm:block">
             <span className="font-serif text-[15px] tracking-wide text-cream-50">
               Heritage Philippines
-            </span>
-            <span className="text-[9.5px] uppercase tracking-[0.22em] text-gold-300/80">
-              Stories · Roots · Journeys
             </span>
           </span>
         </Link>
@@ -104,17 +101,23 @@ function FloatingNav() {
       </div>
 
       {open && (
-        <div className="pointer-events-auto mx-auto mt-3 grid w-[min(520px,calc(100%-2rem))] gap-1 rounded-3xl border border-gold-400/25 bg-coffee-950/95 p-3 shadow-nav backdrop-blur-xl lg:hidden">
-          {navLinks.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              onClick={close}
-              className={mobileLinkClass}
-            >
-              {l.label}
-            </NavLink>
-          ))}
+        <div className="pointer-events-auto mx-auto mt-3 w-[min(520px,calc(100%-2rem))] overflow-hidden rounded-3xl border border-gold-400/25 bg-coffee-900/95 shadow-nav backdrop-blur-xl lg:hidden">
+          <span
+            aria-hidden="true"
+            className="block h-px w-full bg-gradient-to-r from-transparent via-gold-400/55 to-transparent"
+          />
+          <div className="grid gap-1.5 p-3">
+            {navLinks.map((l) => (
+              <NavLink
+                key={l.to}
+                to={l.to}
+                onClick={close}
+                className={mobileLinkClass}
+              >
+                {l.label}
+              </NavLink>
+            ))}
+          </div>
         </div>
       )}
     </header>

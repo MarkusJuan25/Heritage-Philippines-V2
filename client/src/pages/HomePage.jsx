@@ -92,88 +92,27 @@ export default function HomePage() {
 
         <div className="relative z-10 flex min-h-[100svh] flex-col">
           <div className="container-page flex flex-1 items-end pb-16 pt-36 sm:pb-20 sm:pt-40 lg:pt-44">
-            <div className="grid w-full items-end gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.7fr)]">
-              <div className="max-w-2xl">
-                <p className="eyebrow-light">Heritage Philippines</p>
-                <h1 className="mt-5 font-serif text-[2.4rem] leading-[1.05] text-cream-50 text-balance sm:text-5xl lg:text-[3.85rem]">
-                  A homecoming through{" "}
-                  <span className="italic text-accent-gold">
-                    the Philippines.
-                  </span>
-                </h1>
-                <p className="mt-6 max-w-xl text-base leading-relaxed text-cream-100/85 sm:text-lg">
-                  Heritage Philippines creates cinematic, carefully hosted
-                  journeys through ancestral places, living culture, island
-                  landscapes, and the family memories that make a return
-                  meaningful.
-                </p>
-                <div className="mt-9 flex flex-wrap gap-4">
-                  <Link to="/contact" className="btn-primary">
-                    Plan Your Homecoming
-                  </Link>
-                  <Link to="/tour" className="btn-ghost-light">
-                    Explore Tours
-                  </Link>
-                </div>
+            <div className="max-w-3xl">
+              <h1 className="font-serif text-[2.15rem] leading-[1.05] text-cream-50 text-balance sm:text-[2.8rem] lg:text-[3.35rem] xl:text-[3.55rem]">
+                A homecoming through{" "}
+                <span className="italic text-accent-gold">
+                  the Philippines.
+                </span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-cream-100/85 sm:text-lg">
+                Heritage Philippines creates cinematic, carefully hosted
+                journeys through ancestral places, living culture, island
+                landscapes, and the family memories that make a return
+                meaningful.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-4">
+                <Link to="/contact" className="btn-primary">
+                  Plan Your Homecoming
+                </Link>
+                <Link to="/tour" className="btn-ghost-light">
+                  Explore Tours
+                </Link>
               </div>
-
-              {/* Right-side cinematic stage card */}
-              <aside className="hidden lg:block">
-                <div className="relative overflow-hidden rounded-[26px] border border-gold-400/30 bg-coffee-950/65 shadow-nav backdrop-blur-xl">
-                  <div className="relative h-44 w-full overflow-hidden">
-                    <img
-                      src="/images/marlboro-country-batanes-lanscapes.jpg"
-                      alt=""
-                      loading="lazy"
-                      className="h-full w-full object-cover"
-                    />
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-coffee-950 via-coffee-950/40 to-transparent"
-                    />
-                    <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-gold-200 ring-1 ring-gold-400/35 backdrop-blur">
-                      ★ Featured route
-                    </span>
-                    <span className="absolute right-4 top-4 inline-flex items-center rounded-full bg-gold-400/85 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-coffee-950">
-                      4D3N
-                    </span>
-                  </div>
-                  <div className="relative p-6">
-                    <div
-                      aria-hidden="true"
-                      className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gold-400/15 blur-2xl"
-                    />
-                    <p className="relative text-[10px] font-semibold uppercase tracking-[0.22em] text-gold-300/85">
-                      Cagayan Valley · Batanes
-                    </p>
-                    <h3 className="relative mt-1.5 font-serif text-[1.5rem] leading-tight text-cream-50">
-                      Batanes Kinship Route
-                    </h3>
-                    <p className="relative mt-2.5 text-[13px] leading-relaxed text-cream-100/80">
-                      Stone homes, coastal quiet, and Ivatan landscapes
-                      built for reflection.
-                    </p>
-                    <span aria-hidden="true" className="gold-rule relative mt-5" />
-                    <div className="relative mt-4 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-cream-100/65">
-                      <span>Slow island pace</span>
-                      <Link
-                        to="/tour"
-                        className="inline-flex items-center gap-1 font-semibold text-gold-300 transition hover:gap-2 hover:text-gold-200"
-                      >
-                        View route <span aria-hidden="true">→</span>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </div>
-
-          {/* Scroll cue */}
-          <div className="container-page pb-8">
-            <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-cream-100/60">
-              <span aria-hidden="true" className="h-px w-8 bg-cream-100/40" />
-              Scroll · Begin the story
             </div>
           </div>
         </div>
@@ -191,7 +130,6 @@ export default function HomePage() {
               aria-hidden="true"
               className="mx-auto block h-px w-16 bg-gradient-to-r from-transparent via-gold-500/70 to-transparent"
             />
-            <p className="eyebrow mt-6">The Heritage Path</p>
             <h2 className="mt-4 font-serif text-3xl text-coffee-900 text-balance sm:text-[2.25rem] lg:text-[2.6rem] lg:leading-[1.12]">
               Every journey begins with a{" "}
               <span className="italic text-gold-600">story.</span>
@@ -218,7 +156,6 @@ export default function HomePage() {
         />
         <div className="container-page relative">
           <div className="mx-auto max-w-xl text-center">
-            <p className="eyebrow">Three Acts</p>
             <h2 className="mt-3 font-serif text-2xl text-coffee-900 text-balance sm:text-3xl lg:text-[2.1rem]">
               The shape of a Heritage journey.
             </h2>
@@ -274,7 +211,6 @@ export default function HomePage() {
         <div className="container-page relative">
           <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
             <div>
-              <p className="eyebrow">Signature Heritage Routes</p>
               <h2 className="mt-3 font-serif text-3xl text-coffee-900 text-balance sm:text-4xl lg:text-[2.4rem]">
                 Three curated returns across the archipelago.
               </h2>
@@ -370,7 +306,6 @@ export default function HomePage() {
           </div>
 
           <div>
-            <p className="eyebrow">Custom Heritage Plan</p>
             <h2 className="mt-3 font-serif text-3xl text-coffee-900 text-balance sm:text-4xl lg:text-[2.4rem] lg:leading-[1.12]">
               Not every journey starts with a package.{" "}
               <span className="italic text-gold-600">
@@ -424,7 +359,6 @@ export default function HomePage() {
         />
         <div className="container-page relative grid gap-12 py-20 md:py-24 lg:grid-cols-[1.4fr_1fr] lg:items-center">
           <div>
-            <p className="eyebrow-light">Concierge Travel Care</p>
             <h2 className="mt-3 font-serif text-3xl text-balance sm:text-4xl lg:text-[2.4rem]">
               Your route, logistics, and support in{" "}
               <span className="italic text-accent-gold">one calm plan.</span>
