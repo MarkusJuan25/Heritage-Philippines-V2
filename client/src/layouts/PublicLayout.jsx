@@ -143,100 +143,137 @@ export default function PublicLayout() {
           className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/55 to-transparent"
         />
         <div className="relative">
-          <div className="container-page grid gap-12 py-16 md:grid-cols-12">
-            <div className="md:col-span-5">
+          <div className="container-page grid gap-10 py-16 md:grid-cols-12 lg:gap-12">
+            {/* BRAND + ACCREDITATION */}
+            <div className="md:col-span-12 lg:col-span-4">
               <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
+                <span className="grid h-12 w-12 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
                   <img
                     src="/images/heritage-logo.png"
-                    alt=""
-                    className="h-7 w-7 object-contain"
+                    alt="Heritage Philippines"
+                    className="h-8 w-8 object-contain"
                   />
                 </span>
-                <div>
-                  <span className="block font-serif text-xl leading-tight text-cream-50">
-                    Heritage Philippines
-                  </span>
-                  <span className="mt-0.5 block text-[10px] uppercase tracking-[0.24em] text-gold-300/80">
-                    Curated since 2013
-                  </span>
-                </div>
+                <span className="block font-serif text-xl leading-tight text-cream-50">
+                  Heritage Philippines
+                </span>
               </div>
-              <p className="mt-5 max-w-md text-sm leading-relaxed text-cream-200/85">
-                Slow, story-led journeys across the Philippine archipelago —
-                designed for travelers who come for the heritage and stay
-                for the soul.
-              </p>
+
+              <h3 className="mt-8 font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+                Accreditation &amp; Affiliations
+              </h3>
               <span
                 aria-hidden="true"
-                className="mt-6 block h-px w-16 bg-gradient-to-r from-gold-400/70 to-transparent"
+                className="mt-3 block h-px w-10 bg-gold-400/60"
               />
-              <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[11px] uppercase tracking-widest text-cream-200/65">
-                <span>By appointment</span>
-                <span aria-hidden="true" className="text-gold-300/50">·</span>
-                <span>Manila, Philippines</span>
-                <span aria-hidden="true" className="text-gold-300/50">·</span>
-                <span>hello@heritage.ph</span>
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                {[
+                  {
+                    src: "/footer/dot-logo-1.png",
+                    alt: "Department of Tourism Philippines",
+                  },
+                  { src: "/footer/aita-logo2025.png", alt: "AITA" },
+                  {
+                    src: "/footer/ptaa-logo-transparent-clean.png",
+                    alt: "PTAA",
+                  },
+                ].map((logo) => (
+                  <img
+                    key={logo.src}
+                    src={logo.src}
+                    alt={logo.alt}
+                    loading="lazy"
+                    className="h-10 w-auto object-contain opacity-90"
+                  />
+                ))}
               </div>
             </div>
-            <div className="md:col-span-3">
-              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-gold-300">Explore</h3>
+
+            {/* QUICK LINKS */}
+            <div className="md:col-span-4 lg:col-span-2">
+              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+                Quick Links
+              </h3>
               <span
                 aria-hidden="true"
                 className="mt-3 block h-px w-10 bg-gold-400/60"
               />
               <ul className="mt-4 space-y-2.5 text-sm">
-                <li>
-                  <Link to="/packages" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
-                    Packages
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/tour" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
-                    Tour
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/gallery" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
-                    Gallery
-                  </Link>
-                </li>
+                {[
+                  { to: "/tour", label: "Tour" },
+                  { to: "/packages", label: "Packages" },
+                  { to: "/gallery", label: "Gallery" },
+                  { to: "/stories", label: "Stories" },
+                  { to: "/about", label: "About" },
+                  { to: "/contact", label: "Contact Us" },
+                ].map((l) => (
+                  <li key={l.to}>
+                    <Link
+                      to={l.to}
+                      className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div className="md:col-span-4">
-              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.16em] text-gold-300">Discover</h3>
+
+            {/* SERVICES */}
+            <div className="md:col-span-4 lg:col-span-3">
+              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+                Services
+              </h3>
               <span
                 aria-hidden="true"
                 className="mt-3 block h-px w-10 bg-gold-400/60"
               />
-              <ul className="mt-4 space-y-2.5 text-sm">
-                <li>
-                  <Link to="/stories" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
-                    Stories
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/about" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="inline-block text-cream-200/80 transition-all duration-200 hover:translate-x-0.5 hover:text-gold-300">
-                    Contact Us
-                  </Link>
-                </li>
+              <ul className="mt-4 space-y-2.5 text-sm text-cream-200/80">
+                <li>Curated Heritage Tours</li>
+                <li>Hotels &amp; Transfers</li>
+                <li>Visa and Insurance Assistance</li>
+                <li>Custom Family Routes</li>
+                <li>Regional Tour Planning</li>
               </ul>
+            </div>
+
+            {/* OFFICE ADDRESS */}
+            <div className="md:col-span-4 lg:col-span-3">
+              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+                Office Address
+              </h3>
+              <span
+                aria-hidden="true"
+                className="mt-3 block h-px w-10 bg-gold-400/60"
+              />
+              <address className="mt-4 text-sm not-italic leading-relaxed text-cream-200/80">
+                Unit 603, 6th Floor, West Insula Condominium
+                <br />
+                135 West Avenue, Quezon City 1105
+                <br />
+                Metro Manila, Philippines
+              </address>
+              <Link
+                to="/contact"
+                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-300 transition-all duration-200 hover:gap-2.5 hover:text-gold-200"
+              >
+                Contact our team <span aria-hidden="true">→</span>
+              </Link>
             </div>
           </div>
-          <div className="border-t border-cream-50/10">
-            <div className="container-page flex flex-col gap-2 py-5 text-xs text-cream-200/60 sm:flex-row sm:items-center sm:justify-between">
+
+          {/* BOTTOM BAR */}
+          <div className="border-t border-gold-400/15">
+            <div className="container-page flex flex-col gap-3 py-5 text-xs text-cream-200/60 sm:flex-row sm:items-center sm:justify-between">
               <span>
                 &copy; {new Date().getFullYear()} Heritage Philippines. All
                 rights reserved.
               </span>
-              <span className="tracking-wide">
-                Crafted with care in the Philippines.
-              </span>
+              <div className="flex items-center gap-3 text-cream-200/45">
+                <span>Privacy Policy</span>
+                <span aria-hidden="true" className="text-gold-300/30">|</span>
+                <span>Terms &amp; Conditions</span>
+              </div>
             </div>
           </div>
         </div>
