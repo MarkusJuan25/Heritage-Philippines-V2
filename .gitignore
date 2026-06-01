@@ -36,4 +36,4 @@ server/node_modules/.vite/
 .DS_Store
 Thumbs.db
 .vscode/
-.idea/
+.idea/.claude/settings.local.json
