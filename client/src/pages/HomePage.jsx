@@ -61,6 +61,33 @@ const planningHighlights = [
   "Regional and provincial tour planning",
 ];
 
+const popularTours = [
+  {
+    region: "Central Visayas",
+    title: "Bohol Chocolate Hills Trail",
+    meta: "Island heritage · Multi-day",
+    image: "/images/chocolate-hills.jpg",
+  },
+  {
+    region: "Cordillera",
+    title: "Banaue Rice Terraces Ascent",
+    meta: "Highland culture · Multi-day",
+    image: "/images/banaue-rice-terreces.jpg",
+  },
+  {
+    region: "Palawan",
+    title: "El Nido Coastal Homecoming",
+    meta: "Coastal escape · Multi-day",
+    image: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
+  },
+  {
+    region: "Bicol Region",
+    title: "Mayon Heritage Escape",
+    meta: "Volcano country · Multi-day",
+    image: "/images/mt-mayon.jpg",
+  },
+];
+
 export default function HomePage() {
   const [videoIndex, setVideoIndex] = useState(0);
   const currentVideo = heroVideos[videoIndex];
@@ -312,6 +339,66 @@ export default function HomePage() {
                 Browse Tours
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* POPULAR HERITAGE TOURS */}
+      <section className="relative overflow-hidden bg-cream-50 py-20 md:py-24">
+        <div aria-hidden="true" className="absolute inset-0 bg-heritage" />
+        <div className="container-page relative">
+          <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
+            <div>
+              <h2 className="mt-3 font-serif text-3xl text-coffee-900 text-balance sm:text-4xl lg:text-[2.4rem]">
+                Popular heritage tours, ready when you are.
+              </h2>
+            </div>
+            <p className="text-[15px] leading-relaxed text-coffee-800/80 md:max-w-md md:justify-self-end">
+              Favourite departures shaped around landscapes, living culture,
+              and food — easy to join, and simple to make your own.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {popularTours.map((tour) => (
+              <Link
+                key={tour.title}
+                to="/tour"
+                className="group relative flex h-72 flex-col justify-end overflow-hidden rounded-2xl border border-cream-200/70 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium sm:h-80"
+              >
+                <img
+                  src={tour.image}
+                  alt={tour.title}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-gradient-to-t from-coffee-950/85 via-coffee-950/25 to-transparent"
+                />
+                <div className="relative p-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gold-300">
+                    {tour.region}
+                  </p>
+                  <h3 className="mt-1.5 font-serif text-lg leading-snug text-cream-50">
+                    {tour.title}
+                  </h3>
+                  <p className="mt-2 flex items-center gap-2 text-[12px] text-cream-100/85">
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-1 w-1 rounded-full bg-gold-300"
+                    />
+                    {tour.meta}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-10 flex justify-center">
+            <Link to="/tour" className="btn-outline-dark">
+              View All Tours
+            </Link>
           </div>
         </div>
       </section>
