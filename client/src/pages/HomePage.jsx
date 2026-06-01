@@ -71,7 +71,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* CINEMATIC HERO — V1 inspired, 3-video sequence */}
+      {/* CINEMATIC HERO */}
       <section className="cinematic-hero min-h-[100svh]">
         <div className="cinematic-hero__media">
           <video
@@ -92,58 +92,31 @@ export default function HomePage() {
 
         <div className="relative z-10 flex min-h-[100svh] flex-col">
           <div className="container-page flex flex-1 items-end pb-16 pt-36 sm:pb-20 sm:pt-40 lg:pt-44">
-            <div className="max-w-3xl">
-              <h1 className="font-serif text-[2.15rem] leading-[1.05] text-cream-50 text-balance sm:text-[2.8rem] lg:text-[3.35rem] xl:text-[3.55rem]">
-                A homecoming through{" "}
-                <span className="italic text-accent-gold">
-                  the Philippines.
-                </span>
-              </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-cream-100/85 sm:text-lg">
-                Heritage Philippines creates cinematic, carefully hosted
-                journeys through ancestral places, living culture, island
-                landscapes, and the family memories that make a return
-                meaningful.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-4">
-                <Link to="/contact" className="btn-primary">
-                  Plan Your Homecoming
-                </Link>
-                <Link to="/tour" className="btn-ghost-light">
-                  Explore Tours
-                </Link>
+            <div className="grid w-full items-end gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.7fr)]">
+              <div className="max-w-2xl">
+                <p className="eyebrow-light">Heritage Philippines</p>
+                <h1 className="mt-5 font-serif text-[2.4rem] leading-[1.05] text-cream-50 text-balance sm:text-5xl lg:text-[3.85rem]">
+                  A homecoming through{" "}
+                  <span className="italic text-accent-gold">
+                    the Philippines.
+                  </span>
+                </h1>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-cream-100/85 sm:text-lg">
+                  Heritage Philippines creates cinematic, carefully hosted
+                  journeys through ancestral places, living culture, island
+                  landscapes, and the family memories that make a return
+                  meaningful.
+                </p>
+                <div className="mt-9 flex flex-wrap gap-4">
+                  <Link to="/contact" className="btn-primary">
+                    Plan Your Homecoming
+                  </Link>
+                  <Link to="/tour" className="btn-ghost-light">
+                    Explore Tours
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* THE HERITAGE PATH — brand-story intro */}
-      <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
-        <div className="container-page relative">
-          <div className="mx-auto max-w-3xl text-center">
-            <span
-              aria-hidden="true"
-              className="mx-auto block h-px w-16 bg-gradient-to-r from-transparent via-gold-500/70 to-transparent"
-            />
-            <h2 className="mt-4 font-serif text-3xl text-coffee-900 text-balance sm:text-[2.25rem] lg:text-[2.6rem] lg:leading-[1.12]">
-              Every journey begins with a{" "}
-              <span className="italic text-gold-600">story.</span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-coffee-800/85 sm:text-base">
-              For us, travel through the Philippines is not a checklist of
-              destinations. It is a return — to roots that quiet you, to
-              culture that holds you, to the living landscapes and family
-              memories that make a homecoming feel inevitable.
-            </p>
-            <span
-              aria-hidden="true"
-              className="mx-auto mt-8 block h-px w-16 bg-gradient-to-r from-transparent via-gold-500/70 to-transparent"
-            />
           </div>
         </div>
       </section>
@@ -277,7 +250,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CUSTOM PLAN — story-led, integrated */}
+      {/* CUSTOM PLAN */}
       <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
         <div
           aria-hidden="true"
@@ -359,6 +332,7 @@ export default function HomePage() {
         />
         <div className="container-page relative grid gap-12 py-20 md:py-24 lg:grid-cols-[1.4fr_1fr] lg:items-center">
           <div>
+            <p className="eyebrow-light">Concierge Travel Care</p>
             <h2 className="mt-3 font-serif text-3xl text-balance sm:text-4xl lg:text-[2.4rem]">
               Your route, logistics, and support in{" "}
               <span className="italic text-accent-gold">one calm plan.</span>
