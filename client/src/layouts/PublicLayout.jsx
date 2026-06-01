@@ -30,6 +30,16 @@ function FloatingNav() {
   const { pathname } = useLocation();
   const close = () => setOpen(false);
 
+  const handleLogoHomeClick = (event) => {
+    // Always close the mobile menu when the logo is tapped.
+    close();
+    // If we're already on home, scroll to top instead of re-navigating.
+    if (pathname === "/") {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -54,7 +64,7 @@ function FloatingNav() {
       >
         <Link
           to="/"
-          onClick={close}
+          onClick={handleLogoHomeClick}
           aria-label="Heritage Philippines — home"
           className="group flex shrink-0 items-center gap-2.5"
         >
