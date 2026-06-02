@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import HeritageSection from "../components/HeritageSection";
 
 const principles = [
   {
@@ -50,11 +51,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-80"
-        />
+      <HeritageSection variant="primary" className="py-16">
         <div className="container-page relative grid gap-12 lg:grid-cols-[1fr_1.4fr]">
         <div>
           <span className="eyebrow">The studio</span>
@@ -88,9 +85,9 @@ export default function AboutPage() {
           ))}
         </div>
         </div>
-      </section>
+      </HeritageSection>
 
-      <section className="relative overflow-hidden bg-coffee-950 text-cream-50">
+      <section className="relative isolate flex-1 overflow-hidden bg-coffee-950 text-cream-50">
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(58,117,103,0.35),transparent_55%),radial-gradient(circle_at_85%_72%,rgba(216,177,109,0.2),transparent_55%)]"

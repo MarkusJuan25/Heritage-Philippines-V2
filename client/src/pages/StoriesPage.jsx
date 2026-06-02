@@ -1,3 +1,5 @@
+import HeritageSection from "../components/HeritageSection";
+
 const stories = [
   {
     kicker: "Field Notes",
@@ -54,11 +56,7 @@ export default function StoriesPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-80"
-        />
+      <HeritageSection variant="primary" className="py-16">
         <div className="container-page relative">
         <div className="grid gap-8 lg:grid-cols-3">
           {stories.map((s) => (
@@ -99,13 +97,9 @@ export default function StoriesPage() {
           ))}
         </div>
         </div>
-      </section>
+      </HeritageSection>
 
-      <section className="relative overflow-hidden bg-warm-cream">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-70"
-        />
+      <HeritageSection variant="secondary" grow>
         <div className="container-page relative py-16 text-center">
           <span className="eyebrow">Field journal</span>
           <h2 className="section-heading mt-3 text-3xl">
@@ -116,7 +110,7 @@ export default function StoriesPage() {
             writing is ready, never on a schedule.
           </p>
         </div>
-      </section>
+      </HeritageSection>
     </>
   );
 }

@@ -1,3 +1,5 @@
+import HeritageSection from "../components/HeritageSection";
+
 const dayPlan = [
   {
     time: "Dawn",
@@ -55,11 +57,7 @@ export default function TourPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
+      <HeritageSection variant="primary" className="py-16 md:py-20">
         <div className="container-page relative">
           <div className="grid gap-6 md:grid-cols-3">
             {dayPlan.map((d) => (
@@ -79,7 +77,7 @@ export default function TourPage() {
             ))}
           </div>
         </div>
-      </section>
+      </HeritageSection>
 
       <section className="relative overflow-hidden bg-forest-900 text-cream-50">
         <div
@@ -106,11 +104,7 @@ export default function TourPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
+      <HeritageSection variant="secondary" grow className="py-16 md:py-20">
         <div className="container-page relative">
         <figure className="mx-auto max-w-3xl text-center">
           <span
@@ -126,7 +120,7 @@ export default function TourPage() {
           </figcaption>
         </figure>
         </div>
-      </section>
+      </HeritageSection>
     </>
   );
 }

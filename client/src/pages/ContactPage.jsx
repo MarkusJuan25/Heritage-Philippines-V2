@@ -1,3 +1,5 @@
+import HeritageSection from "../components/HeritageSection";
+
 export default function ContactPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,11 +33,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage opacity-80"
-        />
+      <HeritageSection variant="primary" grow className="py-16">
         <div className="container-page relative grid gap-10 lg:grid-cols-[1.5fr_1fr]">
         <form
           onSubmit={handleSubmit}
@@ -242,7 +240,7 @@ export default function ContactPage() {
           </div>
         </aside>
         </div>
-      </section>
+      </HeritageSection>
     </>
   );
 }

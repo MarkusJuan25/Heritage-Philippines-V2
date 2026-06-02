@@ -1,34 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import HeritageSection from "../components/HeritageSection";
 
 const heroVideos = [
   "/videos/Create_a_premium_cinematic_mar.mp4",
   "/videos/heritage_philippines_v_mp_.mp4",
   "/videos/heritage-hero.mp4",
-];
-
-const journeyActs = [
-  {
-    numeral: "I",
-    label: "Roots",
-    title: "Where you remember.",
-    body: "Old neighborhoods, ancestral homes, and the quiet corners that hold a family name. Heritage begins where the story first belonged to you.",
-    image: "/images/townscape-in-night-at-manila.jpg",
-  },
-  {
-    numeral: "II",
-    label: "Journey",
-    title: "Where you arrive slowly.",
-    body: "Through preserved towns, living traditions, and landscapes shaped by generations — moving at a pace that lets the country speak back.",
-    image: "/images/a-glimpse-of-vigan-city.jpg",
-  },
-  {
-    numeral: "III",
-    label: "Homecoming",
-    title: "Where the story returns.",
-    body: "Long suppers, coastal evenings, and quiet reunions with culture, family, and place. The route ends where every Heritage trip is meant to land.",
-    image: "/images/marlboro-country-batanes-lanscapes.jpg",
-  },
 ];
 
 const signatureRoutes = [
@@ -65,26 +42,20 @@ const popularTours = [
   {
     region: "Central Visayas",
     title: "Bohol Chocolate Hills Trail",
-    meta: "Island heritage · Multi-day",
+    text: "Rolling hills, river heritage, and island towns paced for slow, comfortable discovery.",
     image: "/images/chocolate-hills.jpg",
   },
   {
     region: "Cordillera",
     title: "Banaue Rice Terraces Ascent",
-    meta: "Highland culture · Multi-day",
+    text: "Highland villages, ancient terraces, and living traditions carved into the northern mountains.",
     image: "/images/banaue-rice-terreces.jpg",
   },
   {
     region: "Palawan",
     title: "El Nido Coastal Homecoming",
-    meta: "Coastal escape · Multi-day",
+    text: "Crimson sunsets, hidden lagoons, and quiet coastal evenings to end the journey home.",
     image: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
-  },
-  {
-    region: "Bicol Region",
-    title: "Mayon Heritage Escape",
-    meta: "Volcano country · Multi-day",
-    image: "/images/mt-mayon.jpg",
   },
 ];
 
@@ -148,71 +119,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* THREE JOURNEY ACTS */}
-      <section className="relative overflow-hidden bg-warm-cream pb-20 pt-4 md:pb-24">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
-        <div className="container-page relative">
-          <div className="mx-auto max-w-xl text-center">
-            <h2 className="mt-3 font-serif text-2xl text-coffee-900 text-balance sm:text-3xl lg:text-[2.1rem]">
-              The shape of a Heritage journey.
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-7 md:grid-cols-3">
-            {journeyActs.map((act) => (
-              <article
-                key={act.numeral}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm"
-              >
-                <div className="relative h-40 w-full overflow-hidden">
-                  <img
-                    src={act.image}
-                    alt=""
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/35 to-transparent"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col p-7">
-                  <div className="flex items-baseline gap-4">
-                    <span className="font-serif text-[2.4rem] leading-none text-gold-500">
-                      {act.numeral}
-                    </span>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-coffee-700/75">
-                      Act {act.numeral} · {act.label}
-                    </span>
-                  </div>
-                  <span aria-hidden="true" className="gold-rule mt-5 max-w-[2.5rem]" />
-                  <h3 className="mt-4 font-serif text-[1.4rem] leading-tight text-coffee-900">
-                    {act.title}
-                  </h3>
-                  <p className="mt-3 text-[14.5px] leading-[1.7] text-coffee-800/85">
-                    {act.body}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SIGNATURE HERITAGE ROUTES */}
-      <section className="relative overflow-hidden bg-cream-50 py-20 md:py-24">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
+      {/* HERITAGE DESTINATION TOUR */}
+      <HeritageSection variant="primary" className="py-20 md:py-24">
         <div className="container-page relative">
           <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
             <div>
               <h2 className="mt-3 font-serif text-3xl text-coffee-900 text-balance sm:text-4xl lg:text-[2.4rem]">
-                Three curated returns across the archipelago.
+                Heritage Destination Tour
               </h2>
             </div>
             <p className="text-[15px] leading-relaxed text-coffee-800/80 md:max-w-md md:justify-self-end">
@@ -263,26 +176,11 @@ export default function HomePage() {
               </article>
             ))}
           </div>
-
-          <div className="mt-10 flex justify-center">
-            <Link
-              to="/tour"
-              className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-coffee-700 transition hover:text-coffee-900"
-            >
-              <span aria-hidden="true" className="h-px w-8 bg-gold-500/60" />
-              See all routes
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
         </div>
-      </section>
+      </HeritageSection>
 
       {/* CUSTOM PLAN */}
-      <section className="relative overflow-hidden bg-warm-cream py-20 md:py-24">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
+      <HeritageSection variant="secondary" className="py-20 md:py-24">
         <div className="container-page relative grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative">
             <div className="relative overflow-hidden rounded-3xl border border-cream-200 shadow-premium">
@@ -341,11 +239,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </HeritageSection>
 
       {/* POPULAR HERITAGE TOURS */}
-      <section className="relative overflow-hidden bg-cream-50 py-20 md:py-24">
-        <div aria-hidden="true" className="absolute inset-0 bg-heritage" />
+      <HeritageSection variant="primary" className="py-20 md:py-24">
         <div className="container-page relative">
           <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
             <div>
@@ -359,39 +256,46 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-7 md:grid-cols-3">
             {popularTours.map((tour) => (
-              <Link
+              <article
                 key={tour.title}
-                to="/tour"
-                className="group relative flex h-72 flex-col justify-end overflow-hidden rounded-2xl border border-cream-200/70 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium sm:h-80"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
               >
-                <img
-                  src={tour.image}
-                  alt={tour.title}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-coffee-950/85 via-coffee-950/25 to-transparent"
-                />
-                <div className="relative p-5">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-gold-300">
-                    {tour.region}
-                  </p>
-                  <h3 className="mt-1.5 font-serif text-lg leading-snug text-cream-50">
-                    {tour.title}
-                  </h3>
-                  <p className="mt-2 flex items-center gap-2 text-[12px] text-cream-100/85">
+                <div className="relative h-56 w-full overflow-hidden">
+                  <img
+                    src={tour.image}
+                    alt={tour.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/45 to-transparent"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-gold-600">
                     <span
                       aria-hidden="true"
-                      className="inline-block h-1 w-1 rounded-full bg-gold-300"
+                      className="inline-block h-1.5 w-1.5 rounded-full bg-gold-500"
                     />
-                    {tour.meta}
+                    {tour.region}
                   </p>
+                  <h3 className="mt-2 font-serif text-xl text-coffee-900">
+                    {tour.title}
+                  </h3>
+                  <p className="mt-3 flex-1 text-[14.5px] leading-[1.7] text-coffee-800/80">
+                    {tour.text}
+                  </p>
+                  <Link
+                    to="/tour"
+                    className="mt-6 inline-flex w-fit items-center gap-1 text-sm font-semibold text-forest-700 transition group-hover:gap-2 hover:text-forest-800"
+                  >
+                    View Tour <span aria-hidden="true">→</span>
+                  </Link>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
 
@@ -401,66 +305,63 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </HeritageSection>
 
-      {/* CONCIERGE TRAVEL-CARE BAND */}
-      <section className="relative overflow-hidden bg-coffee-950 text-cream-50">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(58,117,103,0.38),transparent_55%),radial-gradient(circle_at_85%_80%,rgba(216,177,109,0.22),transparent_55%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/55 to-transparent"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gold-400/30 to-transparent"
-        />
-        <div className="container-page relative grid gap-12 py-20 md:py-24 lg:grid-cols-[1.4fr_1fr] lg:items-center">
-          <div>
-            <p className="eyebrow-light">Concierge Travel Care</p>
-            <h2 className="mt-3 font-serif text-3xl text-balance sm:text-4xl lg:text-[2.4rem]">
-              Your route, logistics, and support in{" "}
-              <span className="italic text-accent-gold">one calm plan.</span>
-            </h2>
-            <p className="mt-5 max-w-2xl text-cream-100/85">
-              From hotels and transfers to documents, insurance, and route
-              coordination, our team helps shape the practical details
-              around the story.
-            </p>
-          </div>
+      {/* CONCIERGE TRAVEL-CARE CTA */}
+      <HeritageSection variant="secondary" grow className="py-20 md:py-24">
+        <div className="container-page relative">
+          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-gold-400/20 bg-coffee-950 px-7 py-14 text-center text-cream-50 shadow-premium sm:px-12 md:py-16">
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(58,117,103,0.38),transparent_55%),radial-gradient(circle_at_85%_80%,rgba(216,177,109,0.22),transparent_55%)]"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/55 to-transparent"
+            />
+            <div className="relative mx-auto max-w-2xl">
+              <p className="eyebrow-light">Concierge Travel Care</p>
+              <h2 className="mt-3 font-serif text-3xl text-balance sm:text-4xl lg:text-[2.4rem]">
+                Your route, logistics, and support in{" "}
+                <span className="italic text-accent-gold">one calm plan.</span>
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-cream-100/85">
+                From hotels and transfers to documents, insurance, and route
+                coordination, our team helps shape the practical details
+                around the story.
+              </p>
 
-          <div className="space-y-6">
-            <ul className="flex flex-wrap gap-x-2.5 gap-y-2.5">
-              {[
-                "Hotels & transfers",
-                "Visa & insurance assistance",
-                "Custom heritage planning",
-              ].map((item) => (
-                <li
-                  key={item}
-                  className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-gold-400/25 bg-cream-50/[0.06] px-4 py-2 text-[12px] font-semibold text-cream-100/90 backdrop-blur"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="inline-block h-1.5 w-1.5 rounded-full bg-gold-400"
-                  />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-wrap items-center gap-3">
-              <Link to="/contact" className="btn-primary">
-                Plan with Us
-              </Link>
-              <Link to="/gallery" className="btn-ghost-light">
-                View Gallery
-              </Link>
+              <ul className="mt-7 flex flex-wrap justify-center gap-x-2.5 gap-y-2.5">
+                {[
+                  "Hotels & transfers",
+                  "Visa & insurance assistance",
+                  "Custom heritage planning",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-gold-400/25 bg-cream-50/[0.06] px-4 py-2 text-[12px] font-semibold text-cream-100/90 backdrop-blur"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="inline-block h-1.5 w-1.5 rounded-full bg-gold-400"
+                    />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Link to="/contact" className="btn-primary">
+                  Plan with Us
+                </Link>
+                <Link to="/gallery" className="btn-ghost-light">
+                  View Gallery
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </HeritageSection>
     </>
   );
 }

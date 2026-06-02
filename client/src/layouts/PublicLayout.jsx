@@ -139,11 +139,11 @@ export default function PublicLayout() {
     <div className="flex min-h-full flex-col bg-cream-50">
       <FloatingNav />
 
-      <main className="flex-1">
+      <main className="flex flex-1 flex-col">
         <Outlet />
       </main>
 
-      <footer className="relative mt-20 overflow-hidden bg-coffee-950 text-cream-100">
+      <footer className="relative mt-0 overflow-hidden bg-coffee-950 text-cream-100">
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(211,163,86,0.16),transparent_32%),radial-gradient(circle_at_88%_85%,rgba(58,117,103,0.20),transparent_55%),linear-gradient(135deg,#1a100a_0%,#2f1d13_50%,#5a3925_120%)]"

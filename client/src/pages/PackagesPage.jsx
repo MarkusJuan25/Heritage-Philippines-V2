@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import HeritageSection from "../components/HeritageSection";
 
 const regions = [
   "All journeys",
@@ -67,11 +68,7 @@ export default function PackagesPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-warm-cream py-16 md:py-20">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-heritage"
-        />
+      <HeritageSection variant="primary" grow className="py-16 md:py-20">
         <div className="container-page relative">
         <div className="mb-10 flex flex-wrap items-center gap-3">
           <span className="eyebrow mr-2">Browse by region</span>
@@ -152,7 +149,7 @@ export default function PackagesPage() {
           </Link>
         </div>
         </div>
-      </section>
+      </HeritageSection>
     </>
   );
 }
