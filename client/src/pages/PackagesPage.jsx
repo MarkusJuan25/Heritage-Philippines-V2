@@ -102,24 +102,52 @@ const featuredItineraries = [
   },
 ];
 
-const STANDARD_PACKAGE_TYPES = ["Premium", "Honeymoon / Couple", "Family", "Group", "Solo", "Budget"];
+const STANDARD_PACKAGE_TYPES = [
+  "Premium",
+  "Honeymoon / Couple",
+  "Family",
+  "Group",
+  "Solo",
+  "Budget",
+];
 const PACKAGE_TYPE_OPTIONS = [...STANDARD_PACKAGE_TYPES, "Custom Package"];
 const STANDARD_DEST_AREAS = ["Luzon", "Visayas", "Mindanao"];
 const DEST_AREA_OPTIONS = [...STANDARD_DEST_AREAS, "Custom"];
 
+// Fallback province list (V2 has no philippinesPackages.js yet)
+// TODO: Replace with import from data/philippinesPackages when added to V2
 const PROVINCE_FALLBACK = {
   Luzon: [
-    "Bataan", "Batangas", "Benguet (Baguio)", "Cagayan",
-    "Ilocos Norte", "Ilocos Sur", "Laguna", "Mountain Province",
-    "Pampanga", "Quezon", "Rizal",
+    "Bataan",
+    "Batangas",
+    "Benguet (Baguio)",
+    "Cagayan",
+    "Ilocos Norte",
+    "Ilocos Sur",
+    "Laguna",
+    "Mountain Province",
+    "Pampanga",
+    "Quezon",
+    "Rizal",
   ],
   Visayas: [
-    "Bohol", "Cebu", "Iloilo", "Leyte",
-    "Negros Occidental", "Negros Oriental", "Samar", "Siquijor",
+    "Bohol",
+    "Cebu",
+    "Iloilo",
+    "Leyte",
+    "Negros Occidental",
+    "Negros Oriental",
+    "Samar",
+    "Siquijor",
   ],
   Mindanao: [
-    "Bukidnon", "Cagayan de Oro", "Davao del Norte", "Davao del Sur",
-    "Misamis Oriental", "South Cotabato", "Zamboanga del Norte",
+    "Bukidnon",
+    "Cagayan de Oro",
+    "Davao del Norte",
+    "Davao del Sur",
+    "Misamis Oriental",
+    "South Cotabato",
+    "Zamboanga del Norte",
   ],
 };
 
@@ -131,6 +159,21 @@ const defaultQuote = {
   endDate: "",
 };
 
+// V1-style stack position classifier.
+// offset 0 → active, 1 → right, 2 → far-right,
+// (n-1) → left, (n-2) → far-left, rest → hidden.
+function getPackageStackPosition(index, activeIdx) {
+  const total = packageStyles.length;
+  const offset = (index - activeIdx + total) % total;
+
+  if (offset === 0) return "is-active";
+  if (offset === 1) return "is-right";
+  if (offset === 2) return "is-far-right";
+  if (offset === total - 1) return "is-left";
+  if (offset === total - 2) return "is-far-left";
+  return "is-hidden";
+}
+
 export default function PackagesPage() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -139,7 +182,7 @@ export default function PackagesPage() {
   const [isCustomDest, setIsCustomDest] = useState(false);
   const quotePanelRef = useRef(null);
 
-  // Auto-cycle package showcase, pauses while quote panel or card is hovered/focused
+  // Auto-cycle showcase; pauses on hover / quote panel focus
   useEffect(() => {
     if (paused) return;
     const id = setInterval(() => {
@@ -149,10 +192,9 @@ export default function PackagesPage() {
   }, [paused]);
 
   const today = new Date().toISOString().split("T")[0];
-  const active = packageStyles[activeIdx];
 
   const provinceOptions = STANDARD_DEST_AREAS.includes(quote.destinationArea)
-    ? PROVINCE_FALLBACK[quote.destinationArea] ?? []
+    ? (PROVINCE_FALLBACK[quote.destinationArea] ?? [])
     : [];
 
   const hasDestination = isCustomDest
@@ -206,347 +248,360 @@ export default function PackagesPage() {
 
   return (
     <>
-      {/* PAGE HERO */}
-      <section className="page-header">
-        <div className="page-header__media">
+      {/* ================================================================
+          PACKAGES BOOKING HERO — V1 class structure
+          First screen = choose package style + plan quote.
+          JourneyContext: not available in V2 yet → /contact fallback.
+          DatePickerField: not ported → native date inputs (remaining gap).
+      ================================================================ */}
+      <section
+        className="packages-booking-hero"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* Atmospheric background */}
+        <div className="packages-booking-hero__background">
           <img
-            src="/images/banaue-rice-terreces.jpg"
+            src="/images/packages-luxury-feel/yacht-cruise.jpg"
             alt=""
-            className="page-header__image"
-            loading="eager"
           />
-          <div className="page-header__shade" />
+          {/* Gold atmospheric highlight + dark veil */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse 70% 50% at 82% 8%, rgba(190,142,43,0.16), transparent 55%)," +
+                "linear-gradient(135deg, rgba(15,12,8,0.97) 0%, rgba(15,12,8,0.80) 55%, rgba(15,12,8,0.94) 100%)",
+            }}
+          />
         </div>
-        <div className="container-page relative pb-16 pt-36 sm:pt-40 md:pb-20 md:pt-44">
-          <p className="eyebrow-light">Curated Journeys</p>
-          <h1 className="mt-4 text-balance font-serif text-4xl text-cream-50 sm:text-5xl lg:text-6xl">
-            Packages designed at the{" "}
-            <span className="italic text-accent-gold">pace of place.</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-cream-100/85">
-            Hand-built heritage routes across the archipelago. Travel small,
-            travel slowly, and travel with the people who know the land best.
-          </p>
+
+        {/* Booking console: stacked carousel (left) + quote planner (right) */}
+        <div className="packages-booking-hero__inner">
+
+          {/* ── Package style showcase ── */}
+          <div className="packages-booking-hero__showcase">
+            <div
+              className="package-carousel package-carousel--hero"
+              aria-live="polite"
+            >
+              {/* Stacked cards */}
+              <div className="package-carousel__stack">
+                {packageStyles.map((pkg, i) => {
+                  const isActive = i === activeIdx;
+                  const stackClass = getPackageStackPosition(i, activeIdx);
+
+                  return (
+                    <article
+                      key={pkg.title}
+                      className={`package-carousel__card package-carousel__card--hero package-carousel__card--stack ${stackClass}`}
+                      aria-current={isActive ? "true" : undefined}
+                    >
+                      {/* Invisible full-cover button on non-active cards */}
+                      {!isActive && (
+                        <button
+                          className="package-carousel__stack-hit"
+                          type="button"
+                          aria-label={`Choose ${pkg.title}`}
+                          onClick={() => {
+                            setPaused(true);
+                            handleChooseStyle(i);
+                          }}
+                        />
+                      )}
+
+                      {/* Image area — cinematic gradient applied via CSS ::after */}
+                      <div className="package-carousel__media">
+                        <img
+                          src={pkg.image}
+                          alt={pkg.title}
+                          loading={isActive ? "eager" : "lazy"}
+                          decoding="async"
+                        />
+                      </div>
+
+                      {/* Dark content area */}
+                      <div className="package-carousel__content">
+                        <p className="eyebrow-light">{pkg.eyebrow}</p>
+                        <h3>{pkg.title}</h3>
+                        <p>{pkg.text}</p>
+
+                        {/* 2×2 meta tiles */}
+                        <div className="package-carousel__meta">
+                          <span>
+                            <small>Package Style</small>
+                            <strong>{pkg.type}</strong>
+                          </span>
+                          <span>
+                            <small>Duration</small>
+                            <strong>Flexible</strong>
+                          </span>
+                          <span>
+                            <small>Destination</small>
+                            <strong>Customizable</strong>
+                          </span>
+                          <span>
+                            <small>Support</small>
+                            <strong>Guided Planning</strong>
+                          </span>
+                        </div>
+
+                        {/* Quick actions — active card only */}
+                        {isActive && (
+                          <div className="package-carousel__quick-actions">
+                            <button
+                              className="package-carousel__quote-shortcut"
+                              type="button"
+                              onClick={focusQuotePanel}
+                            >
+                              {canQuote ? "Review Quote" : "Request Quote"}
+                            </button>
+                            <button
+                              className="package-add-program-btn package-add-program-btn--card"
+                              type="button"
+                              onClick={focusQuotePanel}
+                            >
+                              <span aria-hidden="true">★</span>
+                              Avail Program
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+            </div>
+          </div>
+
+          {/* ── Quote planner panel ── */}
+          {/*
+            TODO (V2 gaps):
+            - Wire openQuoteModal when JourneyContext is added to V2.
+            - Wire addProgram / isProgramSelected for "Avail Program" when JourneyContext lands.
+            - Port V1 custom DatePickerField calendar once calendar CSS is added.
+            - Replace PROVINCE_FALLBACK with import from data/philippinesPackages when added.
+            - Full V1 Journey drawer/autohide system should be restored later when
+              JourneyContext and package data are ported to V2.
+          */}
+          <div
+            ref={quotePanelRef}
+            className="package-card-quote-panel package-card-quote-panel--hero package-card-quote-panel--premium"
+            onFocusCapture={() => setPaused(true)}
+            onBlurCapture={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget)) {
+                setPaused(false);
+              }
+            }}
+            onPointerEnter={() => setPaused(true)}
+            onPointerLeave={() => setPaused(false)}
+          >
+            <div className="package-quote-panel__header">
+              <span>Plan your quote</span>
+              <p>
+                Choose the basics. Our team shapes the final route and
+                inclusions around your dates.
+              </p>
+            </div>
+
+            {/* Package Style */}
+            <label
+              className={`package-card-quote-field${
+                isCustomPkg ? " package-card-quote-field--custom-mode" : ""
+              }`}
+              htmlFor="package-quote-package-type"
+            >
+              <div className="package-card-quote-field__top">
+                <span>Package Style</span>
+                {isCustomPkg && (
+                  <button
+                    className="package-card-quote-change"
+                    type="button"
+                    onClick={() => {
+                      setIsCustomPkg(false);
+                      updateQuote("packageType", "Premium");
+                    }}
+                  >
+                    Change
+                  </button>
+                )}
+              </div>
+              {isCustomPkg ? (
+                <input
+                  id="package-quote-package-type"
+                  type="text"
+                  value={quote.packageType}
+                  onChange={(e) =>
+                    updateQuote("packageType", e.target.value)
+                  }
+                  placeholder="e.g. food tour, family reunion, barkada adventure…"
+                />
+              ) : (
+                <select
+                  id="package-quote-package-type"
+                  value={quote.packageType}
+                  onChange={(e) => handlePackageTypeChange(e.target.value)}
+                >
+                  {PACKAGE_TYPE_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </label>
+
+            {/* Destination Area */}
+            <label
+              className={`package-card-quote-field${
+                isCustomDest ? " package-card-quote-field--custom-mode" : ""
+              }`}
+              htmlFor="package-quote-destination-area"
+            >
+              <div className="package-card-quote-field__top">
+                <span>Destination Area</span>
+                {isCustomDest && (
+                  <button
+                    className="package-card-quote-change"
+                    type="button"
+                    onClick={() => {
+                      setIsCustomDest(false);
+                      setQuote((q) => ({
+                        ...q,
+                        destinationArea: "Luzon",
+                        province: "",
+                      }));
+                    }}
+                  >
+                    Change
+                  </button>
+                )}
+              </div>
+              {isCustomDest ? (
+                <input
+                  id="package-quote-destination-area"
+                  type="text"
+                  value={quote.destinationArea}
+                  onChange={(e) =>
+                    updateQuote("destinationArea", e.target.value)
+                  }
+                  placeholder="e.g. Batanes + Ilocos, Cebu + Bohol, Bicol food trail…"
+                />
+              ) : (
+                <select
+                  id="package-quote-destination-area"
+                  value={quote.destinationArea}
+                  onChange={(e) => handleDestAreaChange(e.target.value)}
+                >
+                  {DEST_AREA_OPTIONS.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </label>
+
+            {/* Province / Destination — only for Luzon / Visayas / Mindanao */}
+            {STANDARD_DEST_AREAS.includes(quote.destinationArea) && (
+              <label
+                className="package-card-quote-field package-card-quote-field--wide"
+                htmlFor="package-quote-province"
+              >
+                <span>Province / Destination</span>
+                <select
+                  id="package-quote-province"
+                  value={quote.province}
+                  onChange={(e) => updateQuote("province", e.target.value)}
+                >
+                  <option value="">Select province</option>
+                  {provinceOptions.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+
+            {/* Dates — native inputs (V1 custom DatePickerField not yet ported) */}
+            <div className="grid grid-cols-2 gap-3">
+              <label
+                className="package-card-quote-field package-card-quote-field--date"
+                htmlFor="package-quote-startDate"
+              >
+                <span>Start Date</span>
+                <input
+                  id="package-quote-startDate"
+                  type="date"
+                  min={today}
+                  value={quote.startDate}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setQuote((q) => ({
+                      ...q,
+                      startDate: val,
+                      endDate:
+                        q.endDate && q.endDate < val ? "" : q.endDate,
+                    }));
+                  }}
+                />
+              </label>
+              <label
+                className="package-card-quote-field package-card-quote-field--date"
+                htmlFor="package-quote-endDate"
+              >
+                <span>End Date</span>
+                <input
+                  id="package-quote-endDate"
+                  type="date"
+                  min={quote.startDate || today}
+                  value={quote.endDate}
+                  onChange={(e) => updateQuote("endDate", e.target.value)}
+                />
+              </label>
+            </div>
+
+            {/* Quote CTA — links to /contact until JourneyContext + openQuoteModal land in V2 */}
+            <Link
+              to="/contact"
+              aria-disabled={!canQuote}
+              onClick={(e) => {
+                if (!canQuote) e.preventDefault();
+              }}
+              className={`package-quote-btn${
+                canQuote
+                  ? " package-quote-btn--gold"
+                  : " package-quote-btn--disabled"
+              }`}
+            >
+              {canQuote ? "Review Quote" : "Request Quote"}
+            </Link>
+
+            <p className="package-quote-panel__hint">
+              {canQuote
+                ? "Ready — your details will carry to the contact form."
+                : "Choose a destination, province, and travel dates to unlock."}
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* SECTION 1 — Package Showcase + Quote Planner */}
-      <HeritageSection variant="primary" className="py-16 md:py-24">
-        <div className="container-page">
-          <div className="mb-10 text-center">
-            <span className="eyebrow">Choose Your Style</span>
-            <h2 className="mt-3 font-serif text-3xl text-coffee-900 sm:text-4xl">
-              Find the package that fits your journey.
-            </h2>
-          </div>
-
-          <div
-            className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-start"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-          >
-            {/* Package style showcase */}
-            <div>
-              <article className="group overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-premium transition duration-500">
-                <div className="relative h-72 w-full overflow-hidden sm:h-80">
-                  <img
-                    key={active.image}
-                    src={active.image}
-                    alt={active.title}
-                    loading="eager"
-                    className="h-full w-full object-cover transition duration-700"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-coffee-950/75 to-transparent" />
-                  <div className="absolute inset-x-6 bottom-6">
-                    <p className="eyebrow-light text-[10px]">{active.eyebrow}</p>
-                    <h3 className="mt-1 font-serif text-xl text-cream-50">
-                      {active.title}
-                    </h3>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <p className="text-sm leading-relaxed text-coffee-800/85">
-                    {active.text}
-                  </p>
-                  <div className="mt-5 flex flex-wrap gap-2 border-t border-cream-200 pt-5">
-                    {["Duration: Flexible", "Destination: Customizable", "Support: Guided Planning"].map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center rounded-full border border-cream-200 px-3 py-1 text-xs text-coffee-700"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={focusQuotePanel}
-                    className="btn-outline-dark mt-6 text-sm"
-                  >
-                    Plan This Package →
-                  </button>
-                </div>
-              </article>
-
-              {/* Prev / dot indicators / next */}
-              <div className="mt-5 flex items-center justify-center gap-4">
-                <button
-                  type="button"
-                  aria-label="Previous package style"
-                  onClick={() => {
-                    setPaused(true);
-                    setActiveIdx((i) => (i - 1 + packageStyles.length) % packageStyles.length);
-                  }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-cream-200 bg-white text-coffee-700 shadow-soft transition hover:border-gold-400 hover:text-gold-500"
-                >
-                  ‹
-                </button>
-                <div className="flex gap-2">
-                  {packageStyles.map((pkg, i) => (
-                    <button
-                      key={pkg.title}
-                      type="button"
-                      aria-label={`View ${pkg.title}`}
-                      onClick={() => handleChooseStyle(i)}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        i === activeIdx
-                          ? "w-6 bg-gold-500"
-                          : "w-2 bg-cream-200 hover:bg-gold-400"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  aria-label="Next package style"
-                  onClick={() => {
-                    setPaused(true);
-                    setActiveIdx((i) => (i + 1) % packageStyles.length);
-                  }}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-cream-200 bg-white text-coffee-700 shadow-soft transition hover:border-gold-400 hover:text-gold-500"
-                >
-                  ›
-                </button>
-              </div>
-
-              {/* Thumbnail strip */}
-              <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-                {packageStyles.map((pkg, i) => (
-                  <button
-                    key={pkg.title}
-                    type="button"
-                    onClick={() => handleChooseStyle(i)}
-                    className={`flex-shrink-0 overflow-hidden rounded-lg border-2 transition ${
-                      i === activeIdx
-                        ? "border-gold-400 opacity-100"
-                        : "border-transparent opacity-55 hover:opacity-85"
-                    }`}
-                  >
-                    <img
-                      src={pkg.image}
-                      alt={pkg.title}
-                      loading="lazy"
-                      className="h-12 w-16 object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Quote planner panel */}
-            <div
-              ref={quotePanelRef}
-              className="rounded-2xl border border-cream-200/80 bg-white/90 p-6 shadow-premium backdrop-blur-sm lg:self-start"
-              onFocus={() => setPaused(true)}
-            >
-              <p className="eyebrow mb-1">Plan Your Quote</p>
-              <p className="mb-5 text-xs leading-relaxed text-coffee-700/80">
-                Choose the basics. Our team will shape the final route and inclusions.
-              </p>
-
-              {/* Package Style */}
-              <div className="mb-4">
-                <div className="mb-1 flex items-center justify-between">
-                  <label htmlFor="pkg-type" className="field-label">
-                    Package Style
-                  </label>
-                  {isCustomPkg && (
-                    <button
-                      type="button"
-                      className="text-[11px] font-semibold text-forest-700 hover:underline"
-                      onClick={() => {
-                        setIsCustomPkg(false);
-                        updateQuote("packageType", "Premium");
-                      }}
-                    >
-                      Change
-                    </button>
-                  )}
-                </div>
-                {isCustomPkg ? (
-                  <input
-                    id="pkg-type"
-                    type="text"
-                    className="field-input"
-                    value={quote.packageType}
-                    onChange={(e) => updateQuote("packageType", e.target.value)}
-                    placeholder="e.g. food tour, family reunion, barkada adventure…"
-                  />
-                ) : (
-                  <select
-                    id="pkg-type"
-                    className="field-input"
-                    value={quote.packageType}
-                    onChange={(e) => handlePackageTypeChange(e.target.value)}
-                  >
-                    {PACKAGE_TYPE_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-
-              {/* Destination Area */}
-              <div className="mb-4">
-                <div className="mb-1 flex items-center justify-between">
-                  <label htmlFor="dest-area" className="field-label">
-                    Destination Area
-                  </label>
-                  {isCustomDest && (
-                    <button
-                      type="button"
-                      className="text-[11px] font-semibold text-forest-700 hover:underline"
-                      onClick={() => {
-                        setIsCustomDest(false);
-                        setQuote((q) => ({ ...q, destinationArea: "Luzon", province: "" }));
-                      }}
-                    >
-                      Change
-                    </button>
-                  )}
-                </div>
-                {isCustomDest ? (
-                  <input
-                    id="dest-area"
-                    type="text"
-                    className="field-input"
-                    value={quote.destinationArea}
-                    onChange={(e) => updateQuote("destinationArea", e.target.value)}
-                    placeholder="e.g. Batanes + Ilocos, Cebu + Bohol, Bicol food trail…"
-                  />
-                ) : (
-                  <select
-                    id="dest-area"
-                    className="field-input"
-                    value={quote.destinationArea}
-                    onChange={(e) => handleDestAreaChange(e.target.value)}
-                  >
-                    {DEST_AREA_OPTIONS.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-
-              {/* Province — only for standard areas */}
-              {STANDARD_DEST_AREAS.includes(quote.destinationArea) && (
-                <div className="mb-4">
-                  <label htmlFor="province" className="field-label mb-1 block">
-                    Province / Destination
-                  </label>
-                  <select
-                    id="province"
-                    className="field-input"
-                    value={quote.province}
-                    onChange={(e) => updateQuote("province", e.target.value)}
-                  >
-                    <option value="">Select province</option>
-                    {provinceOptions.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Dates */}
-              <div className="mb-5 grid grid-cols-2 gap-3">
-                <div>
-                  <label htmlFor="start-date" className="field-label mb-1 block">
-                    Start Date
-                  </label>
-                  <input
-                    id="start-date"
-                    type="date"
-                    className="field-input"
-                    min={today}
-                    value={quote.startDate}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setQuote((q) => ({
-                        ...q,
-                        startDate: val,
-                        endDate: q.endDate && q.endDate < val ? "" : q.endDate,
-                      }));
-                    }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="end-date" className="field-label mb-1 block">
-                    End Date
-                  </label>
-                  <input
-                    id="end-date"
-                    type="date"
-                    className="field-input"
-                    min={quote.startDate || today}
-                    value={quote.endDate}
-                    onChange={(e) => updateQuote("endDate", e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Quote button — TODO: wire to openQuoteModal when JourneyContext is added to V2 */}
-              <Link
-                to="/contact"
-                aria-disabled={!canQuote}
-                onClick={(e) => {
-                  if (!canQuote) e.preventDefault();
-                }}
-                className={`block w-full rounded-full py-3 text-center text-sm font-semibold transition ${
-                  canQuote
-                    ? "bg-gradient-to-br from-gold-300 via-gold-400 to-gold-500 text-coffee-950 shadow-glow hover:-translate-y-0.5"
-                    : "cursor-not-allowed bg-cream-200 text-coffee-700/50"
-                }`}
-              >
-                Request Quote
-              </Link>
-              <p className="mt-3 text-center text-[11px] leading-relaxed text-coffee-700/60">
-                {canQuote
-                  ? "Ready — your details will carry to the contact form."
-                  : "Choose a destination, province, and travel dates to unlock."}
-              </p>
-            </div>
-          </div>
-        </div>
-      </HeritageSection>
-
-      {/* SECTION 2 — Flexible Package Options */}
+      {/* ================================================================
+          SECTION 2 — Flexible Package Options
+      ================================================================ */}
       <HeritageSection variant="secondary" className="py-16 md:py-20">
         <div className="container-page">
           <div className="mb-10 text-center">
-            <span className="eyebrow">Flexible Formats</span>
-            <h2 className="mt-3 font-serif text-3xl text-coffee-900 sm:text-4xl">
+            <h2 className="font-serif text-3xl text-coffee-900 sm:text-4xl">
               Start with the format, then shape the journey.
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-coffee-800/80">
-              Choose a base travel format first. Our team adjusts the destination,
-              hotel level, pacing, transfers, and guide support around your dates.
+              Choose a base travel format first. Our team adjusts the
+              destination, hotel level, pacing, transfers, and guide support
+              around your dates.
             </p>
           </div>
 
@@ -568,7 +623,9 @@ export default function PackagesPage() {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-serif text-lg text-coffee-900">{pkg.title}</h3>
+                  <h3 className="font-serif text-lg text-coffee-900">
+                    {pkg.title}
+                  </h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-coffee-800/80">
                     {pkg.text}
                   </p>
@@ -584,20 +641,16 @@ export default function PackagesPage() {
               </article>
             ))}
           </div>
-
-          <p className="mt-8 text-center text-xs text-coffee-700/60">
-            Every format can be customized by destination, travel dates, group size,
-            hotel preference, transport needs, and preferred pacing.
-          </p>
         </div>
       </HeritageSection>
 
-      {/* SECTION 3 — Featured Itineraries + Bespoke CTA */}
+      {/* ================================================================
+          SECTION 3 — Featured Itineraries + Bespoke CTA
+      ================================================================ */}
       <HeritageSection variant="primary" grow className="py-16 md:py-20">
         <div className="container-page">
           <div className="mb-10 text-center">
-            <span className="eyebrow">Ready Itineraries</span>
-            <h2 className="mt-3 font-serif text-3xl text-coffee-900 sm:text-4xl">
+            <h2 className="font-serif text-3xl text-coffee-900 sm:text-4xl">
               Featured routes you can start from.
             </h2>
           </div>
@@ -659,7 +712,9 @@ export default function PackagesPage() {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-serif text-base text-coffee-900">{it.title}</h3>
+                  <h3 className="font-serif text-base text-coffee-900">
+                    {it.title}
+                  </h3>
                   <p className="mt-1.5 flex-1 text-xs leading-relaxed text-coffee-800/80">
                     {it.text}
                   </p>

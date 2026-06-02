@@ -132,6 +132,189 @@
       transparent
     );
   }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PACKAGES BOOKING HERO — V1 class structure
+  ═══════════════════════════════════════════════════════════════ */
+
+  /* Section shell — naturally sized; dark background fills content height */
+  .packages-booking-hero {
+    @apply relative isolate overflow-hidden bg-coffee-950 text-cream-50;
+  }
+  .packages-booking-hero__background {
+    @apply pointer-events-none absolute inset-0 -z-10;
+  }
+  .packages-booking-hero__background > img {
+    @apply absolute inset-0 h-full w-full object-cover opacity-20;
+  }
+  /* Two-column booking console: showcase left, quote panel right.
+     pt-28/32/36 clears the fixed navbar. */
+  .packages-booking-hero__inner {
+    @apply container-page relative z-10 grid grid-cols-1 items-start gap-8 pb-14 pt-28 sm:pt-32 md:pt-36 lg:grid-cols-2 lg:pb-16;
+  }
+  .packages-booking-hero__showcase {
+    @apply flex flex-col;
+  }
+
+  /* ── Stacked package carousel ── */
+  .package-carousel__stack {
+    @apply relative mx-auto h-[480px] w-full max-w-[460px] sm:h-[500px];
+  }
+  /* All cards share the same bounding box via absolute inset-0 */
+  .package-carousel__card--stack {
+    @apply absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-cream-50/15 bg-coffee-900/90 shadow-premium;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+  }
+  .package-carousel__card--stack.is-active {
+    transform: none;
+    opacity: 1;
+    z-index: 10;
+  }
+  .package-carousel__card--stack.is-right {
+    transform: translateX(7%) translateY(2.5%) scale(0.92);
+    opacity: 0.62;
+    z-index: 6;
+    cursor: pointer;
+  }
+  .package-carousel__card--stack.is-left {
+    transform: translateX(-7%) translateY(2.5%) scale(0.92);
+    opacity: 0.62;
+    z-index: 6;
+    cursor: pointer;
+  }
+  .package-carousel__card--stack.is-far-right {
+    transform: translateX(13%) translateY(5%) scale(0.84);
+    opacity: 0.28;
+    z-index: 4;
+    cursor: pointer;
+  }
+  .package-carousel__card--stack.is-far-left {
+    transform: translateX(-13%) translateY(5%) scale(0.84);
+    opacity: 0.28;
+    z-index: 4;
+    cursor: pointer;
+  }
+  .package-carousel__card--stack.is-hidden {
+    transform: none;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+  /* Full-cover hit target on non-active stacked cards */
+  .package-carousel__stack-hit {
+    @apply absolute inset-0 z-10 cursor-pointer;
+  }
+  /* Card image area */
+  .package-carousel__media {
+    @apply relative h-[210px] flex-shrink-0 overflow-hidden;
+  }
+  .package-carousel__media > img {
+    @apply h-full w-full object-cover opacity-90 transition duration-700;
+  }
+  /* Cinematic gradient over image — no extra JSX div needed */
+  .package-carousel__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 12, 8, 0.88) 0%, rgba(15, 12, 8, 0.15) 50%, transparent 100%);
+    pointer-events: none;
+  }
+  /* Card content area (below image) */
+  .package-carousel__content {
+    @apply flex flex-1 flex-col overflow-hidden p-4;
+  }
+  .package-carousel__content > h3 {
+    @apply mb-1 text-xl text-cream-50;
+  }
+  /* Description paragraph — shown on all cards, clamped.
+     Excludes the eyebrow <p> which is styled by .eyebrow-light. */
+  .package-carousel__content > p:not(.eyebrow-light) {
+    @apply mb-3 line-clamp-2 text-xs leading-relaxed text-cream-100/65;
+  }
+  /* 2×2 meta tile grid */
+  .package-carousel__meta {
+    @apply grid grid-cols-2 gap-1.5;
+  }
+  .package-carousel__meta > span {
+    @apply flex flex-col rounded-lg border border-cream-50/10 bg-coffee-800/55 px-3 py-1.5;
+  }
+  .package-carousel__meta > span > small {
+    @apply block text-[9px] font-semibold uppercase tracking-widest text-cream-100/40;
+  }
+  .package-carousel__meta > span > strong {
+    @apply block text-xs font-semibold text-cream-50;
+  }
+  /* Action buttons row — active card only */
+  .package-carousel__quick-actions {
+    @apply mt-3 flex gap-2;
+  }
+  .package-carousel__quote-shortcut {
+    @apply flex-1 rounded-full bg-gradient-to-br from-gold-300 via-gold-400 to-gold-500 py-2.5 text-xs font-semibold text-coffee-950 shadow-glow transition hover:-translate-y-0.5;
+  }
+
+  /* ── Add-to-journey / program buttons ── */
+  .package-add-program-btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full border py-2 text-xs font-semibold transition;
+  }
+  .package-add-program-btn--card {
+    @apply border-cream-50/20 px-4 text-cream-100/65 hover:border-gold-400/50 hover:text-gold-300;
+  }
+  .package-add-program-btn--wide {
+    @apply flex-1 border-forest-700 px-4 py-2.5 text-forest-700 hover:bg-forest-700 hover:text-cream-50;
+  }
+
+  /* ── Quote panel ── */
+  /* Both modifier classes must be present to apply these styles */
+  .package-card-quote-panel--hero.package-card-quote-panel--premium {
+    @apply rounded-2xl border border-cream-200/80 bg-white/95 p-7 shadow-premium backdrop-blur-sm lg:self-start;
+  }
+  .package-quote-panel__header {
+    @apply mb-5 border-b border-cream-200 pb-5;
+  }
+  .package-quote-panel__header > span {
+    @apply eyebrow;
+  }
+  .package-quote-panel__header > p {
+    @apply mt-1.5 text-sm leading-relaxed text-coffee-800/80;
+  }
+  /* Individual form field wrapper */
+  .package-card-quote-field {
+    @apply mb-4;
+  }
+  /* Label row with optional "Change" link */
+  .package-card-quote-field__top {
+    @apply mb-1.5 flex items-center justify-between;
+  }
+  /* Standalone label text or top-row label */
+  .package-card-quote-field > span:first-child,
+  .package-card-quote-field__top > span {
+    @apply field-label;
+  }
+  /* All inputs/selects inside a field wrapper */
+  .package-card-quote-field > select,
+  .package-card-quote-field input[type="text"],
+  .package-card-quote-field input[type="date"] {
+    @apply field-input;
+  }
+  .package-card-quote-change {
+    @apply text-[11px] font-semibold text-forest-700 transition hover:underline;
+  }
+  /* Main quote submit button */
+  .package-quote-btn {
+    @apply block w-full rounded-full py-3 text-center text-sm font-semibold transition;
+  }
+  .package-quote-btn--gold {
+    @apply bg-gradient-to-br from-gold-300 via-gold-400 to-gold-500 text-coffee-950 shadow-glow hover:-translate-y-0.5;
+  }
+  .package-quote-btn--disabled {
+    @apply cursor-not-allowed bg-cream-200 text-coffee-700/50;
+  }
+  .package-quote-panel__hint {
+    @apply mt-3 text-center text-[11px] leading-relaxed text-coffee-700/60;
+  }
+  .package-link-btn {
+    @apply text-sm font-medium text-coffee-700/70 transition hover:text-coffee-900;
+  }
 }
 
 @layer utilities {
