@@ -272,7 +272,7 @@ export default function TourPage() {
                 onClick={() => setActiveFilter(pill)}
                 className={`rounded-full border px-4 py-1.5 text-xs font-semibold tracking-wide transition ${
                   activeFilter === pill
-                    ? "border-forest-700 bg-forest-700 text-cream-50 shadow-warm"
+                    ? "border-coffee-900 bg-coffee-900 text-cream-50 shadow-warm"
                     : "border-cream-200 bg-white text-coffee-800 hover:border-gold-400/60 hover:bg-cream-50"
                 }`}
               >
@@ -289,7 +289,7 @@ export default function TourPage() {
               placeholder="Search province, place, or route"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-full border border-cream-200 bg-white px-4 py-2 text-xs text-coffee-900 placeholder-coffee-700/40 transition focus:border-forest-700 focus:outline-none focus:ring-2 focus:ring-forest-700/20"
+              className="w-full rounded-full border border-cream-200 bg-white px-4 py-2 text-xs text-coffee-900 placeholder-coffee-700/40 transition focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
             />
           </div>
         </div>
@@ -369,7 +369,7 @@ export default function TourPage() {
 
                       <Link
                         to="/contact"
-                        className="mt-5 text-sm font-semibold text-forest-700 transition hover:text-forest-800"
+                        className="mt-5 text-sm font-semibold text-gold-600 transition hover:text-gold-700"
                       >
                         Inquire about this route →
                       </Link>
@@ -388,7 +388,7 @@ export default function TourPage() {
                     setActiveFilter("All");
                     setSearchQuery("");
                   }}
-                  className="mt-4 text-sm font-semibold text-forest-700 hover:underline"
+                  className="mt-4 text-sm font-semibold text-gold-600 hover:underline"
                 >
                   Clear filters
                 </button>
@@ -401,7 +401,7 @@ export default function TourPage() {
       {/* ── REGIONAL PREVIEWS ── */}
       <section
         id="regions"
-        className="relative overflow-hidden bg-forest-900 text-cream-50"
+        className="relative overflow-hidden bg-coffee-950 text-cream-50"
       >
         <div
           aria-hidden="true"
@@ -459,7 +459,7 @@ export default function TourPage() {
                   </div>
                   <Link
                     to="/contact"
-                    className="mt-4 text-sm font-semibold text-forest-700 transition hover:text-forest-800"
+                    className="mt-4 text-sm font-semibold text-gold-600 transition hover:text-gold-700"
                   >
                     Plan a {region.region} route →
                   </Link>

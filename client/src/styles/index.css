@@ -53,10 +53,10 @@
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-cream-50/30 bg-cream-50/[0.10] px-6 py-3 text-sm font-semibold text-cream-50 backdrop-blur transition hover:-translate-y-0.5 hover:border-gold-300/60 hover:bg-cream-50/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
   }
   .btn-outline-light {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-cream-50/40 px-6 py-3 text-sm font-semibold text-cream-50 transition hover:bg-cream-50 hover:text-forest-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-cream-50/40 px-6 py-3 text-sm font-semibold text-cream-50 transition hover:bg-cream-50 hover:text-coffee-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300;
   }
   .btn-outline-dark {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest-700 px-6 py-3 text-sm font-semibold text-forest-700 transition hover:bg-forest-700 hover:text-cream-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest-700;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-coffee-800 px-6 py-3 text-sm font-semibold text-coffee-800 transition hover:bg-coffee-800 hover:text-cream-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-coffee-700;
   }
 
   /* Surfaces */
@@ -78,7 +78,7 @@
     @apply mb-1 block text-xs font-semibold uppercase tracking-widest text-coffee-700;
   }
   .field-input {
-    @apply w-full rounded-lg border border-cream-200 bg-cream-50 px-4 py-3 text-sm text-coffee-900 placeholder-coffee-700/40 transition focus:border-forest-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-700/20;
+    @apply w-full rounded-lg border border-cream-200 bg-cream-50 px-4 py-3 text-sm text-coffee-900 placeholder-coffee-700/40 transition focus:border-gold-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20;
   }
 
   /* Cinematic hero shell — full-bleed image/video + warm dark overlay */
@@ -260,7 +260,7 @@
     @apply border-cream-50/20 px-4 text-cream-100/65 hover:border-gold-400/50 hover:text-gold-300;
   }
   .package-add-program-btn--wide {
-    @apply flex-1 border-forest-700 px-4 py-2.5 text-forest-700 hover:bg-forest-700 hover:text-cream-50;
+    @apply flex-1 border-coffee-800 px-4 py-2.5 text-coffee-800 hover:bg-coffee-800 hover:text-cream-50;
   }
 
   /* ── Quote panel ── */
@@ -297,7 +297,7 @@
     @apply field-input;
   }
   .package-card-quote-change {
-    @apply text-[11px] font-semibold text-forest-700 transition hover:underline;
+    @apply text-[11px] font-semibold text-gold-600 transition hover:underline;
   }
   /* Main quote submit button */
   .package-quote-btn {
@@ -347,4 +347,71 @@
 @keyframes reel-fade {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+/* ─── Gallery board ─────────────────────────────────────────────────────────── */
+@layer components {
+  /* Toolbar row */
+  .gallery-board-toolbar {
+    @apply mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between;
+  }
+
+  /* Photo / Video tab strip */
+  .gallery-tab-group {
+    @apply flex shrink-0 overflow-hidden rounded-full border border-cream-200 bg-white shadow-soft;
+  }
+  .gallery-mode-button {
+    @apply px-5 py-2 text-sm font-semibold text-coffee-800 transition-colors hover:bg-cream-100
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold-400;
+  }
+  .gallery-mode-button--active {
+    @apply bg-coffee-900 text-cream-50 hover:bg-coffee-950;
+  }
+
+  /* Search input */
+  .gallery-search {
+    @apply w-full rounded-full border border-cream-200 bg-white px-4 py-2 text-sm
+           text-coffee-900 placeholder-coffee-700/45 transition
+           focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20
+           sm:w-64;
+  }
+
+  /* Photo experience wrapper */
+  .gallery-photo-experience {
+    @apply space-y-4;
+  }
+
+  /* Large featured photo card */
+  .gallery-feature-photo {
+    @apply relative h-[280px] w-full overflow-hidden rounded-2xl
+           border border-cream-200/60 shadow-premium
+           sm:h-[360px] md:h-[460px];
+  }
+
+  /* Masonry-style grid */
+  .gallery-grid {
+    @apply grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4;
+  }
+
+  /* Individual memory card */
+  .gallery-memory-card {
+    @apply relative aspect-[4/3] overflow-hidden rounded-xl
+           border border-cream-200/60 shadow-warm
+           transition duration-300 hover:shadow-premium;
+  }
+
+  /* Video experience wrapper */
+  .gallery-video-experience {
+    @apply space-y-8;
+  }
+
+  /* Video card grid */
+  .gallery-video-grid {
+    @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Empty state */
+  .gallery-empty-state {
+    @apply flex min-h-[340px] flex-col items-center justify-center gap-2 text-center;
+  }
 }

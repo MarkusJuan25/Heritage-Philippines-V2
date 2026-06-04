@@ -135,7 +135,7 @@ export default function ContactPage() {
                 <p className="relative mt-2 text-sm">
                   <a
                     href={`mailto:${CONTACT.email}`}
-                    className="text-coffee-800/90 transition-colors hover:text-forest-700"
+                    className="text-coffee-800/90 transition-colors hover:text-coffee-950"
                   >
                     {CONTACT.email}
                   </a>
@@ -193,7 +193,7 @@ export default function ContactPage() {
               <div className="relative flex min-h-[300px] flex-col items-center justify-center gap-4 text-center">
                 <span
                   aria-hidden="true"
-                  className="grid h-12 w-12 place-items-center rounded-full bg-forest-800/10 text-xl text-forest-700"
+                  className="grid h-12 w-12 place-items-center rounded-full bg-gold-400/15 text-xl text-gold-600"
                 >
                   ✓
                 </span>
@@ -258,7 +258,7 @@ export default function ContactPage() {
                         name="countryCode"
                         value={countryCode}
                         onChange={(e) => setCountryCode(e.target.value)}
-                        className="rounded-lg border border-cream-200 bg-cream-50 px-3 py-3 text-sm text-coffee-900 transition focus:border-forest-700 focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest-700/20 sm:w-[230px] sm:shrink-0"
+                        className="rounded-lg border border-cream-200 bg-cream-50 px-3 py-3 text-sm text-coffee-900 transition focus:border-gold-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-gold-500/20 sm:w-[230px] sm:shrink-0"
                       >
                         {COUNTRY_CODES.map((c) => (
                           <option key={c.code} value={c.code}>
@@ -405,7 +405,7 @@ export default function ContactPage() {
                     type="button"
                     aria-expanded={openFaq === i}
                     onClick={() => toggleFaq(i)}
-                    className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left text-sm font-semibold text-coffee-900 transition-colors hover:text-forest-700"
+                    className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left text-sm font-semibold text-coffee-900 transition-colors hover:text-coffee-700"
                   >
                     {item.q}
                     <span

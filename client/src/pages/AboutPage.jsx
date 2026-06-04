@@ -62,7 +62,7 @@ export default function AboutPage() {
             <p className="eyebrow">About Heritage Philippines</p>
             <h1 className="mt-4 font-serif text-3xl text-coffee-900 sm:text-4xl lg:text-5xl">
               Created for travelers who want{" "}
-              <span className="italic text-forest-700">
+              <span className="italic text-gold-600">
                 more than sightseeing.
               </span>
             </h1>
@@ -125,7 +125,7 @@ export default function AboutPage() {
               </p>
               <Link
                 to="/contact"
-                className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-forest-700 transition-colors hover:text-forest-900"
+                className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-gold-600 transition-colors hover:text-gold-800"
               >
                 Go to Contact Us →
               </Link>
@@ -185,7 +185,7 @@ export default function AboutPage() {
             <div className="card-warm p-7">
               <span
                 aria-hidden="true"
-                className="inline-block h-1 w-10 rounded-full bg-gradient-to-r from-forest-600 to-forest-800"
+                className="inline-block h-1 w-10 rounded-full bg-gradient-to-r from-coffee-700 to-coffee-900"
               />
               <h3 className="mt-4 font-serif text-xl text-coffee-900">
                 Mission

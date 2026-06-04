@@ -632,7 +632,7 @@ export default function PackagesPage() {
                   <div className="mt-5 border-t border-cream-200 pt-4">
                     <Link
                       to="/contact"
-                      className="text-sm font-semibold text-forest-700 transition hover:text-forest-800"
+                      className="text-sm font-semibold text-gold-600 transition hover:text-gold-700"
                     >
                       Inquire →
                     </Link>
@@ -721,7 +721,7 @@ export default function PackagesPage() {
                   <div className="mt-4 flex items-center justify-between border-t border-cream-200 pt-4">
                     <Link
                       to="/tour"
-                      className="text-xs font-semibold text-forest-700 hover:text-forest-800"
+                      className="text-xs font-semibold text-gold-600 hover:text-gold-700"
                     >
                       View
                     </Link>

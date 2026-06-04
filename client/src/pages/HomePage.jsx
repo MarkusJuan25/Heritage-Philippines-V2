@@ -168,7 +168,7 @@ export default function HomePage() {
                   </p>
                   <Link
                     to="/tour"
-                    className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-forest-700 transition group-hover:gap-2 hover:text-forest-800"
+                    className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-gold-600 transition group-hover:gap-2 hover:text-gold-700"
                   >
                     Explore Route <span aria-hidden="true">→</span>
                   </Link>
@@ -290,7 +290,7 @@ export default function HomePage() {
                   </p>
                   <Link
                     to="/tour"
-                    className="mt-6 inline-flex w-fit items-center gap-1 text-sm font-semibold text-forest-700 transition group-hover:gap-2 hover:text-forest-800"
+                    className="mt-6 inline-flex w-fit items-center gap-1 text-sm font-semibold text-gold-600 transition group-hover:gap-2 hover:text-gold-700"
                   >
                     View Tour <span aria-hidden="true">→</span>
                   </Link>
