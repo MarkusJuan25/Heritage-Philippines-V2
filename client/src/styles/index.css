@@ -343,3 +343,8 @@
       radial-gradient(circle at 88% 92%, rgba(35, 74, 64, 0.045), transparent 40%);
   }
 }
+
+@keyframes reel-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
