@@ -415,3 +415,206 @@
     @apply flex min-h-[340px] flex-col items-center justify-center gap-2 text-center;
   }
 }
+
+.gallery-tab-group {
+  width: max-content;
+  max-width: 100%;
+  align-self: flex-start;
+  flex: 0 0 auto;
+}
+
+.gallery-filter-toolbar {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gallery-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.gallery-mode-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 2.75rem;
+  min-height: 2.5rem;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.gallery-tab-label {
+  display: none;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .gallery-filter-toolbar {
+    width: auto;
+    gap: 0.75rem;
+  }
+
+  .gallery-mode-button {
+    width: auto;
+    padding: 0.5rem 1.25rem;
+  }
+
+  .gallery-search {
+    width: min(22rem, 42vw);
+  }
+
+  .gallery-tab-label {
+    display: inline;
+  }
+}
+
+/* ─── Gallery reel board ─────────────────────────────────────────────────── */
+
+/* Reel stage: one active player plus compact selectors. */
+.gallery-reel-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 0.75rem;
+  border: 1px solid rgba(119, 78, 43, 0.16);
+  border-radius: 1rem;
+  background:
+    linear-gradient(135deg, rgba(255, 249, 232, 0.76), rgba(232, 211, 172, 0.28));
+}
+
+.gallery-reel-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 0.75rem;
+}
+
+.gallery-reel-card {
+  position: relative;
+  min-width: 0;
+}
+
+.gallery-reel-frame {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(217, 188, 124, 0.35);
+  border-radius: 0.875rem;
+  background-color: #1c1007;
+  box-shadow: 0 18px 42px rgba(57, 34, 18, 0.16);
+}
+
+.gallery-reel-embed {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.gallery-reel-card--featured .gallery-reel-frame,
+.gallery-reel-card--thumb .gallery-reel-frame {
+  aspect-ratio: 9 / 16;
+}
+
+.gallery-reel-card--selected .gallery-reel-frame {
+  border-color: rgba(217, 166, 58, 0.75);
+  box-shadow:
+    0 20px 46px rgba(57, 34, 18, 0.2),
+    0 0 0 3px rgba(217, 166, 58, 0.18);
+}
+
+.gallery-reel-frame > button {
+  display: grid;
+  place-items: center;
+}
+
+.gallery-reel-play {
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  place-items: center;
+  border-radius: 9999px;
+  background-color: #d9a63a;
+  color: #211106;
+  font-size: 0.9rem;
+  line-height: 1;
+  transform: none;
+  box-shadow:
+    0 18px 34px rgba(18, 10, 4, 0.38),
+    0 0 0 6px rgba(255, 246, 218, 0.18);
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.gallery-reel-card--featured .gallery-reel-play {
+  width: 4.1rem;
+  height: 4.1rem;
+  font-size: 1.08rem;
+}
+
+.gallery-reel-card--thumb .gallery-reel-play {
+  width: 2.65rem;
+  height: 2.65rem;
+  font-size: 0.78rem;
+}
+
+.gallery-reel-play--preview {
+  pointer-events: none;
+}
+
+.gallery-reel-frame button:hover .gallery-reel-play,
+.gallery-reel-frame button:focus-visible .gallery-reel-play {
+  transform: scale(1.08);
+  background-color: #e8bd54;
+  box-shadow:
+    0 22px 42px rgba(18, 10, 4, 0.44),
+    0 0 0 7px rgba(255, 246, 218, 0.22);
+}
+
+.gallery-reel-meta {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  padding: 0.9rem;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(28, 16, 7, 0.86), rgba(28, 16, 7, 0));
+}
+
+.gallery-reel-card--thumb .gallery-reel-meta {
+  padding: 0.65rem;
+}
+
+@media (min-width: 640px) {
+  .gallery-reel-thumbs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-reel-stage {
+    grid-template-columns: minmax(280px, 410px) minmax(360px, 430px);
+    justify-content: center;
+  }
+
+  .gallery-reel-card--featured {
+    grid-column: 1;
+  }
+
+  .gallery-reel-thumbs {
+    grid-column: 2;
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+}
