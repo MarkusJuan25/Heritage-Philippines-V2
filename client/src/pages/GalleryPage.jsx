@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const GALLERY_IMAGE_FALLBACK = "/images/kamayan-style.jpg";
 
@@ -254,9 +254,15 @@ function getFirstPlayableVideoIndex(videos) {
 // Sub-components
 // ---------------------------------------------------------------------------
 
-function FeaturedPhoto({ photo }) {
+function FeaturedPhoto({ photo, onOpen }) {
   return (
     <figure className="gallery-feature-photo group">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`View photo: ${photo.caption}`}
+        className="gallery-photo-open-btn"
+      />
       <img
         src={photo.image}
         alt={photo.caption}
@@ -268,7 +274,7 @@ function FeaturedPhoto({ photo }) {
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"
       />
-      <figcaption className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+      <figcaption className="absolute inset-x-0 bottom-0 z-20 p-6 pointer-events-none md:p-8">
         <p className="text-[10px] font-semibold uppercase tracking-[0.26em] text-gold-300">
           {photo.location} · {photo.category}
         </p>
@@ -280,9 +286,15 @@ function FeaturedPhoto({ photo }) {
   );
 }
 
-function MemoryCard({ photo }) {
+function MemoryCard({ photo, onOpen }) {
   return (
     <figure className="gallery-memory-card group">
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`View photo: ${photo.caption}`}
+        className="gallery-photo-open-btn"
+      />
       <img
         src={photo.image}
         alt={photo.caption}
@@ -294,7 +306,7 @@ function MemoryCard({ photo }) {
         aria-hidden="true"
         className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"
       />
-      <figcaption className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
+      <figcaption className="absolute inset-x-0 bottom-0 z-20 p-3 pointer-events-none sm:p-4">
         <p className="text-[9px] font-semibold uppercase tracking-widest text-gold-300/90">
           {photo.location}
         </p>
@@ -433,6 +445,46 @@ function ReelCard({
 }
 
 
+function PhotoLightbox({ photo, onClose }) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gallery-lightbox-title"
+      className="gallery-lightbox-overlay"
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        aria-label="Close photo"
+        className="gallery-lightbox-close"
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+      >
+        ×
+      </button>
+      <figure
+        className="gallery-lightbox-figure"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={photo.image}
+          alt={photo.caption}
+          onError={handleImageFallback}
+          className="gallery-lightbox-img"
+        />
+        <figcaption className="gallery-lightbox-caption">
+          <p className="gallery-lightbox-meta">
+            {photo.location} · {photo.category}
+          </p>
+          <p id="gallery-lightbox-title" className="gallery-lightbox-title">
+            {photo.caption}
+          </p>
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
 function EmptyState({ query }) {
   return (
     <div className="gallery-empty-state">
@@ -459,6 +511,16 @@ export default function GalleryPage() {
   const [activeVideoIndex, setActiveVideoIndex] = useState(() =>
     getFirstPlayableVideoIndex(VIDEOS)
   );
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  useEffect(() => {
+    if (!selectedPhoto) return;
+    const handleKey = (e) => {
+      if (e.key === "Escape") setSelectedPhoto(null);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [selectedPhoto]);
 
   const filteredPhotos = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -500,6 +562,7 @@ export default function GalleryPage() {
   const videoChoices = filteredVideos;
 
   return (
+    <>
     <main className="gallery-page-shell min-h-screen bg-warm-cream bg-heritage pb-20 pt-28 sm:pt-32 md:pt-36">
       <div className="container-page">
 
@@ -574,11 +637,20 @@ export default function GalleryPage() {
             <EmptyState query={search} />
           ) : (
             <div className="gallery-photo-experience">
-              {featured && <FeaturedPhoto photo={featured} />}
+              {featured && (
+                <FeaturedPhoto
+                  photo={featured}
+                  onOpen={() => setSelectedPhoto(featured)}
+                />
+              )}
               {restPhotos.length > 0 && (
                 <div className="gallery-grid">
                   {restPhotos.map((p) => (
-                    <MemoryCard key={p.id} photo={p} />
+                    <MemoryCard
+                      key={p.id}
+                      photo={p}
+                      onOpen={() => setSelectedPhoto(p)}
+                    />
                   ))}
                 </div>
               )}
@@ -625,5 +697,12 @@ export default function GalleryPage() {
 
       </div>
     </main>
+    {selectedPhoto && (
+      <PhotoLightbox
+        photo={selectedPhoto}
+        onClose={() => setSelectedPhoto(null)}
+      />
+    )}
+    </>
   );
 }
