@@ -331,22 +331,77 @@
   .bg-warm-cream {
     background-color: #fbf7f1;
     background-image:
-      radial-gradient(ellipse 60% 50% at 0% 0%, rgba(216, 177, 109, 0.10), transparent 60%),
-      radial-gradient(ellipse 65% 55% at 100% 100%, rgba(35, 74, 64, 0.07), transparent 60%),
-      linear-gradient(180deg, #fbf7f1 0%, #f5efe3 100%);
+      repeating-linear-gradient(45deg, rgba(139, 90, 56, 0.024) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(-45deg, rgba(190, 142, 43, 0.018) 0 1px, transparent 1px 9px),
+      radial-gradient(ellipse 62% 48% at 0% 0%, rgba(216, 177, 109, 0.18), transparent 62%),
+      radial-gradient(ellipse 68% 56% at 100% 100%, rgba(92, 56, 31, 0.10), transparent 62%),
+      linear-gradient(180deg, #fbf7f1 0%, #f7efe1 48%, #efe1c9 100%);
   }
 
   /* Soft heritage atmosphere overlay — pairs with bg-warm-cream */
   .bg-heritage {
+    background-color: #fbf7f1;
     background-image:
-      radial-gradient(circle at 12% 8%, rgba(190, 142, 43, 0.05), transparent 40%),
-      radial-gradient(circle at 88% 92%, rgba(35, 74, 64, 0.045), transparent 40%);
+      repeating-linear-gradient(45deg, rgba(139, 90, 56, 0.026) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(-45deg, rgba(190, 142, 43, 0.018) 0 1px, transparent 1px 9px),
+      radial-gradient(ellipse 58% 46% at 6% 4%, rgba(216, 177, 109, 0.20), transparent 62%),
+      radial-gradient(ellipse 52% 44% at 92% 96%, rgba(92, 56, 31, 0.12), transparent 64%),
+      linear-gradient(180deg, #fbf7f1 0%, #f7efe1 46%, #efe1c9 100%);
   }
 }
 
 @keyframes reel-fade {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+.gallery-page-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #fbf7f1;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(139, 90, 56, 0.028) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-45deg, rgba(190, 142, 43, 0.02) 0 1px, transparent 1px 9px),
+    radial-gradient(ellipse 70% 42% at 10% 0%, rgba(216, 177, 109, 0.28), transparent 62%),
+    radial-gradient(ellipse 56% 46% at 92% 94%, rgba(92, 56, 31, 0.16), transparent 66%),
+    linear-gradient(180deg, #fbf7f1 0%, #f6ecd9 50%, #ead8b8 100%);
+}
+
+.gallery-page-shell::before,
+.gallery-page-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gallery-page-shell::before {
+  z-index: 0;
+  background-image:
+    linear-gradient(180deg, rgba(251, 247, 241, 0.26), rgba(251, 247, 241, 0.72)),
+    url("/images/heritage-background-v1.png");
+  background-position: top center;
+  background-repeat: repeat-y;
+  background-size: max(1180px, 100vw) auto;
+  filter: sepia(0.5) saturate(0.7) contrast(0.94);
+  min-height: 100%;
+  opacity: 0.18;
+}
+
+.gallery-page-shell::after {
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 18% 14%, rgba(217, 166, 58, 0.16), transparent 24rem),
+    radial-gradient(circle at 84% 44%, rgba(92, 56, 31, 0.11), transparent 24rem),
+    radial-gradient(circle at 12% 78%, rgba(217, 166, 58, 0.12), transparent 26rem),
+    radial-gradient(circle at 86% 92%, rgba(92, 56, 31, 0.10), transparent 24rem),
+    linear-gradient(90deg, rgba(251, 247, 241, 0.34), transparent 28%, transparent 72%, rgba(251, 247, 241, 0.34));
+}
+
+.gallery-page-shell > .container-page {
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Gallery board ─────────────────────────────────────────────────────────── */
@@ -480,13 +535,17 @@
 .gallery-reel-stage {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
-  align-items: start;
-  padding: 0.75rem;
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  align-items: stretch;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   border: 1px solid rgba(119, 78, 43, 0.16);
   border-radius: 1rem;
   background:
-    linear-gradient(135deg, rgba(255, 249, 232, 0.76), rgba(232, 211, 172, 0.28));
+    linear-gradient(135deg, rgba(255, 249, 232, 0.88), rgba(232, 211, 172, 0.42));
+  box-shadow: 0 20px 50px rgba(57, 34, 18, 0.10);
 }
 
 .gallery-reel-thumbs {
@@ -502,6 +561,7 @@
 
 .gallery-reel-frame {
   position: relative;
+  isolation: isolate;
   aspect-ratio: 9 / 16;
   width: 100%;
   overflow: hidden;
@@ -514,10 +574,12 @@
 .gallery-reel-embed {
   position: absolute;
   inset: 0;
+  z-index: 40;
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
+  pointer-events: auto;
 }
 
 .gallery-reel-card--featured .gallery-reel-frame,
@@ -563,14 +625,78 @@
   font-size: 1.08rem;
 }
 
+.gallery-reel-play-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 246, 218, 0.94);
+  color: #211106;
+  padding: 0.45rem 1rem 0.45rem 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow:
+    0 18px 34px rgba(18, 10, 4, 0.38),
+    0 0 0 6px rgba(255, 246, 218, 0.18);
+}
+
+.gallery-reel-play-button .gallery-reel-play {
+  position: relative;
+  width: 2.9rem;
+  height: 2.9rem;
+  font-size: 0;
+  box-shadow: none;
+}
+
+.gallery-reel-play-button .gallery-reel-play::before {
+  content: "";
+  width: 0;
+  height: 0;
+  margin-left: 0.16rem;
+  border-top: 0.42rem solid transparent;
+  border-bottom: 0.42rem solid transparent;
+  border-left: 0.68rem solid currentColor;
+}
+
 .gallery-reel-card--thumb .gallery-reel-play {
   width: 2.65rem;
   height: 2.65rem;
   font-size: 0.78rem;
 }
 
-.gallery-reel-play--preview {
-  pointer-events: none;
+.gallery-reel-select-chip,
+.gallery-reel-preview-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 246, 218, 0.42);
+  background-color: rgba(28, 16, 7, 0.72);
+  color: #fff6da;
+  font-size: 0;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  min-height: 2.35rem;
+  padding: 0.72rem 1rem;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 14px 28px rgba(18, 10, 4, 0.32);
+}
+
+.gallery-reel-select-chip::after,
+.gallery-reel-preview-label::after {
+  content: attr(data-label);
+  font-size: 0.72rem;
+}
+
+.gallery-reel-card--selected .gallery-reel-select-chip {
+  border-color: rgba(217, 166, 58, 0.85);
+  background-color: rgba(217, 166, 58, 0.92);
+  color: #211106;
 }
 
 .gallery-reel-frame button:hover .gallery-reel-play,
@@ -605,8 +731,7 @@
 
 @media (min-width: 1024px) {
   .gallery-reel-stage {
-    grid-template-columns: minmax(280px, 410px) minmax(360px, 430px);
-    justify-content: center;
+    grid-template-columns: minmax(460px, 1.15fr) minmax(420px, 0.95fr);
   }
 
   .gallery-reel-card--featured {

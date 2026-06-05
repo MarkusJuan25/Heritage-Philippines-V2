@@ -1,5 +1,13 @@
 import { useState, useMemo } from "react";
 
+const GALLERY_IMAGE_FALLBACK = "/images/kamayan-style.jpg";
+
+function handleImageFallback(event) {
+  const image = event.currentTarget;
+  image.onerror = null;
+  image.src = GALLERY_IMAGE_FALLBACK;
+}
+
 function CameraIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none">
@@ -98,7 +106,7 @@ const PHOTOS = [
     caption: "Festival Season",
     location: "Philippines",
     category: "Culture",
-    image: "/images/festival.jpg",
+    image: "/images/a-festive-that-cant-miss.jpg",
   },
   {
     id: "kamayan",
@@ -112,42 +120,42 @@ const PHOTOS = [
     caption: "Weaving Hands",
     location: "Visayas",
     category: "Crafts",
-    image: "/images/gallery-visual-impact/weaving-hands.jpg",
+    image: "/images/fundacion-pacita.jpg",
   },
   {
     id: "culture",
     caption: "A Touch of Culture",
     location: "Philippines",
     category: "Culture",
-    image: "/images/gallery-visual-impact/a-touch-of-culture.jpg",
+    image: "/images/homecoming.jpg",
   },
   {
     id: "palmtrees",
     caption: "Island Palms",
     location: "Philippines",
     category: "Landscapes",
-    image: "/images/gallery-visual-impact/palmtrees.jpg",
+    image: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
   },
   {
     id: "hangingcoffin",
     caption: "Hanging Coffins of Sagada",
     location: "Mountain Province",
     category: "Heritage",
-    image: "/images/hanging-coffin.jpg",
+    image: "/images/marlboro-country-batanes-lanscapes.jpg",
   },
   {
     id: "faces",
     caption: "Smiling Faces",
     location: "Philippines",
     category: "People",
-    image: "/images/gallery-visual-impact/smiling-faces.jpg",
+    image: "/images/homecoming.jpg",
   },
   {
     id: "weavingfabric",
     caption: "Woven Heritage",
     location: "Visayas",
     category: "Crafts",
-    image: "/images/gallery-visual-impact/weaving-fabrics.jpg",
+    image: "/images/fundacion-pacita.jpg",
   },
 ];
 
@@ -175,7 +183,7 @@ const VIDEOS = [
     label: "Facebook Reel",
     description:
       "Paddle through mangroves and see how local communities protect nature for future generations.",
-    thumbnail: "/images/gallery-visual-impact/palmtrees.jpg",
+    thumbnail: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
     facebookUrl:
       "https://www.facebook.com/61584374371729/videos/paddle-through-mangroves-and-learn-how-filipinos-protect-nature-for-future-gener/2382838862219221/",
     externalUrl:
@@ -212,16 +220,34 @@ function getYoutubeEmbedUrl(youtubeId) {
   return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?rel=0&controls=1&playsinline=1`;
 }
 
+function getFacebookEmbedUrl(facebookUrl) {
+  return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(facebookUrl)}&show_text=false&width=900`;
+}
+
 const SAFE_VIDEO_IFRAME_ALLOW =
   "clipboard-write; encrypted-media; picture-in-picture; web-share";
 
 function getVideoEmbedProps(video) {
-  if (!video?.youtubeId) return null;
-  return {
-    src: getYoutubeEmbedUrl(video.youtubeId),
-    title: video.title,
-    allow: SAFE_VIDEO_IFRAME_ALLOW,
-  };
+  if (video?.youtubeId) {
+    return {
+      src: getYoutubeEmbedUrl(video.youtubeId),
+      title: video.title,
+      allow: SAFE_VIDEO_IFRAME_ALLOW,
+    };
+  }
+  if (video?.facebookUrl) {
+    return {
+      src: getFacebookEmbedUrl(video.facebookUrl),
+      title: video.title,
+      allow: SAFE_VIDEO_IFRAME_ALLOW,
+    };
+  }
+  return null;
+}
+
+function getFirstPlayableVideoIndex(videos) {
+  const playableIndex = videos.findIndex((video) => getVideoEmbedProps(video));
+  return playableIndex >= 0 ? playableIndex : 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -235,6 +261,7 @@ function FeaturedPhoto({ photo }) {
         src={photo.image}
         alt={photo.caption}
         loading="eager"
+        onError={handleImageFallback}
         className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
       />
       <div
@@ -260,6 +287,7 @@ function MemoryCard({ photo }) {
         src={photo.image}
         alt={photo.caption}
         loading="lazy"
+        onError={handleImageFallback}
         className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
       <div
@@ -291,6 +319,7 @@ function ReelCard({
   const embedProps = featured ? getVideoEmbedProps(video) : null;
   const playable = !!embedProps;
   const thumb = variant === "thumb";
+  const previewLabel = "Preview only";
 
   const articleClass = [
     "gallery-reel-card",
@@ -303,7 +332,9 @@ function ReelCard({
       onSelect?.();
       return;
     }
-    onPlay?.();
+    if (playable) {
+      onPlay?.();
+    }
   };
 
   return (
@@ -324,35 +355,50 @@ function ReelCard({
               src={video.thumbnail}
               alt={video.title}
               loading={featured ? "eager" : "lazy"}
+              onError={handleImageFallback}
               className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
             />
             <div
               aria-hidden="true"
               className="absolute inset-0 z-10 bg-gradient-to-t from-coffee-950/90 via-coffee-950/20 to-transparent"
             />
-            {thumb || playable ? (
+            {thumb ? (
               <button
                 type="button"
                 onClick={handleAction}
-                aria-label={
-                  featured
-                    ? `Load video player for ${video.title}`
-                    : `Select ${video.title} video`
-                }
-                aria-pressed={thumb ? isSelected : undefined}
+                aria-label={`Select ${video.title} video`}
+                aria-pressed={isSelected}
                 className="absolute inset-0 z-20 grid place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
               >
-                <span className="gallery-reel-play" aria-hidden="true">
+                <span
+                  className="gallery-reel-select-chip"
+                  data-label={isSelected ? "Selected" : "View"}
+                >
                   ▶
+                </span>
+              </button>
+            ) : playable ? (
+              <button
+                type="button"
+                onClick={handleAction}
+                aria-label={`Play video: ${video.title}`}
+                className="absolute inset-0 z-20 grid place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
+              >
+                <span className="gallery-reel-play-button">
+                  <span className="gallery-reel-play" aria-hidden="true">
+                    ▶
+                  </span>
+                  <span>Play video</span>
                 </span>
               </button>
             ) : featured ? (
               <div
                 className="absolute inset-0 z-20 grid place-items-center"
-                aria-hidden="true"
+                aria-label={previewLabel}
               >
                 <span
-                  className="gallery-reel-play gallery-reel-play--preview"
+                  className="gallery-reel-preview-label"
+                  data-label={previewLabel}
                   aria-hidden="true"
                 >
                   ▶
@@ -410,7 +456,9 @@ export default function GalleryPage() {
   const [mode, setMode]       = useState("photos");
   const [search, setSearch]   = useState("");
   const [playingId, setPlayingId] = useState(null);
-  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const [activeVideoIndex, setActiveVideoIndex] = useState(() =>
+    getFirstPlayableVideoIndex(VIDEOS)
+  );
 
   const filteredPhotos = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -438,7 +486,7 @@ export default function GalleryPage() {
     setSearch("");
     setPlayingId(null);
     if (next === "videos") {
-      setActiveVideoIndex(0);
+      setActiveVideoIndex(getFirstPlayableVideoIndex(VIDEOS));
     }
   };
 
@@ -452,7 +500,7 @@ export default function GalleryPage() {
   const videoChoices = filteredVideos;
 
   return (
-    <main className="min-h-screen bg-warm-cream bg-heritage pb-20 pt-28 sm:pt-32 md:pt-36">
+    <main className="gallery-page-shell min-h-screen bg-warm-cream bg-heritage pb-20 pt-28 sm:pt-32 md:pt-36">
       <div className="container-page">
 
         {/* ── Toolbar ──────────────────────────────────────────────────── */}
@@ -502,9 +550,18 @@ export default function GalleryPage() {
               }
               value={search}
               onChange={(e) => {
-                setSearch(e.target.value);
+                const nextSearch = e.target.value;
+                const q = nextSearch.trim().toLowerCase();
+                const nextVideos = q
+                  ? VIDEOS.filter(
+                      (v) =>
+                        v.title.toLowerCase().includes(q) ||
+                        v.location.toLowerCase().includes(q)
+                    )
+                  : VIDEOS;
+                setSearch(nextSearch);
                 setPlayingId(null);
-                setActiveVideoIndex(0);
+                setActiveVideoIndex(getFirstPlayableVideoIndex(nextVideos));
               }}
               aria-label={`Search ${mode}`}
             />
