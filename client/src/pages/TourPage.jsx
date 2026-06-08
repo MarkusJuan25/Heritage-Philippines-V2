@@ -164,6 +164,8 @@ export default function TourPage() {
     return () => clearInterval(id);
   }, []);
 
+  const activeRoute = heroRoutes[activeRouteIdx] ?? heroRoutes[0];
+
   const filteredTours = tourCollections.filter((tour) => {
     const matchesFilter =
       activeFilter === "All" || tour.filterRegion === activeFilter;
@@ -185,7 +187,7 @@ export default function TourPage() {
       <section className="page-header">
         <div className="page-header__media">
           <img
-            src="/images/a-festive-that-cant-miss.jpg"
+            src={activeRoute.image}
             alt=""
             className="page-header__image"
             loading="eager"
@@ -199,7 +201,7 @@ export default function TourPage() {
             {/* Left — headline + copy + CTAs */}
             <div>
               <p className="eyebrow-light tracking-[0.2em]">
-                LUZON HERITAGE ROUTES
+                {heroRoutes[activeRouteIdx].label} HERITAGE ROUTES
               </p>
               <h1 className="mt-4 font-serif text-3xl leading-tight tracking-wide text-cream-50 sm:text-4xl lg:text-5xl">
                 TOUR THE PHILIPPINES THROUGH HERITAGE
@@ -225,35 +227,62 @@ export default function TourPage() {
 
             {/* Right — route stack */}
             <div className="flex flex-col gap-3">
-              {heroRoutes.map((route) => (
-                <a
+              {heroRoutes.map((route, idx) => (
+                <button
                   key={route.title}
-                  href="#tour-collection"
-                  className="group flex cursor-pointer items-center gap-4 rounded-2xl border border-cream-50/15 bg-coffee-900/70 p-4 backdrop-blur-sm transition duration-300 hover:bg-coffee-900/90 hover:border-cream-50/25"
+                  type="button"
+                  aria-pressed={idx === activeRouteIdx}
+                  aria-label={route.title}
+                  onClick={() => setActiveRouteIdx(idx)}
+                  className={`group flex cursor-pointer items-center gap-4 rounded-2xl border p-4 backdrop-blur-sm transition duration-300 ${
+                    idx === activeRouteIdx
+                      ? "border-gold-400/55 bg-coffee-800/90 shadow-warm"
+                      : "border-cream-50/10 bg-coffee-900/50 hover:border-cream-50/20 hover:bg-coffee-900/80"
+                  }`}
                 >
                   <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl">
                     <img
                       src={route.image}
                       alt={route.title}
                       loading="lazy"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      className={`h-full w-full object-cover transition duration-500 ${
+                        idx === activeRouteIdx
+                          ? "scale-105"
+                          : "group-hover:scale-105"
+                      }`}
                     />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-gold-300">
+                    <p
+                      className={`text-[10px] font-bold uppercase tracking-widest transition duration-300 ${
+                        idx === activeRouteIdx
+                          ? "text-gold-300"
+                          : "text-gold-400/60"
+                      }`}
+                    >
                       {route.label}
                     </p>
-                    <h3 className="mt-0.5 font-serif text-base leading-tight text-cream-50">
+                    <h3
+                      className={`mt-0.5 font-serif text-base leading-tight transition duration-300 ${
+                        idx === activeRouteIdx
+                          ? "text-cream-50"
+                          : "text-cream-50/60"
+                      }`}
+                    >
                       {route.title}
                     </h3>
                   </div>
                   <span
                     aria-hidden="true"
-                    className="ml-2 flex-shrink-0 font-serif text-3xl leading-none text-cream-50/20"
+                    className={`ml-2 flex-shrink-0 font-serif text-3xl leading-none transition duration-300 ${
+                      idx === activeRouteIdx
+                        ? "text-gold-400/50"
+                        : "text-cream-50/15"
+                    }`}
                   >
                     {route.number}
                   </span>
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -282,7 +311,7 @@ export default function TourPage() {
           </div>
 
           {/* Search input */}
-          <div className="min-w-[180px] flex-1 sm:max-w-xs">
+          <div className="min-w-[180px] flex-1 md:ml-auto md:w-[280px] md:flex-none lg:w-[320px] xl:w-[340px]">
             <input
               type="search"
               aria-label="Search tours"
