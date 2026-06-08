@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 
 const GALLERY_IMAGE_FALLBACK = "/images/kamayan-style.jpg";
 
@@ -445,7 +445,23 @@ function ReelCard({
 }
 
 
-function PhotoLightbox({ photo, onClose }) {
+function PhotoLightbox({ photo, onClose, onPrev, onNext }) {
+  const touchStartX = useRef(null);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 50) return;
+    e.preventDefault();
+    if (delta < 0) onNext();
+    else onPrev();
+  };
+
   return (
     <div
       role="dialog"
@@ -453,6 +469,8 @@ function PhotoLightbox({ photo, onClose }) {
       aria-labelledby="gallery-lightbox-title"
       className="gallery-lightbox-overlay"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <button
         type="button"
@@ -462,6 +480,25 @@ function PhotoLightbox({ photo, onClose }) {
       >
         ×
       </button>
+
+      <button
+        type="button"
+        aria-label="Previous photo"
+        className="gallery-lightbox-nav gallery-lightbox-nav--prev"
+        onClick={(e) => { e.stopPropagation(); onPrev(); }}
+      >
+        ‹
+      </button>
+
+      <button
+        type="button"
+        aria-label="Next photo"
+        className="gallery-lightbox-nav gallery-lightbox-nav--next"
+        onClick={(e) => { e.stopPropagation(); onNext(); }}
+      >
+        ›
+      </button>
+
       <figure
         className="gallery-lightbox-figure"
         onClick={(e) => e.stopPropagation()}
@@ -473,9 +510,6 @@ function PhotoLightbox({ photo, onClose }) {
           className="gallery-lightbox-img"
         />
         <figcaption className="gallery-lightbox-caption">
-          <p className="gallery-lightbox-meta">
-            {photo.location} · {photo.category}
-          </p>
           <p id="gallery-lightbox-title" className="gallery-lightbox-title">
             {photo.caption}
           </p>
@@ -505,22 +539,13 @@ function EmptyState({ query }) {
 // Page
 // ---------------------------------------------------------------------------
 export default function GalleryPage() {
-  const [mode, setMode]       = useState("photos");
-  const [search, setSearch]   = useState("");
+  const [mode, setMode]           = useState("photos");
+  const [search, setSearch]       = useState("");
   const [playingId, setPlayingId] = useState(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(() =>
     getFirstPlayableVideoIndex(VIDEOS)
   );
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
-
-  useEffect(() => {
-    if (!selectedPhoto) return;
-    const handleKey = (e) => {
-      if (e.key === "Escape") setSelectedPhoto(null);
-    };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [selectedPhoto]);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(-1);
 
   const filteredPhotos = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -542,6 +567,34 @@ export default function GalleryPage() {
         v.location.toLowerCase().includes(q)
     );
   }, [search]);
+
+  // Derive the photo object from the index — null when closed.
+  const selectedPhoto =
+    selectedPhotoIndex >= 0 ? (filteredPhotos[selectedPhotoIndex] ?? null) : null;
+
+  const closePhoto = () => setSelectedPhotoIndex(-1);
+  const showPreviousPhoto = () =>
+    setSelectedPhotoIndex((i) => (i - 1 + filteredPhotos.length) % filteredPhotos.length);
+  const showNextPhoto = () =>
+    setSelectedPhotoIndex((i) => (i + 1) % filteredPhotos.length);
+
+  // Body scroll lock + keyboard navigation while lightbox is open.
+  useEffect(() => {
+    if (selectedPhotoIndex < 0) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const total = filteredPhotos.length;
+    const handleKey = (e) => {
+      if (e.key === "Escape")          setSelectedPhotoIndex(-1);
+      else if (e.key === "ArrowLeft")  setSelectedPhotoIndex((i) => (i - 1 + total) % total);
+      else if (e.key === "ArrowRight") setSelectedPhotoIndex((i) => (i + 1) % total);
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [selectedPhotoIndex, filteredPhotos.length]);
 
   const switchMode = (next) => {
     setMode(next);
@@ -640,16 +693,16 @@ export default function GalleryPage() {
               {featured && (
                 <FeaturedPhoto
                   photo={featured}
-                  onOpen={() => setSelectedPhoto(featured)}
+                  onOpen={() => setSelectedPhotoIndex(0)}
                 />
               )}
               {restPhotos.length > 0 && (
                 <div className="gallery-grid">
-                  {restPhotos.map((p) => (
+                  {restPhotos.map((p, i) => (
                     <MemoryCard
                       key={p.id}
                       photo={p}
-                      onOpen={() => setSelectedPhoto(p)}
+                      onOpen={() => setSelectedPhotoIndex(i + 1)}
                     />
                   ))}
                 </div>
@@ -700,7 +753,9 @@ export default function GalleryPage() {
     {selectedPhoto && (
       <PhotoLightbox
         photo={selectedPhoto}
-        onClose={() => setSelectedPhoto(null)}
+        onClose={closePhoto}
+        onPrev={showPreviousPhoto}
+        onNext={showNextPhoto}
       />
     )}
     </>
