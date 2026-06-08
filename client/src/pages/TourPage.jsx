@@ -318,9 +318,6 @@ export default function TourPage() {
                         <h3 className="font-serif text-xl text-coffee-900">
                           {tour.title}
                         </h3>
-                        <p className="mt-2 flex-1 text-sm leading-relaxed text-coffee-800/80">
-                          {tour.overview || tour.shortDescription}
-                        </p>
 
                         {/* Meta */}
                         <div className="mt-4 flex flex-wrap gap-x-4 gap-y-0.5 border-t border-cream-200 pt-4 text-xs text-coffee-700/75">
@@ -368,9 +365,12 @@ export default function TourPage() {
                             {/* TODO: connect Add Program to JourneyContext when journey flow is restored. */}
                             <button
                               type="button"
-                              className="min-w-0 rounded-full border border-cream-300 px-2 py-2 text-[10px] font-semibold text-coffee-700/70 transition hover:border-coffee-300 hover:bg-cream-50 hover:text-coffee-800 sm:text-[11px]"
+                              className="min-w-0 rounded-full border border-gold-400/70 bg-gradient-to-br from-cream-50 via-gold-50 to-gold-100 px-2 py-2 text-[10px] font-bold text-coffee-900 shadow-warm transition hover:-translate-y-0.5 hover:border-gold-500 hover:bg-gold-100 hover:shadow-premium focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 sm:text-[11px]"
                             >
-                              Add Program
+                              <span className="inline-flex items-center justify-center gap-1">
+                                <span aria-hidden="true">＋</span>
+                                Add Program
+                              </span>
                             </button>
                           </div>
                         </div>
