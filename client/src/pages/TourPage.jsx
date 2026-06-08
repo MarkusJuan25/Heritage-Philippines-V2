@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
+import { packageCategories, tourPackages } from "../data/tourPackages.js";
 
 // --- Static data ---
 
@@ -24,143 +25,6 @@ const heroRoutes = [
     title: "Mindanao Cultural Journeys",
     number: "03",
     image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
-  },
-];
-
-// filterRegion drives the pill filter: "Luzon" | "Visayas" | "Mindanao" | "All"
-// TODO: Move PDF itinerary downloads to Packages or PackageDetail later.
-const tourCollections = [
-  {
-    filterRegion: "Luzon",
-    category: "Northern Luzon",
-    title: "Ilocos Heritage Trail",
-    location: "Ilocos Sur · Vigan · Laoag",
-    description:
-      "Walk cobblestone streets, visit coral-stone basilicas, meet indigo weavers still practicing the Inabel tradition, and end evenings with Vigan's storied cuisine.",
-    duration: "5–7 days",
-    bestFor: "Culture seekers, first-time heritage travelers",
-    highlights: ["Vigan UNESCO", "Inabel weaving", "Calesa & food"],
-    image: "/images/Luzon/Region I — Ilocos Region/The Spanish Heritage of Vigan Ilocos Sur.jpg",
-  },
-  {
-    filterRegion: "Luzon",
-    category: "Cordillera",
-    title: "Living Rice Terraces Loop",
-    location: "Ifugao · Banaue · Batad",
-    description:
-      "Trace the 2,000-year-old Banaue and Batad terraces, join harvest rituals, and spend nights in heritage lodges above the cloud line.",
-    duration: "4–6 days",
-    bestFor: "Active travelers, solo journeys",
-    highlights: ["Banaue terraces", "Batad village", "Highland ritual"],
-    image: "/images/Luzon/CAR — Cordillera Administrative Region/The Rice Terraces of Ifugao Banaue.jpg",
-  },
-  {
-    filterRegion: "Luzon",
-    category: "Cordillera",
-    title: "Baguio Heritage Route",
-    location: "Baguio City · Benguet · CAR",
-    description:
-      "Explore Baguio's layered colonial and highland identity — the Mansion House, Burnham Park, the Easter Weaving Room, and the cool-air markets connecting lowland and mountain cultures.",
-    duration: "2–3 days",
-    bestFor: "City break travelers, heritage families",
-    highlights: ["Burnham Park", "Cordillera crafts", "Cool highland city"],
-    image: "/images/Luzon/CAR — Cordillera Administrative Region/Culture and Industry in the City Baguio.jpg",
-  },
-  {
-    filterRegion: "Luzon",
-    category: "Central Luzon",
-    title: "Bataan Heritage & History Tour",
-    location: "Bataan · Mount Samat · Balanga City",
-    description:
-      "Stand at the Mount Samat Cross overlooking the Death March route, explore the Bataan Heritage Museum, and trace the WWII and colonial layers of this pivotal Philippine peninsula.",
-    duration: "2–3 days",
-    bestFor: "History enthusiasts, school groups",
-    highlights: ["Mount Samat Cross", "WWII heritage", "Balanga heritage"],
-    image: "/images/Luzon/Region III — Central Luzon/Crucible of History Mount Samat Cross.jpg",
-  },
-  {
-    filterRegion: "Luzon",
-    category: "Bicol",
-    title: "Bicol & Mayon Heritage Route",
-    location: "Legazpi · Cagsawa · Daraga · Albay",
-    description:
-      "Journey through Bicol's volcanic drama and baroque heritage — Mayon Volcano, the ruined Cagsawa Church, Daraga's hilltop basilica, and the layered faith culture of Albay.",
-    duration: "3–5 days",
-    bestFor: "Nature and heritage travelers, photographers",
-    highlights: ["Mayon Volcano", "Cagsawa ruins", "Bicol cuisine"],
-    image: "/images/Luzon/Region V — Bicol Region/The Volcano and the Plains Mount Mayon.jpg",
-  },
-  {
-    filterRegion: "Luzon",
-    category: "Island Getaway",
-    title: "Alibijaban Island Getaway",
-    location: "Alibijaban Island · Quezon Province",
-    description:
-      "Reach one of Luzon's quietest island escapes — a pristine retreat off the Quezon coast with clear water, local fishing communities, and unhurried island time far from the tour trail.",
-    duration: "2–4 days",
-    bestFor: "Island seekers, couples, small groups",
-    highlights: ["Pristine coves", "Local fishing culture", "Island hopping"],
-    image: "/images/Luzon/Region IV-A — CALABARZON/Port of Batangas.jpg",
-  },
-  {
-    filterRegion: "Visayas",
-    category: "Visayas",
-    title: "Visayas Island Heritage",
-    location: "Cebu · Bohol · Eastern Visayas",
-    description:
-      "Cebu's Spanish forts, Bohol's baroque churches, and Eastern Visayas' MacArthur landing sites — threaded together across island-hop routes with heritage-led local guides.",
-    duration: "6–8 days",
-    bestFor: "Family groups, history lovers",
-    highlights: ["Cebu historic fort", "Chocolate Hills", "Ancestral houses"],
-    image: "/images/Visayas/Region VII — Central Visayas/Bohol - The Geological Wonders Chocolate Hills.jpg",
-  },
-  {
-    filterRegion: "Visayas",
-    category: "Western Visayas",
-    title: "Bacolod-Iloilo Heritage Route",
-    location: "Bacolod · Iloilo · Negros Occidental",
-    description:
-      "From Bacolod's sugar heritage and Silay City ancestral mansions to Iloilo's UNESCO Miagao Church and heritage riverside districts — Western Visayas at its most layered.",
-    duration: "4–6 days",
-    bestFor: "Heritage travelers, food lovers, history groups",
-    highlights: ["Miagao Church", "Silay heritage homes", "Iloilo heritage district"],
-    image: "/images/Visayas/Region VI — Western Visayas/Preserved Heritage Weaving and the Miagao Church.jpg",
-  },
-  {
-    filterRegion: "Mindanao",
-    category: "Mindanao",
-    title: "Mindanao Cultural Frontier",
-    location: "Davao · Bukidnon · Lake Sebu",
-    description:
-      "Discover the living weaving culture of Bukidnon, highland traditions of Cotabato, and the layered culinary heritage spanning coastal Davao.",
-    duration: "5–7 days",
-    bestFor: "Experienced travelers, cultural researchers",
-    highlights: ["Higaonon weaving", "Davao food culture", "Highland domains"],
-    image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
-  },
-  {
-    filterRegion: "All",
-    category: "Faith & Culture",
-    title: "Faith & Pilgrimage Circuit",
-    location: "Quiapo · Intramuros · Multi-region",
-    description:
-      "A curated route through Manila's most sacred heritage sites — the Quiapo devotion, Intramuros' walled city churches, and colonial faith landmarks paired with quiet evening stays.",
-    duration: "3–4 days",
-    bestFor: "Devotional travelers, cultural immersion",
-    highlights: ["Quiapo heritage", "Intramuros churches", "Sacred art stops"],
-    image: "/images/Luzon/NCR — National Capital Region/Intramuros Manila.jpg",
-  },
-  {
-    filterRegion: "All",
-    category: "Flexible",
-    title: "Custom Regional Tour",
-    location: "Any region, Philippines",
-    description:
-      "Tell us your region, your pace, and your cultural interests. We build the route, the stays, and the local guides around your specific itinerary.",
-    duration: "Flexible",
-    bestFor: "Any group size, any region",
-    highlights: ["Fully custom", "Your pace", "Any heritage region"],
-    image: "/images/journey.jpg",
   },
 ];
 
@@ -191,7 +55,6 @@ const destinations = [
   },
 ];
 
-const FILTER_PILLS = ["All", "Luzon", "Visayas", "Mindanao"];
 
 export default function TourPage() {
   const [activeRouteIdx, setActiveRouteIdx] = useState(0);
@@ -214,14 +77,24 @@ export default function TourPage() {
 
   const activeRoute = heroRoutes[activeRouteIdx] ?? heroRoutes[0];
 
-  const filteredTours = tourCollections.filter((tour) => {
+  const filteredTours = tourPackages.filter((tour) => {
     const matchesFilter =
-      activeFilter === "All" || tour.filterRegion === activeFilter;
+      activeFilter === "All" || tour.islandGroup === activeFilter;
 
     const q = searchQuery.trim().toLowerCase();
     const matchesSearch =
       !q ||
-      [tour.title, tour.category, tour.description, tour.location ?? "", ...tour.highlights]
+      [
+        tour.title,
+        tour.category,
+        tour.overview || tour.shortDescription || "",
+        tour.location ?? "",
+        tour.province ?? "",
+        tour.region ?? "",
+        tour.islandGroup ?? "",
+        tour.slug ?? "",
+        ...(tour.highlights || []),
+      ]
         .join(" ")
         .toLowerCase()
         .includes(q);
@@ -348,7 +221,7 @@ export default function TourPage() {
         <div className="container-page flex flex-wrap items-center gap-4 py-3">
           {/* Region pills */}
           <div className="flex flex-wrap gap-2">
-            {FILTER_PILLS.map((pill) => (
+            {packageCategories.map((pill) => (
               <button
                 key={pill}
                 type="button"
@@ -404,7 +277,7 @@ export default function TourPage() {
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {visibleTours.map((tour) => (
                     <article
-                      key={tour.title}
+                      key={tour.slug}
                       className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
                     >
                       {/* Image */}
@@ -446,7 +319,7 @@ export default function TourPage() {
                           {tour.title}
                         </h3>
                         <p className="mt-2 flex-1 text-sm leading-relaxed text-coffee-800/80">
-                          {tour.description}
+                          {tour.overview || tour.shortDescription}
                         </p>
 
                         {/* Meta */}
@@ -461,7 +334,7 @@ export default function TourPage() {
                             <strong className="font-semibold text-coffee-800">
                               Best for:
                             </strong>{" "}
-                            {tour.bestFor}
+                            {tour.groupSize ?? tour.bestFor}
                           </span>
                         </div>
 
