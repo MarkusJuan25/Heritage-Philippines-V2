@@ -4,88 +4,157 @@ import HeritageSection from "../components/HeritageSection";
 
 // --- Static data ---
 
+const PAGE_SIZE = 9;
+
 const heroRoutes = [
   {
     label: "LUZON",
     title: "Luzon Heritage Routes",
     number: "01",
-    image: "/images/a-glimpse-of-vigan-city.jpg",
+    image: "/images/Luzon/Region I — Ilocos Region/The Spanish Heritage of Vigan Ilocos Sur.jpg",
   },
   {
     label: "VISAYAS",
     title: "Visayas Island Heritage",
     number: "02",
-    image: "/images/chocolate-hills.jpg",
+    image: "/images/Visayas/Region VII — Central Visayas/Bohol - The Geological Wonders Chocolate Hills.jpg",
   },
   {
     label: "MINDANAO",
     title: "Mindanao Cultural Journeys",
     number: "03",
-    image: "/images/living-culture.jpg",
+    image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
   },
 ];
 
 // filterRegion drives the pill filter: "Luzon" | "Visayas" | "Mindanao" | "All"
+// TODO: Move PDF itinerary downloads to Packages or PackageDetail later.
 const tourCollections = [
   {
     filterRegion: "Luzon",
     category: "Northern Luzon",
     title: "Ilocos Heritage Trail",
+    location: "Ilocos Sur · Vigan · Laoag",
     description:
       "Walk cobblestone streets, visit coral-stone basilicas, meet indigo weavers still practicing the Inabel tradition, and end evenings with Vigan's storied cuisine.",
     duration: "5–7 days",
     bestFor: "Culture seekers, first-time heritage travelers",
     highlights: ["Vigan UNESCO", "Inabel weaving", "Calesa & food"],
-    image: "/images/a-glimpse-of-vigan-city.jpg",
+    image: "/images/Luzon/Region I — Ilocos Region/The Spanish Heritage of Vigan Ilocos Sur.jpg",
   },
   {
     filterRegion: "Luzon",
     category: "Cordillera",
     title: "Living Rice Terraces Loop",
+    location: "Ifugao · Banaue · Batad",
     description:
       "Trace the 2,000-year-old Banaue and Batad terraces, join harvest rituals, and spend nights in heritage lodges above the cloud line.",
     duration: "4–6 days",
     bestFor: "Active travelers, solo journeys",
     highlights: ["Banaue terraces", "Batad village", "Highland ritual"],
-    image: "/images/banaue-rice-terreces.jpg",
+    image: "/images/Luzon/CAR — Cordillera Administrative Region/The Rice Terraces of Ifugao Banaue.jpg",
+  },
+  {
+    filterRegion: "Luzon",
+    category: "Cordillera",
+    title: "Baguio Heritage Route",
+    location: "Baguio City · Benguet · CAR",
+    description:
+      "Explore Baguio's layered colonial and highland identity — the Mansion House, Burnham Park, the Easter Weaving Room, and the cool-air markets connecting lowland and mountain cultures.",
+    duration: "2–3 days",
+    bestFor: "City break travelers, heritage families",
+    highlights: ["Burnham Park", "Cordillera crafts", "Cool highland city"],
+    image: "/images/Luzon/CAR — Cordillera Administrative Region/Culture and Industry in the City Baguio.jpg",
+  },
+  {
+    filterRegion: "Luzon",
+    category: "Central Luzon",
+    title: "Bataan Heritage & History Tour",
+    location: "Bataan · Mount Samat · Balanga City",
+    description:
+      "Stand at the Mount Samat Cross overlooking the Death March route, explore the Bataan Heritage Museum, and trace the WWII and colonial layers of this pivotal Philippine peninsula.",
+    duration: "2–3 days",
+    bestFor: "History enthusiasts, school groups",
+    highlights: ["Mount Samat Cross", "WWII heritage", "Balanga heritage"],
+    image: "/images/Luzon/Region III — Central Luzon/Crucible of History Mount Samat Cross.jpg",
+  },
+  {
+    filterRegion: "Luzon",
+    category: "Bicol",
+    title: "Bicol & Mayon Heritage Route",
+    location: "Legazpi · Cagsawa · Daraga · Albay",
+    description:
+      "Journey through Bicol's volcanic drama and baroque heritage — Mayon Volcano, the ruined Cagsawa Church, Daraga's hilltop basilica, and the layered faith culture of Albay.",
+    duration: "3–5 days",
+    bestFor: "Nature and heritage travelers, photographers",
+    highlights: ["Mayon Volcano", "Cagsawa ruins", "Bicol cuisine"],
+    image: "/images/Luzon/Region V — Bicol Region/The Volcano and the Plains Mount Mayon.jpg",
+  },
+  {
+    filterRegion: "Luzon",
+    category: "Island Getaway",
+    title: "Alibijaban Island Getaway",
+    location: "Alibijaban Island · Quezon Province",
+    description:
+      "Reach one of Luzon's quietest island escapes — a pristine retreat off the Quezon coast with clear water, local fishing communities, and unhurried island time far from the tour trail.",
+    duration: "2–4 days",
+    bestFor: "Island seekers, couples, small groups",
+    highlights: ["Pristine coves", "Local fishing culture", "Island hopping"],
+    image: "/images/Luzon/Region IV-A — CALABARZON/Port of Batangas.jpg",
   },
   {
     filterRegion: "Visayas",
     category: "Visayas",
     title: "Visayas Island Heritage",
+    location: "Cebu · Bohol · Eastern Visayas",
     description:
-      "Cebu's Spanish forts, Bohol's baroque churches, and Iloilo's grand ancestral homes — threaded together across island-hop routes with local guides.",
+      "Cebu's Spanish forts, Bohol's baroque churches, and Eastern Visayas' MacArthur landing sites — threaded together across island-hop routes with heritage-led local guides.",
     duration: "6–8 days",
     bestFor: "Family groups, history lovers",
     highlights: ["Cebu historic fort", "Chocolate Hills", "Ancestral houses"],
-    image: "/images/chocolate-hills.jpg",
+    image: "/images/Visayas/Region VII — Central Visayas/Bohol - The Geological Wonders Chocolate Hills.jpg",
+  },
+  {
+    filterRegion: "Visayas",
+    category: "Western Visayas",
+    title: "Bacolod-Iloilo Heritage Route",
+    location: "Bacolod · Iloilo · Negros Occidental",
+    description:
+      "From Bacolod's sugar heritage and Silay City ancestral mansions to Iloilo's UNESCO Miagao Church and heritage riverside districts — Western Visayas at its most layered.",
+    duration: "4–6 days",
+    bestFor: "Heritage travelers, food lovers, history groups",
+    highlights: ["Miagao Church", "Silay heritage homes", "Iloilo heritage district"],
+    image: "/images/Visayas/Region VI — Western Visayas/Preserved Heritage Weaving and the Miagao Church.jpg",
   },
   {
     filterRegion: "Mindanao",
     category: "Mindanao",
     title: "Mindanao Cultural Frontier",
+    location: "Davao · Bukidnon · Lake Sebu",
     description:
       "Discover the living weaving culture of Bukidnon, highland traditions of Cotabato, and the layered culinary heritage spanning coastal Davao.",
     duration: "5–7 days",
     bestFor: "Experienced travelers, cultural researchers",
     highlights: ["Higaonon weaving", "Davao food culture", "Highland domains"],
-    image: "/images/marlboro-country-batanes-lanscapes.jpg",
+    image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
   },
   {
     filterRegion: "All",
     category: "Faith & Culture",
     title: "Faith & Pilgrimage Circuit",
+    location: "Quiapo · Intramuros · Multi-region",
     description:
-      "A curated route through the Philippines' most sacred heritage sites — from the Penafrancia feast in Naga to the Quiapo devotion in Manila, paired with quiet stays.",
-    duration: "4–5 days",
+      "A curated route through Manila's most sacred heritage sites — the Quiapo devotion, Intramuros' walled city churches, and colonial faith landmarks paired with quiet evening stays.",
+    duration: "3–4 days",
     bestFor: "Devotional travelers, cultural immersion",
-    highlights: ["Quiapo heritage", "Penafrancia route", "Sacred art stops"],
-    image: "/images/heritage-home.jpg",
+    highlights: ["Quiapo heritage", "Intramuros churches", "Sacred art stops"],
+    image: "/images/Luzon/NCR — National Capital Region/Intramuros Manila.jpg",
   },
   {
     filterRegion: "All",
     category: "Flexible",
     title: "Custom Regional Tour",
+    location: "Any region, Philippines",
     description:
       "Tell us your region, your pace, and your cultural interests. We build the route, the stays, and the local guides around your specific itinerary.",
     duration: "Flexible",
@@ -95,58 +164,31 @@ const tourCollections = [
   },
 ];
 
-const regionalPreviews = [
+const destinations = [
   {
-    region: "Luzon",
-    tagline: "The old north and the capital's roots",
-    description:
-      "From the cobblestone corridors of Vigan to the rice-terrace villages of the Cordillera — Luzon holds the archipelago's oldest written culture, colonial heritage, and mountain rituals still alive today.",
-    destinations: ["Ilocos Sur", "Banaue", "Intramuros", "Bataan"],
-    image: "/images/a-glimpse-of-vigan-city.jpg",
+    number: "01",
+    title: "Ilocos Heritage Trail",
+    region: "Northern Luzon",
+    image: "/images/Luzon/Region I — Ilocos Region/The Spanish Heritage of Vigan Ilocos Sur.jpg",
   },
   {
+    number: "02",
+    title: "Cordillera Highland Loop",
+    region: "Cordillera",
+    image: "/images/Luzon/CAR — Cordillera Administrative Region/The Rice Terraces of Ifugao Banaue.jpg",
+  },
+  {
+    number: "03",
+    title: "Visayas Island Circuit",
     region: "Visayas",
-    tagline: "Islands built on faith and trade",
-    description:
-      "Cebu's Spanish fort, Bohol's baroque churches, Iloilo's grand ancestral homes — the Visayas blend colonial faith, seafaring culture, and the warmest welcome across every island.",
-    destinations: ["Cebu City", "Bohol", "Iloilo", "Negros Occidental"],
-    image: "/images/chocolate-hills.jpg",
+    image: "/images/Visayas/Region VII — Central Visayas/Bohol - The Geological Wonders Chocolate Hills.jpg",
   },
   {
+    number: "04",
+    title: "Mindanao Cultural Frontier",
     region: "Mindanao",
-    tagline: "Where culture runs deepest",
-    description:
-      "The highland weaving societies of Bukidnon, the ancestral domains of the Bagobo and Maguindanao peoples, and the diverse culinary traditions of coastal Davao.",
-    destinations: ["Davao City", "Bukidnon", "Lake Sebu", "Cotabato"],
-    image: "/images/living-culture.jpg",
+    image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
   },
-];
-
-const planningRhythm = [
-  {
-    time: "Dawn",
-    title: "Quiet arrivals",
-    body: "Sunrise calesa, slow coffee, and a stroll through waking plazas before the heat finds them.",
-  },
-  {
-    time: "Midday",
-    title: "Hands on heritage",
-    body: "A weaving studio, an ancestral kitchen, or a coral-stone restoration site — always working, never staged.",
-  },
-  {
-    time: "Dusk",
-    title: "Candlelit suppers",
-    body: "Long tables, family recipes, and the kind of unhurried conversation that turns trips into memories.",
-  },
-];
-
-const included = [
-  "Heritage-led local guides",
-  "Route planning support",
-  "Private or group transfers",
-  "Boutique stays by request",
-  "Food and cultural stops",
-  "On-trip coordination",
 ];
 
 const FILTER_PILLS = ["All", "Luzon", "Visayas", "Mindanao"];
@@ -155,6 +197,7 @@ export default function TourPage() {
   const [activeRouteIdx, setActiveRouteIdx] = useState(0);
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Auto-advance hero route stack every 5 seconds
   useEffect(() => {
@@ -163,6 +206,11 @@ export default function TourPage() {
     }, 5000);
     return () => clearInterval(id);
   }, []);
+
+  // Reset to page 1 whenever filter or search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter, searchQuery]);
 
   const activeRoute = heroRoutes[activeRouteIdx] ?? heroRoutes[0];
 
@@ -173,13 +221,19 @@ export default function TourPage() {
     const q = searchQuery.trim().toLowerCase();
     const matchesSearch =
       !q ||
-      [tour.title, tour.category, tour.description, ...tour.highlights]
+      [tour.title, tour.category, tour.description, tour.location ?? "", ...tour.highlights]
         .join(" ")
         .toLowerCase()
         .includes(q);
 
     return matchesFilter && matchesSearch;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filteredTours.length / PAGE_SIZE));
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const visibleTours = filteredTours.slice(startIndex, startIndex + PAGE_SIZE);
+  const showingFrom = filteredTours.length === 0 ? 0 : startIndex + 1;
+  const showingTo = Math.min(startIndex + PAGE_SIZE, filteredTours.length);
 
   return (
     <>
@@ -328,84 +382,169 @@ export default function TourPage() {
       <div id="tour-collection">
         <HeritageSection variant="primary" className="py-16 md:py-20">
           <div className="container-page">
-            <div className="mb-8">
-              <h2 className="font-serif text-3xl text-coffee-900 sm:text-4xl">
-                Curated tours across the Philippines.
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-coffee-800/80">
-                Browse province-led routes with guided culture, food memory,
-                heritage stops, and practical travel support.
-              </p>
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="font-serif text-3xl text-coffee-900 sm:text-4xl">
+                  Curated tours across the Philippines.
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-coffee-800/80">
+                  Browse province-led routes with guided culture, food memory,
+                  heritage stops, and practical travel support.
+                </p>
+              </div>
+              {filteredTours.length > 0 && (
+                <p className="shrink-0 text-xs text-coffee-700/60">
+                  Showing {showingFrom}–{showingTo} of {filteredTours.length} routes
+                </p>
+              )}
             </div>
 
-            {filteredTours.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredTours.map((tour) => (
-                  <article
-                    key={tour.title}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
-                  >
-                    {/* Image */}
-                    <div className="relative h-44 w-full overflow-hidden">
-                      <img
-                        src={tour.image}
-                        alt={tour.title}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-coffee-950/65 to-transparent" />
-                      <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold-300 backdrop-blur">
-                        {tour.category}
-                      </span>
-                    </div>
-
-                    {/* Body */}
-                    <div className="flex flex-1 flex-col p-6">
-                      <h3 className="font-serif text-xl text-coffee-900">
-                        {tour.title}
-                      </h3>
-                      <p className="mt-2 flex-1 text-sm leading-relaxed text-coffee-800/80">
-                        {tour.description}
-                      </p>
-
-                      {/* Meta */}
-                      <div className="mt-4 flex flex-col gap-0.5 border-t border-cream-200 pt-4 text-xs text-coffee-700/75">
-                        <span>
-                          <strong className="font-semibold text-coffee-800">
-                            Duration:
-                          </strong>{" "}
-                          {tour.duration}
-                        </span>
-                        <span>
-                          <strong className="font-semibold text-coffee-800">
-                            Best for:
-                          </strong>{" "}
-                          {tour.bestFor}
+            {visibleTours.length > 0 ? (
+              <>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {visibleTours.map((tour) => (
+                    <article
+                      key={tour.title}
+                      className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
+                    >
+                      {/* Image */}
+                      <div className="relative h-56 w-full overflow-hidden">
+                        <img
+                          src={tour.image}
+                          alt={tour.title}
+                          loading="lazy"
+                          className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-coffee-950/70 to-transparent" />
+                        <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold-300 backdrop-blur">
+                          {tour.category}
                         </span>
                       </div>
 
-                      {/* Tags */}
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {tour.highlights.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full bg-cream-100 px-2.5 py-1 text-[11px] font-medium text-coffee-700"
-                          >
-                            {tag}
+                      {/* Body */}
+                      <div className="flex flex-1 flex-col p-5">
+                        {/* Location row */}
+                        {tour.location && (
+                          <p className="mb-2 flex items-center gap-1.5 text-[11px] text-coffee-700/70">
+                            <svg
+                              aria-hidden="true"
+                              className="h-3 w-3 flex-shrink-0 text-gold-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            {tour.location}
+                          </p>
+                        )}
+
+                        <h3 className="font-serif text-xl text-coffee-900">
+                          {tour.title}
+                        </h3>
+                        <p className="mt-2 flex-1 text-sm leading-relaxed text-coffee-800/80">
+                          {tour.description}
+                        </p>
+
+                        {/* Meta */}
+                        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-0.5 border-t border-cream-200 pt-4 text-xs text-coffee-700/75">
+                          <span>
+                            <strong className="font-semibold text-coffee-800">
+                              Duration:
+                            </strong>{" "}
+                            {tour.duration}
                           </span>
-                        ))}
-                      </div>
+                          <span>
+                            <strong className="font-semibold text-coffee-800">
+                              Best for:
+                            </strong>{" "}
+                            {tour.bestFor}
+                          </span>
+                        </div>
 
-                      <Link
-                        to="/contact"
-                        className="mt-5 text-sm font-semibold text-gold-600 transition hover:text-gold-700"
+                        {/* Tags */}
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {tour.highlights.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full bg-cream-100 px-2.5 py-1 text-[11px] font-medium text-coffee-700"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Action buttons — Request Quote · View Tour · Add Program */}
+                        <div className="mt-4 border-t border-cream-100 pt-4">
+                          <div className="grid grid-cols-3 gap-1.5">
+                            <Link
+                              to="/contact"
+                              className="min-w-0 rounded-full bg-gold-500 px-2 py-2 text-center text-[10px] font-bold text-coffee-950 transition hover:bg-gold-400 sm:text-[11px]"
+                            >
+                              Request Quote
+                            </Link>
+                            <Link
+                              to="/contact"
+                              className="min-w-0 rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-[10px] font-semibold text-cream-50 transition hover:bg-coffee-800 sm:text-[11px]"
+                            >
+                              View Tour
+                            </Link>
+                            {/* TODO: connect Add Program to JourneyContext when journey flow is restored. */}
+                            <button
+                              type="button"
+                              className="min-w-0 rounded-full border border-cream-300 px-2 py-2 text-[10px] font-semibold text-coffee-700/70 transition hover:border-coffee-300 hover:bg-cream-50 hover:text-coffee-800 sm:text-[11px]"
+                            >
+                              Add Program
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                {/* Pagination strip */}
+                <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-cream-200 pt-6">
+                  <p className="text-xs text-coffee-700/60">
+                    Showing {showingFrom}–{showingTo} of {filteredTours.length} routes
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage((p) => p - 1)}
+                      className="rounded-full border border-cream-200 px-3 py-1.5 text-xs text-coffee-700 transition hover:border-gold-400/50 hover:bg-cream-50 disabled:cursor-not-allowed disabled:text-coffee-700/30 disabled:hover:border-cream-200 disabled:hover:bg-transparent"
+                    >
+                      ← Prev
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setCurrentPage(p)}
+                        className={`h-8 w-8 rounded-full text-xs font-semibold transition ${
+                          p === currentPage
+                            ? "bg-coffee-900 text-cream-50"
+                            : "border border-cream-200 text-coffee-700 hover:border-gold-400/50 hover:bg-cream-50"
+                        }`}
                       >
-                        Inquire about this route →
-                      </Link>
-                    </div>
-                  </article>
-                ))}
-              </div>
+                        {p}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      disabled={currentPage === totalPages}
+                      onClick={() => setCurrentPage((p) => p + 1)}
+                      className="rounded-full border border-cream-200 px-3 py-1.5 text-xs text-coffee-700 transition hover:border-gold-400/50 hover:bg-cream-50 disabled:cursor-not-allowed disabled:text-coffee-700/30 disabled:hover:border-cream-200 disabled:hover:bg-transparent"
+                    >
+                      Next →
+                    </button>
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="py-16 text-center">
                 <p className="text-sm text-coffee-700/70">
@@ -427,70 +566,50 @@ export default function TourPage() {
         </HeritageSection>
       </div>
 
-      {/* ── REGIONAL PREVIEWS ── */}
-      <section
-        id="regions"
-        className="relative overflow-hidden bg-coffee-950 text-cream-50"
-      >
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[radial-gradient(circle_at_15%_85%,rgba(58,117,103,0.45),transparent_55%),radial-gradient(circle_at_85%_10%,rgba(216,177,109,0.18),transparent_50%)]"
-        />
-        <div className="container-page relative py-20">
+      {/* ── DESTINATION RECOMMENDATIONS ── */}
+      <section id="regions" className="bg-coffee-950 py-20 text-cream-50">
+        <div className="container-page">
           <div className="mb-10">
-            <p className="eyebrow-light">Three Regions</p>
+            <p className="eyebrow-light">Destination Recommendations</p>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
-              One archipelago, three island stories.
+              Top heritage destinations.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cream-100/70">
-              Every heritage tour is grounded in one of three island groups.
-              Explore the route that feels like home — or like something you
-              have always needed to find.
+              Curated starting points across the archipelago — each route
+              anchored in living culture, landscape, and local knowledge.
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
-            {regionalPreviews.map((region) => (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {destinations.map((dest) => (
               <article
-                key={region.region}
-                className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-premium"
+                key={dest.title}
+                className="group relative aspect-[3/4] overflow-hidden rounded-2xl"
               >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={region.image}
-                    alt={region.region}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-coffee-950/80 via-coffee-950/20 to-transparent" />
-                  <div className="absolute inset-x-5 bottom-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-gold-300">
-                      {region.tagline}
-                    </p>
-                    <h3 className="mt-0.5 font-serif text-2xl text-cream-50">
-                      {region.region}
-                    </h3>
-                  </div>
+                <img
+                  src={dest.image}
+                  alt={dest.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-coffee-950/90 via-coffee-950/30 to-transparent" />
+                <div className="absolute left-4 top-4">
+                  <span className="font-serif text-4xl leading-none text-gold-400/60">
+                    {dest.number}
+                  </span>
                 </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <p className="flex-1 text-sm leading-relaxed text-coffee-800/80">
-                    {region.description}
+                <div className="absolute inset-x-5 bottom-5">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-gold-300">
+                    {dest.region}
                   </p>
-                  <div className="mt-4 flex flex-wrap gap-1.5 border-t border-cream-200 pt-4">
-                    {region.destinations.map((dest) => (
-                      <span
-                        key={dest}
-                        className="rounded-full border border-cream-200 px-3 py-1 text-[11px] text-coffee-700"
-                      >
-                        {dest}
-                      </span>
-                    ))}
-                  </div>
+                  <h3 className="mt-1 font-serif text-lg leading-snug text-cream-50">
+                    {dest.title}
+                  </h3>
                   <Link
                     to="/contact"
-                    className="mt-4 text-sm font-semibold text-gold-600 transition hover:text-gold-700"
+                    className="mt-2 inline-block text-[11px] font-semibold text-gold-300 transition hover:text-gold-200"
                   >
-                    Plan a {region.region} route →
+                    View route →
                   </Link>
                 </div>
               </article>
@@ -498,117 +617,6 @@ export default function TourPage() {
           </div>
         </div>
       </section>
-
-      {/* ── PLANNING RHYTHM ── */}
-      <HeritageSection variant="secondary" className="py-16 md:py-20">
-        <div className="container-page">
-          <div className="mb-10 text-center">
-            <p className="eyebrow">How We Move</p>
-            <h2 className="mt-3 font-serif text-3xl text-coffee-900 sm:text-4xl">
-              A day on Heritage tour.
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-coffee-800/80">
-              No rigid schedule. Every day has a quiet morning, a hands-on
-              midday, and an unhurried evening.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {planningRhythm.map((step) => (
-              <article
-                key={step.time}
-                className="relative overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 p-6 shadow-warm"
-              >
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-1 w-10 rounded-full bg-gradient-to-r from-gold-400 to-gold-500"
-                />
-                <span className="eyebrow mt-4 block">{step.time}</span>
-                <h3 className="mt-2 font-serif text-xl text-coffee-900">
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-coffee-800/85">
-                  {step.body}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </HeritageSection>
-
-      {/* ── WHAT'S INCLUDED ── */}
-      <HeritageSection variant="primary" className="py-16 md:py-20">
-        <div className="container-page">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
-            <div>
-              <p className="eyebrow">Inclusions</p>
-              <h2 className="mt-3 font-serif text-3xl text-coffee-900 sm:text-4xl">
-                Everything except the rush.
-              </h2>
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-coffee-800/80">
-                Every Heritage Philippines route comes with the essentials — so
-                you arrive, settle in, and experience the place without
-                logistics pulling you out of the moment.
-              </p>
-              <Link to="/contact" className="btn-outline-dark mt-6">
-                Ask about inclusions
-              </Link>
-            </div>
-            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {included.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-3 rounded-xl border border-cream-200/80 bg-gradient-to-br from-white to-cream-50 px-4 py-3 shadow-soft"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-gold-500"
-                  />
-                  <span className="text-sm text-coffee-800">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </HeritageSection>
-
-      {/* ── TESTIMONIAL + FINAL CTA ── */}
-      <HeritageSection variant="secondary" grow className="py-16 md:py-20">
-        <div className="container-page">
-          <figure className="mx-auto mb-16 max-w-3xl text-center">
-            <span
-              aria-hidden="true"
-              className="mx-auto mb-6 block h-1 w-12 rounded-full bg-gold-500"
-            />
-            <blockquote className="font-serif text-2xl leading-snug text-coffee-900 sm:text-3xl">
-              &ldquo;We didn&apos;t just see the Philippines — we were welcomed
-              into it. Every meal, every story, felt like a homecoming.&rdquo;
-            </blockquote>
-            <figcaption className="mt-6 text-xs uppercase tracking-widest text-coffee-700/70">
-              Anna &amp; Ben · Cordillera Highland Loop, 2024
-            </figcaption>
-          </figure>
-
-          <div className="rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 p-8 text-center shadow-warm md:p-12">
-            <p className="eyebrow">Ready to travel?</p>
-            <h2 className="mt-3 font-serif text-2xl text-coffee-900 sm:text-3xl">
-              Let us shape the right Heritage tour for you.
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-coffee-800/80">
-              Tell us your region, your dates, and your travel style. We will
-              build the route, the stays, and the cultural stops around your
-              journey.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-              <Link to="/contact" className="btn-primary">
-                Start Planning
-              </Link>
-              <Link to="/packages" className="btn-outline-dark">
-                View Packages
-              </Link>
-            </div>
-          </div>
-        </div>
-      </HeritageSection>
     </>
   );
 }
