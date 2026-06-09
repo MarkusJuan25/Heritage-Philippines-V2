@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
+import { provincePackages } from "../data/philippinesPackages";
+import { useJourney } from "../context/JourneyContext";
 
 // --- Static data ---
 const packageStyles = [
@@ -44,22 +46,22 @@ const packageStyles = [
 const flexibleOptions = [
   {
     title: "Hotel + Tour Package",
-    text: "Bundle a comfortable stay with transfers, guided stops, and destination pacing.",
+    text: "Bundle a boutique hotel or resort stay with private transfers, curated guided stops, and full destination pacing — ideal for Premium, Couple, and Family packages.",
     image: "/images/packages-luxury-feel/yacht-cruise.jpg",
   },
   {
     title: "Homestay + Tour Package",
-    text: "Choose a warmer local stay with community feel, cultural immersion, and practical route planning.",
+    text: "Choose a warm local stay — a heritage house, family home, or small community inn — woven into a curated cultural route with guided support.",
     image: "/images/homecoming-emotion/happy-family.jpg",
   },
   {
     title: "Eco-Tours / Private Tour",
-    text: "Shape a private route around natural landscapes, cultural stops, slower pacing, and personal guide support.",
+    text: "A private route shaped around landscapes, nature encounters, community culture, slower pacing, and a dedicated guide who knows the region.",
     image: "/images/experiences-destinations/beach-lagoon.jpg",
   },
   {
     title: "Daily Joiner Tours",
-    text: "A future shared-tour option for travelers who prefer scheduled departures and a lighter package format.",
+    text: "Join a scheduled group departure for shared discovery. Lighter logistics, flexible start, and a practical format for solo travelers and budget-minded groups.",
     image: "/images/marlboro-country-batanes-lanscapes.jpg",
   },
 ];
@@ -69,35 +71,41 @@ const featuredItineraries = [
     title: "Bataan Heritage Route",
     duration: "3D2N",
     tag: "History Route",
-    text: "History, Mt. Samat, Las Casas, coastal leisure, and local craft stops.",
+    text: "A three-day reflection and heritage route — Mt. Samat Cross, Las Casas Filipinas de Acuzar, a Corregidor Island option, coastal leisure, and local craft stops woven into the schedule.",
+    highlights: [
+      "Mt. Samat Shrine and Cross",
+      "Las Casas Filipinas de Acuzar",
+      "Corregidor Island optional daytrip",
+      "Local craft and coastal stop",
+    ],
     image: "/images/a-glimpse-of-vigan-city.jpg",
   },
   {
     title: "Bicol Adventure Day Tour",
     duration: "Day Tour",
     tag: "Adventure",
-    text: "Mayon ATV, Cagsawa Ruins, Daraga Church, and Bicol food stops.",
+    text: "A full-day Bicol circuit — Mayon Volcano ATV, Cagsawa Ruins, Daraga Church, a local Bicol Express food stop, and a scenic return by evening.",
     image: "/images/experiences-destinations/enjoying-the-spot.jpg",
   },
   {
     title: "Baguio Cool Highlands Escape",
     duration: "3D2N",
     tag: "Highlands",
-    text: "Strawberry Farm, Burnham Park, Botanical Garden, Mines View, Camp John Hay, and night market.",
+    text: "Three days in the highland city — Strawberry Farm, Burnham Park, Botanical Garden, Mines View, Camp John Hay, pine forest walks, and a Baguio night market experience.",
     image: "/images/home-hero-story-preview/misty-mountain.jpg",
   },
   {
     title: "Bacolod-Iloilo Heritage & Food Trail",
     duration: "5D4N",
     tag: "Food & Heritage",
-    text: "Bacolod heritage, Silay ancestral houses, Iloilo churches, river esplanade, and food stops.",
+    text: "Five days across Western Visayas — Bacolod sugar heritage, Silay ancestral houses, the Iloilo river esplanade, Miagao Church, regional food stops, and a negrense feast before departure.",
     image: "/images/journey-culture-movement/family-cooking.jpg",
   },
   {
     title: "Alibijaban Island Getaway",
     duration: "3D2N",
     tag: "Island Escape",
-    text: "Quezon island escape, sandbar, mangroves, beach leisure, and private dinner.",
+    text: "A Quezon island escape — Alibijaban sandbar, mangrove kayak, a quiet beach stretch, a private island dinner, and sunrise views before the return sea crossing.",
     image: "/images/experiences-destinations/beach-lagoon.jpg",
   },
 ];
@@ -114,42 +122,18 @@ const PACKAGE_TYPE_OPTIONS = [...STANDARD_PACKAGE_TYPES, "Custom Package"];
 const STANDARD_DEST_AREAS = ["Luzon", "Visayas", "Mindanao"];
 const DEST_AREA_OPTIONS = [...STANDARD_DEST_AREAS, "Custom"];
 
-// Fallback province list (V2 has no philippinesPackages.js yet)
-// TODO: Replace with import from data/philippinesPackages when added to V2
-const PROVINCE_FALLBACK = {
-  Luzon: [
-    "Bataan",
-    "Batangas",
-    "Benguet (Baguio)",
-    "Cagayan",
-    "Ilocos Norte",
-    "Ilocos Sur",
-    "Laguna",
-    "Mountain Province",
-    "Pampanga",
-    "Quezon",
-    "Rizal",
-  ],
-  Visayas: [
-    "Bohol",
-    "Cebu",
-    "Iloilo",
-    "Leyte",
-    "Negros Occidental",
-    "Negros Oriental",
-    "Samar",
-    "Siquijor",
-  ],
-  Mindanao: [
-    "Bukidnon",
-    "Cagayan de Oro",
-    "Davao del Norte",
-    "Davao del Sur",
-    "Misamis Oriental",
-    "South Cotabato",
-    "Zamboanga del Norte",
-  ],
-};
+// Province list derived from real philippinesPackages data
+const PROVINCE_MAP = ["Luzon", "Visayas", "Mindanao"].reduce((acc, grp) => {
+  acc[grp] = [
+    ...new Set(
+      provincePackages.filter((p) => p.islandGroup === grp).map((p) => p.province)
+    ),
+  ].sort();
+  return acc;
+}, {});
+
+const slugify = (s) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 const defaultQuote = {
   packageType: "Premium",
@@ -181,6 +165,7 @@ export default function PackagesPage() {
   const [isCustomPkg, setIsCustomPkg] = useState(false);
   const [isCustomDest, setIsCustomDest] = useState(false);
   const quotePanelRef = useRef(null);
+  const { addProgram, isProgramSelected, openQuoteModal, programs } = useJourney();
 
   // Auto-cycle showcase; pauses on hover / quote panel focus
   useEffect(() => {
@@ -194,7 +179,7 @@ export default function PackagesPage() {
   const today = new Date().toISOString().split("T")[0];
 
   const provinceOptions = STANDARD_DEST_AREAS.includes(quote.destinationArea)
-    ? (PROVINCE_FALLBACK[quote.destinationArea] ?? [])
+    ? (PROVINCE_MAP[quote.destinationArea] ?? [])
     : [];
 
   const hasDestination = isCustomDest
@@ -246,13 +231,28 @@ export default function PackagesPage() {
     quotePanelRef.current?.querySelector("select, input")?.focus();
   };
 
+  const handleOpenQuoteModal = () => {
+    openQuoteModal({
+      packageType: quote.packageType,
+      destinationArea: quote.destinationArea,
+      province: quote.province,
+      startDate: quote.startDate,
+      endDate: quote.endDate,
+      isCustomDest,
+      source: packageStyles[activeIdx]?.title || "",
+      programs,
+    });
+  };
+
+  // Precomputed for the large featured itinerary card (avoids IIFE in JSX)
+  const it0Id = slugify(featuredItineraries[0].title);
+  const it0Added = isProgramSelected(it0Id);
+
   return (
     <>
       {/* ================================================================
           PACKAGES BOOKING HERO — V1 class structure
           First screen = choose package style + plan quote.
-          JourneyContext: not available in V2 yet → /contact fallback.
-          DatePickerField: not ported → native date inputs (remaining gap).
       ================================================================ */}
       <section
         className="packages-booking-hero"
@@ -291,6 +291,8 @@ export default function PackagesPage() {
                 {packageStyles.map((pkg, i) => {
                   const isActive = i === activeIdx;
                   const stackClass = getPackageStackPosition(i, activeIdx);
+                  const programId = slugify(pkg.type);
+                  const programAdded = isProgramSelected(programId);
 
                   return (
                     <article
@@ -358,12 +360,19 @@ export default function PackagesPage() {
                               {canQuote ? "Review Quote" : "Request Quote"}
                             </button>
                             <button
-                              className="package-add-program-btn package-add-program-btn--card"
+                              className={`package-add-program-btn package-add-program-btn--card${programAdded ? " package-add-program-btn--added" : ""}`}
                               type="button"
-                              onClick={focusQuotePanel}
+                              disabled={programAdded}
+                              onClick={() =>
+                                addProgram({
+                                  id: programId,
+                                  title: pkg.title,
+                                  type: "package-style",
+                                })
+                              }
                             >
-                              <span aria-hidden="true">★</span>
-                              Avail Program
+                              <span aria-hidden="true">{programAdded ? "✓" : "★"}</span>
+                              {programAdded ? "Added to Journey" : "Avail Program"}
                             </button>
                           </div>
                         )}
@@ -377,15 +386,6 @@ export default function PackagesPage() {
           </div>
 
           {/* ── Quote planner panel ── */}
-          {/*
-            TODO (V2 gaps):
-            - Wire openQuoteModal when JourneyContext is added to V2.
-            - Wire addProgram / isProgramSelected for "Avail Program" when JourneyContext lands.
-            - Port V1 custom DatePickerField calendar once calendar CSS is added.
-            - Replace PROVINCE_FALLBACK with import from data/philippinesPackages when added.
-            - Full V1 Journey drawer/autohide system should be restored later when
-              JourneyContext and package data are ported to V2.
-          */}
           <div
             ref={quotePanelRef}
             className="package-card-quote-panel package-card-quote-panel--hero package-card-quote-panel--premium"
@@ -564,13 +564,11 @@ export default function PackagesPage() {
               </label>
             </div>
 
-            {/* Quote CTA — links to /contact until JourneyContext + openQuoteModal land in V2 */}
-            <Link
-              to="/contact"
-              aria-disabled={!canQuote}
-              onClick={(e) => {
-                if (!canQuote) e.preventDefault();
-              }}
+            {/* Quote CTA — opens journey/quote modal when form is valid */}
+            <button
+              type="button"
+              disabled={!canQuote}
+              onClick={canQuote ? handleOpenQuoteModal : undefined}
               className={`package-quote-btn${
                 canQuote
                   ? " package-quote-btn--gold"
@@ -578,11 +576,11 @@ export default function PackagesPage() {
               }`}
             >
               {canQuote ? "Review Quote" : "Request Quote"}
-            </Link>
+            </button>
 
             <p className="package-quote-panel__hint">
               {canQuote
-                ? "Ready — your details will carry to the contact form."
+                ? "Ready — review your quote and send to our team."
                 : "Choose a destination, province, and travel dates to unlock."}
             </p>
           </div>
@@ -591,168 +589,200 @@ export default function PackagesPage() {
 
       {/* ================================================================
           SECTION 2 — Flexible Package Options
+          Warm parchment background, editorial cards, clear actions
       ================================================================ */}
-      <HeritageSection variant="secondary" className="py-16 md:py-20">
+      <section className="packages-flexible-options">
         <div className="container-page">
-          <div className="mb-10 text-center">
-            <h2 className="font-serif text-3xl text-coffee-900 sm:text-4xl">
-              Start with the format, then shape the journey.
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-coffee-800/80">
-              Choose a base travel format first. Our team adjusts the
-              destination, hotel level, pacing, transfers, and guide support
-              around your dates.
+          <div className="packages-flexible-options__heading">
+            <span className="eyebrow">Travel Format</span>
+            <h2>Start with your format, then shape the route.</h2>
+            <p>
+              Choose how you want to travel — hotel, homestay, private, or
+              group. Our team builds the destination, pacing, transfers, and
+              inclusions around your specific dates and group.
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {flexibleOptions.map((pkg, i) => (
-              <article
-                key={pkg.title}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
-              >
-                <div className="relative h-44 w-full overflow-hidden">
-                  <img
-                    src={pkg.image}
-                    alt={pkg.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                  <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-coffee-950/55 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gold-300 backdrop-blur">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-serif text-lg text-coffee-900">
-                    {pkg.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-coffee-800/80">
-                    {pkg.text}
-                  </p>
-                  <div className="mt-5 border-t border-cream-200 pt-4">
-                    <Link
-                      to="/contact"
-                      className="text-sm font-semibold text-gold-600 transition hover:text-gold-700"
-                    >
-                      Inquire →
-                    </Link>
+          <div className="packages-flexible-options__grid">
+            {flexibleOptions.map((pkg, i) => {
+              const fid = slugify(pkg.title);
+              const fadded = isProgramSelected(fid);
+              return (
+                <article key={pkg.title} className="packages-flexible-card group">
+                  <div className="packages-flexible-card__media">
+                    <img src={pkg.image} alt={pkg.title} loading="lazy" />
+                    <span className="packages-flexible-card__index" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                   </div>
-                </div>
-              </article>
-            ))}
+                  <div className="packages-flexible-card__body">
+                    <h3>{pkg.title}</h3>
+                    <p>{pkg.text}</p>
+                    <div className="packages-flexible-card__actions">
+                      <button
+                        type="button"
+                        disabled={fadded}
+                        onClick={() =>
+                          addProgram({ id: fid, title: pkg.title, type: "flexible-package" })
+                        }
+                        className={`packages-flexible-card__add-btn${
+                          fadded ? " packages-flexible-card__add-btn--added" : ""
+                        }`}
+                      >
+                        {fadded ? "✓ Added to Journey" : "Add to My Journey"}
+                      </button>
+                      <Link to="/contact" className="packages-flexible-card__inquire">
+                        Inquire →
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
+
+          <p className="packages-flexible-options__note">
+            All formats are adjustable — our team shapes inclusions, transfers,
+            and pacing around your confirmed dates and group.
+          </p>
         </div>
-      </HeritageSection>
+      </section>
 
       {/* ================================================================
-          SECTION 3 — Featured Itineraries + Bespoke CTA
+          SECTION 3 — Route Journal
+          Dark coffee background, editorial feature + mini grid
       ================================================================ */}
-      <HeritageSection variant="primary" grow className="py-16 md:py-20">
+      <section className="packages-route-journal">
         <div className="container-page">
-          <div className="mb-10 text-center">
-            <h2 className="font-serif text-3xl text-coffee-900 sm:text-4xl">
-              Featured routes you can start from.
-            </h2>
-          </div>
-
-          {/* Large featured itinerary */}
-          <article className="group mb-8 flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-premium md:flex-row">
-            <div className="relative h-64 overflow-hidden md:h-auto md:w-5/12">
-              <img
-                src={featuredItineraries[0].image}
-                alt={featuredItineraries[0].title}
-                loading="lazy"
-                className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-              />
-              <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-gold-400/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-coffee-950">
-                {featuredItineraries[0].tag}
-              </span>
-            </div>
-            <div className="flex flex-1 flex-col justify-center p-8">
-              <span className="eyebrow">{featuredItineraries[0].duration}</span>
-              <h3 className="mt-2 font-serif text-2xl text-coffee-900 sm:text-3xl">
-                {featuredItineraries[0].title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-coffee-800/85">
-                {featuredItineraries[0].text}
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link to="/tour" className="btn-outline-dark text-sm">
-                  View Tours
-                </Link>
-                <Link to="/contact" className="btn-primary text-sm">
-                  Request Quote
-                </Link>
-              </div>
-            </div>
-          </article>
-
-          {/* Smaller itinerary cards */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featuredItineraries.slice(1).map((it) => (
-              <article
-                key={it.title}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
-              >
-                <div className="relative h-40 overflow-hidden">
-                  <img
-                    src={it.image}
-                    alt={it.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-coffee-950/60 to-transparent" />
-                  <span className="absolute inset-x-4 bottom-3 flex items-center justify-between">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-gold-300">
-                      {it.tag}
-                    </span>
-                    <span className="rounded-full bg-coffee-950/55 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-cream-100 backdrop-blur">
-                      {it.duration}
-                    </span>
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="font-serif text-base text-coffee-900">
-                    {it.title}
-                  </h3>
-                  <p className="mt-1.5 flex-1 text-xs leading-relaxed text-coffee-800/80">
-                    {it.text}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-cream-200 pt-4">
-                    <Link
-                      to="/tour"
-                      className="text-xs font-semibold text-gold-600 hover:text-gold-700"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      to="/contact"
-                      className="text-xs font-semibold text-gold-500 hover:text-gold-500/80"
-                    >
-                      Request Quote →
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          {/* Bespoke CTA */}
-          <div className="mt-16 rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 p-8 text-center shadow-warm md:p-12">
-            <span className="eyebrow">Bespoke Itineraries</span>
-            <h2 className="mt-3 font-serif text-2xl text-coffee-900 sm:text-3xl">
-              Don&apos;t see your journey?
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-coffee-800/80">
-              Tell us what calls you — a region, a craft, a memory — and we
-              will build the trip around it.
+          <div className="packages-route-journal__heading">
+            <span className="eyebrow-light">Sample Heritage Routes</span>
+            <h2>Featured itineraries to start your journey.</h2>
+            <p>
+              Reference routes — fully adjustable around your group, dates,
+              budget, and cultural interests.
             </p>
-            <Link to="/contact" className="btn-outline-dark mt-6">
-              Plan with Us
-            </Link>
           </div>
+
+          <div className="packages-route-journal__layout">
+            {/* Large featured itinerary */}
+            <article className="packages-route-feature group">
+              <div className="packages-route-feature__media">
+                <img
+                  src={featuredItineraries[0].image}
+                  alt={featuredItineraries[0].title}
+                  loading="lazy"
+                />
+                <span className="packages-route-feature__tag">
+                  {featuredItineraries[0].tag}
+                </span>
+              </div>
+              <div className="packages-route-feature__body">
+                <span className="eyebrow-light">{featuredItineraries[0].duration}</span>
+                <h3>{featuredItineraries[0].title}</h3>
+                <p>{featuredItineraries[0].text}</p>
+                {featuredItineraries[0].highlights && (
+                  <ul className="packages-route-feature__highlights">
+                    {featuredItineraries[0].highlights.map((h) => (
+                      <li key={h}>
+                        <span aria-hidden="true">✦</span>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className="packages-route-feature__actions">
+                  <button
+                    type="button"
+                    disabled={it0Added}
+                    onClick={() =>
+                      addProgram({
+                        id: it0Id,
+                        title: featuredItineraries[0].title,
+                        type: "itinerary",
+                        duration: featuredItineraries[0].duration,
+                      })
+                    }
+                    className={
+                      it0Added
+                        ? "packages-route-feature__add--added"
+                        : "packages-route-feature__add"
+                    }
+                  >
+                    {it0Added ? "✓ Added to Journey" : "Add to My Journey"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleOpenQuoteModal}
+                    className="packages-route-feature__quote"
+                  >
+                    Request Quote
+                  </button>
+                  <Link to="/tour" className="packages-route-feature__view">
+                    View Tours →
+                  </Link>
+                </div>
+              </div>
+            </article>
+
+            {/* Mini itinerary cards — stacked right column */}
+            <div className="packages-route-list">
+              {featuredItineraries.slice(1).map((it) => {
+                const itId = slugify(it.title);
+                const itAdded = isProgramSelected(itId);
+                return (
+                  <article key={it.title} className="packages-route-mini group">
+                    <div className="packages-route-mini__media">
+                      <img src={it.image} alt={it.title} loading="lazy" />
+                      <div className="packages-route-mini__overlay" />
+                      <span className="packages-route-mini__meta">
+                        <span className="packages-route-mini__meta-tag">{it.tag}</span>
+                        <span className="packages-route-mini__meta-dur">{it.duration}</span>
+                      </span>
+                    </div>
+                    <div className="packages-route-mini__body">
+                      <h3>{it.title}</h3>
+                      <p>{it.text}</p>
+                      <div className="packages-route-mini__actions">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openQuoteModal({
+                              source: it.title,
+                              duration: it.duration,
+                              programs,
+                            })
+                          }
+                          className="packages-route-mini__quote"
+                        >
+                          Quote
+                        </button>
+                        <button
+                          type="button"
+                          disabled={itAdded}
+                          onClick={() =>
+                            addProgram({
+                              id: itId,
+                              title: it.title,
+                              type: "itinerary",
+                              duration: it.duration,
+                            })
+                          }
+                          className={`packages-route-mini__add-btn${
+                            itAdded ? " packages-route-mini__add-btn--added" : ""
+                          }`}
+                        >
+                          {itAdded ? "✓ Added" : "+ My Journey"}
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
-      </HeritageSection>
+      </section>
     </>
   );
 }
