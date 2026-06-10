@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
 import { packageCategories, tourPackages } from "../data/tourPackages.js";
+import { useJourney } from "../context/JourneyContext";
 
 // --- Static data ---
 
@@ -61,6 +62,7 @@ export default function TourPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const { openQuoteModal, addProgram, isProgramSelected } = useJourney();
 
   // Auto-advance hero route stack every 5 seconds
   useEffect(() => {
@@ -350,26 +352,46 @@ export default function TourPage() {
                         {/* Action buttons — Request Quote · View Tour · Add Program */}
                         <div className="mt-4 border-t border-cream-100 pt-4">
                           <div className="grid grid-cols-3 gap-1.5">
-                            <Link
-                              to="/contact"
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openQuoteModal({
+                                  source: tour.title,
+                                  category: tour.category,
+                                  location: tour.location,
+                                })
+                              }
                               className="min-w-0 rounded-full bg-gold-500 px-2 py-2 text-center text-[10px] font-bold text-coffee-950 transition hover:bg-gold-400 sm:text-[11px]"
                             >
                               Request Quote
-                            </Link>
+                            </button>
                             <Link
                               to="/contact"
                               className="min-w-0 rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-[10px] font-semibold text-cream-50 transition hover:bg-coffee-800 sm:text-[11px]"
                             >
                               View Tour
                             </Link>
-                            {/* TODO: connect Add Program to JourneyContext when journey flow is restored. */}
                             <button
                               type="button"
-                              className="min-w-0 rounded-full border border-gold-400/70 bg-gradient-to-br from-cream-50 via-gold-50 to-gold-100 px-2 py-2 text-[10px] font-bold text-coffee-900 shadow-warm transition hover:-translate-y-0.5 hover:border-gold-500 hover:bg-gold-100 hover:shadow-premium focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 sm:text-[11px]"
+                              disabled={isProgramSelected(tour.slug)}
+                              onClick={() =>
+                                addProgram({
+                                  id: tour.slug,
+                                  title: tour.title,
+                                  type: "tour",
+                                })
+                              }
+                              className={`min-w-0 rounded-full border px-2 py-2 text-[10px] font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 sm:text-[11px] ${
+                                isProgramSelected(tour.slug)
+                                  ? "cursor-default border-gold-400/60 bg-gold-50 text-gold-700"
+                                  : "border-gold-400/70 bg-gradient-to-br from-cream-50 via-gold-50 to-gold-100 text-coffee-900 shadow-warm hover:-translate-y-0.5 hover:border-gold-500 hover:bg-gold-100 hover:shadow-premium"
+                              }`}
                             >
                               <span className="inline-flex items-center justify-center gap-1">
-                                <span aria-hidden="true">＋</span>
-                                Add Program
+                                <span aria-hidden="true">
+                                  {isProgramSelected(tour.slug) ? "✓" : "＋"}
+                                </span>
+                                {isProgramSelected(tour.slug) ? "Added" : "Add Program"}
                               </span>
                             </button>
                           </div>

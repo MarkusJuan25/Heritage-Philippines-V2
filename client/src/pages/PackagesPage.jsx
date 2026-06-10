@@ -239,7 +239,6 @@ export default function PackagesPage() {
       startDate: quote.startDate,
       endDate: quote.endDate,
       isCustomDest,
-      source: packageStyles[activeIdx]?.title || "",
       programs,
     });
   };
