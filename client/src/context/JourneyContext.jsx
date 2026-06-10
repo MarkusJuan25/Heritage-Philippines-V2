@@ -4,8 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 const JourneyContext = createContext(null);
 
 export function JourneyProvider({ children }) {
+  const location = useLocation();
+
   const [programs, setPrograms] = useState([]);
   const [modal, setModal] = useState({ open: false, data: null });
+
+  const showJourneyDock = 
+    location.pathname.startsWith("/packages") ||
+    location.pathname.startsWith("/tour");
 
   const addProgram = useCallback((program) => {
     setPrograms((prev) =>
@@ -43,12 +49,11 @@ export function JourneyProvider({ children }) {
       }}
     >
       {children}
-      <MyJourneyWidget
-        programs={programs}
-        onOpenQuoteModal={() =>
-          openQuoteModal({ programs, fromWidget: true })
-        }
-      />
+      {showJourneyDock && (
+        <MyJourneyWidget programs={programs} onOpenQuoteModal={() => openQuoteModal({ programs, fromWidget: true })}
+        />
+      )}
+
       {modal.open && <QuoteModal data={modal.data} onClose={closeQuoteModal} />}
     </JourneyContext.Provider>
   );

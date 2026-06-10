@@ -313,7 +313,7 @@ export default function HomePage() {
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-gold-400/20 bg-coffee-950 px-7 py-14 text-center text-cream-50 shadow-premium sm:px-12 md:py-16">
             <div
               aria-hidden="true"
-              className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(58,117,103,0.38),transparent_55%),radial-gradient(circle_at_85%_80%,rgba(216,177,109,0.22),transparent_55%)]"
+              className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(255,244,214,0.07),transparent_48%),radial-gradient(circle_at_85%_80%,rgba(216,177,109,0.22),transparent_55%),linear-gradient(135deg,rgba(15,12,8,0.18),transparent_58%)]"
             />
             <div
               aria-hidden="true"

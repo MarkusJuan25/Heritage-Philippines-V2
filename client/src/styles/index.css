@@ -1557,3 +1557,26 @@
   .gallery-lightbox-nav--prev { left: 1.25rem; }
   .gallery-lightbox-nav--next { right: 1.25rem; }
 }
+
+/* My Journey dock auto-hide final override */
+.my-journey-floating-dock.is-auto-hidden {
+  transform: translateX(calc(100%% - 8px)) !important;
+  opacity: 0.35 !important;
+}
+
+.my-journey-floating-dock--left.is-auto-hidden {
+  transform: translateX(calc(-100%% + 8px)) !important;
+  opacity: 0.35 !important;
+}
+
+@media (max-width: 767px) {
+  .my-journey-floating-dock.is-auto-hidden {
+    transform: translateX(calc(100%% - 8px)) !important;
+    opacity: 0.3 !important;
+  }
+
+  .my-journey-floating-dock--left.is-auto-hidden {
+    transform: translateX(calc(-100%% + 8px)) !important;
+    opacity: 0.3 !important;
+  }
+}
