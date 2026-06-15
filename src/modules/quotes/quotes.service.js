@@ -1,3 +1,4 @@
+import { sendQuoteNotifications } from "./quotes.email.js";
 import { validateQuoteRequest } from "./quotes.validation.js";
 
 const quoteRequests = [];
@@ -13,6 +14,8 @@ export async function createQuoteRequest(payload) {
   };
 
   quoteRequests.push(quote);
+
+  await sendQuoteNotifications(quote);
 
   return quote;
 }
