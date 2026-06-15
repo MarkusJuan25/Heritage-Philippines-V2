@@ -1,3 +1,4 @@
+import { createQuoteRequest } from "../services/quotesService";
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -737,8 +738,10 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     startDate: data.startDate || "",
     endDate: data.endDate || "",
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors ] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // upd saves personal fields to the session draft automatically
   const upd = (field, value) => {
@@ -775,16 +778,84 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const getGroupSizeNumber = (value) => {
+    const match = String(value || "").match(/\d+/);
+    return match ? Number(match[0]) : undefined;
+  };
+
+  const buildQuotePayload = () => ({
+    name: form.clientName.trim(),
+    email: form.email.trim(),
+    phone: form.phone.trim(),
+    destination:
+      form.preferredDestination.trim() ||
+      computedDestPrefill ||
+      data.source ||
+      data.province ||
+      data.destinationArea ||
+      "Custom Heritage Philippines journey",
+    groupSize: getGroupSizeNumber(form.numberOfTravelers),
+    startDate: form.startDate || "",
+    endDate: form.endDate || "",
+    message: form.message.trim(),
+    packageStyle: form.groupType || data.packageType || "",
+    province: data.province || "",
+    source: data.source || "",
+    destinationArea: data.destinationArea || "",
+    selectedPrograms: programs.map((program) => ({
+      id: program.id,
+      title: program.title,
+      location: program.location,
+      duration: program.duration,
+    })),
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError("");
+
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;
     }
-    onClearDraft();
-    setSubmitted(true);
+
+    setSubmitting(true);
+
+    try {
+      await createQuoteRequest(buildQuotePayload());
+      onClearDraft();
+      setSubmitted(true);
+    } catch (error) {
+      const details = error.response?.data?.details;
+      const apiMessage = error.response?.data?.message;
+
+      if (Array.isArray(details) && details.length > 0) {
+        const fieldMap = {
+          name: "clientName",
+          destination: "preferredDestination",
+          groupSize: "numberOfTravelers",
+        };
+
+        const apiErrors = details.reduce((acc, detail) => {
+          const field = fieldMap[detail.field] || detail.field;
+          acc[field] = detail.message;
+          return acc;
+        }, {});
+
+        setErrors((current) => ({ ...current, ...apiErrors }));
+      }
+
+      setSubmitError(
+        details?.[0]?.message ||
+          apiMessage ||
+          "We could not send your quote request right now. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
+
 
   // Context section helpers
   const contextDest =
@@ -816,7 +887,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
             Your request is noted.
           </h2>
           <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-coffee-800/70">
-            Request prepared. Backend email connection will be added next.
+            Your quote request was sent successfully. Our team will review the details and respond as soon as possible.
           </p>
           <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
             <button
@@ -1109,17 +1180,23 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
           )}
         </div>
 
+        {submitError && (
+          <p
+            className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            role="alert"
+          >
+            {submitError}
+          </p>
+        )}
+
         {/* ── CTA ── */}
         <div className="flex flex-col gap-3 border-t border-cream-200 pt-5 sm:flex-row">
-          <button type="submit" className="btn-primary flex-1 text-sm">
-            Send Quote Request →
-          </button>
           <button
-            type="button"
-            onClick={onClose}
-            className="flex-1 rounded-full border border-coffee-900/20 px-6 py-3 text-sm font-semibold text-coffee-900 transition hover:bg-cream-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300"
+            type="submit"
+            disabled={submitting}
+            className="btn-primary flex-1 text-sm disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Cancel
+            {submitting ? "Sending..." : "Send Quote Request →"}
           </button>
         </div>
       </form>
