@@ -136,8 +136,8 @@ const slugify = (s) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 const defaultQuote = {
-  packageType: "Premium",
-  destinationArea: "Luzon",
+  packageType: "",
+  destinationArea: "",
   province: "",
   startDate: "",
   endDate: "",
@@ -443,6 +443,9 @@ export default function PackagesPage() {
                   value={quote.packageType}
                   onChange={(e) => handlePackageTypeChange(e.target.value)}
                 >
+                  <option value="" disabled>
+                    Choose package
+                  </option>
                   {PACKAGE_TYPE_OPTIONS.map((opt) => (
                     <option key={opt} value={opt}>
                       {opt}
@@ -494,6 +497,9 @@ export default function PackagesPage() {
                   value={quote.destinationArea}
                   onChange={(e) => handleDestAreaChange(e.target.value)}
                 >
+                  <option value="" disabled>
+                    Choose Destination
+                  </option>
                   {DEST_AREA_OPTIONS.map((opt) => (
                     <option key={opt} value={opt}>
                       {opt}
@@ -515,7 +521,7 @@ export default function PackagesPage() {
                   value={quote.province}
                   onChange={(e) => updateQuote("province", e.target.value)}
                 >
-                  <option value="">Select province</option>
+                  <option value="" disabled>Select province</option>
                   {provinceOptions.map((p) => (
                     <option key={p} value={p}>
                       {p}

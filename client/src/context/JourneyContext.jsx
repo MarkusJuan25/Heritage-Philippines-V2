@@ -34,6 +34,8 @@ export function JourneyProvider({ children }) {
     setPrograms((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
+  const clearPrograms = useCallback(() => setPrograms([]), []);
+
   const isProgramSelected = useCallback(
     (id) => programs.some((p) => p.id === id),
     [programs]
@@ -73,6 +75,7 @@ export function JourneyProvider({ children }) {
         programs,
         addProgram,
         removeProgram,
+        clearPrograms,
         isProgramSelected,
         openQuoteModal,
         closeQuoteModal,
@@ -95,6 +98,7 @@ export function JourneyProvider({ children }) {
           personalDraft={personalDraft}
           onSaveDraft={savePersonalDraft}
           onClearDraft={clearPersonalDraft}
+          onClearPrograms={clearPrograms}
         />
       )}
     </JourneyContext.Provider>
@@ -617,6 +621,8 @@ function DateField({ id, value, onChange, min, label }) {
           inputMode="numeric"
           value={displayVal}
           onChange={handleTextChange}
+          onClick={openCal}
+          onFocus={openCal}
           placeholder="dd/mm/yyyy"
           autoComplete="off"
           aria-label={label}
@@ -706,9 +712,10 @@ const GROUP_TYPES = [
 const PERSONAL_FIELDS = [
   "clientName", "email", "phone", "groupType",
   "numberOfTravelers", "message", "consent", "preferredDestination",
+  "startDate", "endDate",
 ];
 
-function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onClearDraft }) {
+function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onClearDraft, onClearPrograms }) {
   const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
 
@@ -734,9 +741,9 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     consent: personalDraft.consent,
     // preferredDestination: prefer user's prior manual input, otherwise derive from context
     preferredDestination: personalDraft.preferredDestination || computedDestPrefill,
-    // Planner dates — always re-initialized from card data
-    startDate: data.startDate || "",
-    endDate: data.endDate || "",
+    // Planner dates — prefer draft (user's prior input); fall back to card data
+    startDate: personalDraft.startDate || data.startDate || "",
+    endDate: personalDraft.endDate || data.endDate || "",
   });
   const [errors, setErrors ] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -769,7 +776,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
       errs.email = "Please enter a valid email address.";
     }
-    if (!form.numberOfTravelers) {
+    if (form.groupType !== "Solo" && !form.numberOfTravelers) {
       errs.numberOfTravelers = "Number of travelers is required.";
     }
     if (!form.consent) {
@@ -794,7 +801,10 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
       data.province ||
       data.destinationArea ||
       "Custom Heritage Philippines journey",
-    groupSize: getGroupSizeNumber(form.numberOfTravelers),
+    groupSize:
+      form.groupType === "Solo"
+        ? 1
+        : getGroupSizeNumber(form.numberOfTravelers),
     startDate: form.startDate || "",
     endDate: form.endDate || "",
     message: form.message.trim(),
@@ -825,6 +835,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     try {
       await createQuoteRequest(buildQuotePayload());
       onClearDraft();
+      onClearPrograms();
       setSubmitted(true);
     } catch (error) {
       const details = error.response?.data?.details;
@@ -1001,31 +1012,48 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
               </select>
             </EnquiryField>
 
-            <EnquiryField label="Number of Travelers *" htmlFor="qm-travelers">
-              <select
-                id="qm-travelers"
-                value={form.numberOfTravelers}
-                onChange={(e) => {
-                  upd("numberOfTravelers", e.target.value);
-                  if (errors.numberOfTravelers) clearErr("numberOfTravelers");
-                }}
-                className={`field-input${errors.numberOfTravelers ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
-                aria-invalid={errors.numberOfTravelers ? "true" : undefined}
-                aria-describedby={errors.numberOfTravelers ? "qm-tr-err" : undefined}
-              >
-                <option value="">Select…</option>
-                <option value="1">1 — Solo</option>
-                <option value="2">2 — Couple</option>
-                <option value="3">3 people</option>
-                <option value="4-6">4–6 people</option>
-                <option value="7-10">7–10 people</option>
-                <option value="11-20">11–20 people</option>
-                <option value="20+">20+ people</option>
-              </select>
-              {errors.numberOfTravelers && (
-                <p id="qm-tr-err" className="mt-1 text-xs text-red-500" role="alert">
-                  {errors.numberOfTravelers}
-                </p>
+            <EnquiryField
+              label={form.groupType === "Solo" ? "Number of Travelers" : "Number of Travelers *"}
+              htmlFor="qm-travelers"
+            >
+              {form.groupType === "Solo" ? (
+                <input
+                  id="qm-travelers"
+                  type="number"
+                  name="numberOfTravelers"
+                  value="1"
+                  min="1"
+                  disabled
+                  className="field-input opacity-80"
+                />
+              ) : (
+                <>
+                  <select
+                    id="qm-travelers"
+                    value={form.numberOfTravelers}
+                    onChange={(e) => {
+                      upd("numberOfTravelers", e.target.value);
+                      if (errors.numberOfTravelers) clearErr("numberOfTravelers");
+                    }}
+                    className={`field-input${errors.numberOfTravelers ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
+                    aria-invalid={errors.numberOfTravelers ? "true" : undefined}
+                    aria-describedby={errors.numberOfTravelers ? "qm-tr-err" : undefined}
+                  >
+                    <option value="">Select…</option>
+                    <option value="1">1 — Solo</option>
+                    <option value="2">2 — Couple</option>
+                    <option value="3">3 people</option>
+                    <option value="4-6">4–6 people</option>
+                    <option value="7-10">7–10 people</option>
+                    <option value="11-20">11–20 people</option>
+                    <option value="20+">20+ people</option>
+                  </select>
+                  {errors.numberOfTravelers && (
+                    <p id="qm-tr-err" className="mt-1 text-xs text-red-500" role="alert">
+                      {errors.numberOfTravelers}
+                    </p>
+                  )}
+                </>
               )}
             </EnquiryField>
 
@@ -1050,13 +1078,14 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
                 label="Preferred Start Date"
                 value={form.startDate}
                 min={today}
-                onChange={(iso) =>
+                onChange={(iso) => {
                   setForm((f) => ({
                     ...f,
                     startDate: iso,
                     endDate: f.endDate && f.endDate < iso ? "" : f.endDate,
-                  }))
-                }
+                  }));
+                  onSaveDraft({ startDate: iso });
+                }}
               />
             </EnquiryField>
 
@@ -1123,7 +1152,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
             <div className="mt-3 border-t border-cream-200 pt-3">
               <button
                 type="button"
-                onClick={() => { onClose(); navigate("/tour#tour-collection"); }}
+                onClick={() => { onSaveDraft(form); onClose(); navigate("/tour#tour-collection"); }}
                 className="text-xs font-semibold text-gold-600 transition hover:text-gold-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
               >
                 + Add another package
