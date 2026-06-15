@@ -22,6 +22,29 @@ function formatValue(value, fallback = "Not provided") {
   return text || fallback;
 }
 
+function formatPhilippineDateTime(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Not provided";
+  }
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Manila",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).formatToParts(date);
+
+  const getPart = (type) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+
+  return `${getPart("month")} ${getPart("day")}, ${getPart("year")} at ${getPart("hour")}:${getPart("minute")} ${getPart("dayPeriod")} PHT`;
+}
+
 function getEmailConfig() {
   return {
     enabled: process.env.EMAIL_NOTIFICATIONS_ENABLED === "true",
@@ -40,11 +63,11 @@ function buildQuoteRows(quote) {
     ["Destination", quote.destination],
     ["Province", quote.province],
     ["Package Style", quote.packageStyle],
-    ["Group Size", quote.groupSize],
+    ["Number of People", quote.groupSize || "Not provided"],
     ["Start Date", quote.startDate],
     ["End Date", quote.endDate],
     ["Message", quote.message],
-    ["Submitted At", quote.createdAt],
+    ["Submitted At", formatPhilippineDateTime(quote.createdAt)],
   ];
 
   return rows
@@ -68,11 +91,11 @@ function buildQuoteText(quote) {
     `Destination: ${formatValue(quote.destination)}`,
     `Province: ${formatValue(quote.province)}`,
     `Package Style: ${formatValue(quote.packageStyle)}`,
-    `Group Size: ${formatValue(quote.groupSize)}`,
+    `Number of People: ${formatValue(quote.groupSize)}`,
     `Start Date: ${formatValue(quote.startDate)}`,
     `End Date: ${formatValue(quote.endDate)}`,
     `Message: ${formatValue(quote.message)}`,
-    `Submitted At: ${formatValue(quote.createdAt)}`,
+    `Submitted At: ${formatPhilippineDateTime(quote.createdAt)}`,
   ].join("\n");
 }
 
