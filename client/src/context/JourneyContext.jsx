@@ -86,7 +86,11 @@ export function JourneyProvider({ children }) {
     >
       {children}
       {showJourneyDock && (
-        <MyJourneyWidget programs={programs} onOpenQuoteModal={() => openQuoteModal({ programs, fromWidget: true })}
+        <MyJourneyWidget
+          programs={programs}
+          onOpenQuoteModal={() => openQuoteModal({ programs, fromWidget: true })}
+          onRemoveProgram={removeProgram}
+          onClearPrograms={clearPrograms}
         />
       )}
 
@@ -115,7 +119,7 @@ const DRAG_MIN_PX = 768;
 const PEEK_MIN_MS = 2800;   // min idle time before dock auto-hides to edge
 const PEEK_MAX_MS = 3500;
 
-function MyJourneyWidget({ programs, onOpenQuoteModal }) {
+function MyJourneyWidget({ programs, onOpenQuoteModal, onRemoveProgram, onClearPrograms }) {
   const [open, setOpen] = useState(false);
   const [side, setSide] = useState("right");
   const [topPx, setTopPx] = useState(null);
@@ -343,14 +347,36 @@ function MyJourneyWidget({ programs, onOpenQuoteModal }) {
                 Add programs from the Packages page to build your journey.
               </p>
             ) : (
-              <ul className="space-y-2">
-                {programs.map((p) => (
-                  <li key={p.id} className="flex items-start gap-2 text-sm text-coffee-900">
-                    <span className="mt-0.5 shrink-0 text-gold-500" aria-hidden="true">✓</span>
-                    <span className="flex-1">{p.title}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-3">
+                <ul className="space-y-2">
+                  {programs.map((p) => (
+                    <li
+                      key={p.id}
+                      className="flex items-start gap-2 rounded-xl bg-cream-50/70 px-2.5 py-2 text-sm text-coffee-900"
+                    >
+                      <span className="mt-0.5 shrink-0 text-gold-500" aria-hidden="true">
+                        ✓
+                      </span>
+                      <span className="min-w-0 flex-1 leading-relaxed">{p.title}</span>
+                      <button
+                        type="button"
+                        onClick={() => onRemoveProgram(p.id)}
+                        className="shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold text-coffee-800/50 transition hover:bg-cream-100 hover:text-coffee-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300"
+                        aria-label={`Remove ${p.title} from My Journey`}
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  onClick={onClearPrograms}
+                  className="text-xs font-semibold text-coffee-800/50 transition hover:text-coffee-900 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300"
+                >
+                  Clear Journey
+                </button>
+              </div>
             )}
             <div className="mt-5 flex flex-col gap-2 border-t border-cream-200 pt-4">
               <button
