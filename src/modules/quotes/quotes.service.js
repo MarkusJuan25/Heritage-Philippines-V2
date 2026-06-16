@@ -1,7 +1,6 @@
 import { sendQuoteNotifications } from "./quotes.email.js";
 import { validateQuoteRequest } from "./quotes.validation.js";
-
-const quoteRequests = [];
+import { createQuoteRecord } from "./quotes.repository.js";
 
 export async function createQuoteRequest(payload) {
   const validatedQuote = validateQuoteRequest(payload);
@@ -13,9 +12,9 @@ export async function createQuoteRequest(payload) {
     createdAt: new Date().toISOString(),
   };
 
-  quoteRequests.push(quote);
+  const saved = createQuoteRecord(quote);
 
-  await sendQuoteNotifications(quote);
+  await sendQuoteNotifications(saved);
 
-  return quote;
+  return saved;
 }
