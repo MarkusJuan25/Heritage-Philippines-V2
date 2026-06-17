@@ -1,43 +1,55 @@
-// In-memory quote store.
-// To switch to Prisma: replace each function body with the equivalent
-// prisma.quote.create / findMany / findUnique call. Callers stay the same.
+// Prisma-backed quote store.
+// Each function maps to prisma.quoteRequest.create / findMany / findUnique.
 
-const records = [];
+import { prisma } from "../../lib/prisma.js";
 
-// Maps an assembled quote object to the stored record shape.
-// When Prisma is introduced, this becomes the `data` argument to prisma.quote.create().
-// Passthrough fields (e.g. selectedPrograms from the frontend) are preserved via spread
-// so the API response shape stays complete; explicit core fields document the future schema.
-function normalizeQuoteRecord(input) {
+function mapRecord(record) {
   return {
-    ...input,
-    id: input.id,
-    status: input.status ?? "received",
-    createdAt: input.createdAt,
-    name: input.name ?? "",
-    email: input.email ?? "",
-    phone: input.phone ?? "",
-    destination: input.destination ?? "",
-    province: input.province ?? "",
-    packageStyle: input.packageStyle ?? "",
-    groupSize: input.groupSize ?? null,
-    startDate: input.startDate ?? "",
-    endDate: input.endDate ?? "",
-    message: input.message ?? "",
+    ...record,
+    createdAt:
+      record.createdAt instanceof Date
+        ? record.createdAt.toISOString()
+        : record.createdAt,
+    updatedAt:
+      record.updatedAt instanceof Date
+        ? record.updatedAt.toISOString()
+        : record.updatedAt,
   };
 }
 
-export function createQuoteRecord(quote) {
-  const stored = normalizeQuoteRecord(quote);
-  records.push(stored);
-  return { ...stored };
+export async function createQuoteRecord(input) {
+  const record = await prisma.quoteRequest.create({
+    data: {
+      id: input.id,
+      status: input.status ?? "received",
+      name: input.name ?? "",
+      email: input.email ?? "",
+      phone: input.phone ?? "",
+      destination: input.destination ?? "",
+      province: input.province ?? "",
+      packageStyle: input.packageStyle ?? "",
+      source: input.source ?? "website",
+      groupSize: input.groupSize ?? null,
+      startDate: input.startDate ?? "",
+      endDate: input.endDate ?? "",
+      message: input.message ?? "",
+      selectedPrograms: input.selectedPrograms ?? null,
+      createdAt: input.createdAt ? new Date(input.createdAt) : new Date(),
+    },
+  });
+  return mapRecord(record);
 }
 
-export function listQuoteRecords() {
-  return records.map((r) => ({ ...r }));
+export async function listQuoteRecords() {
+  const records = await prisma.quoteRequest.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return records.map(mapRecord);
 }
 
-export function getQuoteRecordById(id) {
-  const record = records.find((r) => r.id === id);
-  return record ? { ...record } : undefined;
+export async function getQuoteRecordById(id) {
+  const record = await prisma.quoteRequest.findUnique({
+    where: { id },
+  });
+  return record ? mapRecord(record) : undefined;
 }
