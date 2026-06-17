@@ -266,10 +266,29 @@ function buildClientHtml(quote) {
     startFmt && endFmt ? `${startFmt} – ${endFmt}` : startFmt || endFmt || "";
 
   const summarySection = buildSection("Your Request Summary", [
+    buildRow("Name", formatValue(quote.name)),
+    buildRow("Email", formatValue(quote.email)),
+    buildRow("Phone", quote.phone),
     buildRow("Destination", formatValue(quote.destination)),
-    buildRow("Travel Dates", travelDates),
     buildRow("Package Style", quote.packageStyle),
     buildRow("Group Size", quote.groupSize ? String(quote.groupSize) : ""),
+    buildRow("Travel Dates", travelDates),
+  ]);
+
+  const messageSection = quote.message && quote.message.trim()
+    ? `<div style="margin-bottom:16px;border:1px solid #e8ddd0;border-radius:10px;overflow:hidden;background:#ffffff;">
+        <div style="padding:9px 20px;background:#f9f4ed;border-bottom:1px solid #e8ddd0;">
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#a07840;font-family:Arial,Helvetica,sans-serif;">Your Message</span>
+        </div>
+        <div style="padding:16px 20px;font-size:14px;color:#2e1f10;line-height:1.75;font-style:italic;font-family:Arial,Helvetica,sans-serif;">
+          &ldquo;${escapeHtml(quote.message.trim())}&rdquo;
+        </div>
+      </div>`
+    : "";
+
+  const refSection = buildSection("Reference", [
+    buildRow("Quote ID", formatValue(quote.id)),
+    buildRow("Submitted", formatPhilippineDateTime(quote.createdAt)),
   ]);
 
   const body = `
@@ -280,6 +299,8 @@ function buildClientHtml(quote) {
       Thank you for reaching out to ${escapeHtml(BRAND_NAME)}. Your quote request has been received, and our team will review your travel details carefully. We will be in touch with you as soon as possible.
     </p>
     ${summarySection}
+    ${messageSection}
+    ${refSection}
     <p style="font-size:13px;color:#9b7d5a;margin:20px 0 0;line-height:1.7;font-family:Arial,Helvetica,sans-serif;">
       Warm regards,<br>
       <strong style="color:#4a3828;">${escapeHtml(BRAND_NAME)}</strong>
@@ -305,10 +326,20 @@ function buildClientQuoteEmail(quote) {
     "We will get back to you as soon as possible with the next steps.",
     "",
     "YOUR REQUEST SUMMARY",
+    `Name: ${formatValue(quote.name)}`,
+    `Email: ${formatValue(quote.email)}`,
+    `Phone: ${formatValue(quote.phone)}`,
     `Destination: ${formatValue(quote.destination)}`,
-    `Travel Dates: ${travelDates}`,
     `Package Style: ${formatValue(quote.packageStyle)}`,
     `Group Size: ${formatValue(quote.groupSize)}`,
+    `Travel Dates: ${travelDates}`,
+    "",
+    "YOUR MESSAGE",
+    formatValue(quote.message),
+    "",
+    "REFERENCE",
+    `Quote ID: ${formatValue(quote.id)}`,
+    `Submitted: ${formatPhilippineDateTime(quote.createdAt)}`,
     "",
     "Warm regards,",
     BRAND_NAME,

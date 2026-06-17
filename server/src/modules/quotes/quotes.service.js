@@ -14,7 +14,11 @@ export async function createQuoteRequest(payload) {
 
   const saved = await createQuoteRecord(quote);
 
-  await sendQuoteNotifications(saved);
+  try {
+    await sendQuoteNotifications(saved);
+  } catch (err) {
+    console.error(`[quotes] Email notification error for ${saved.id}:`, err?.message || err);
+  }
 
   return saved;
 }
