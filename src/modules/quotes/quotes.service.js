@@ -12,7 +12,7 @@ export async function createQuoteRequest(payload) {
     createdAt: new Date().toISOString(),
   };
 
-  const saved = createQuoteRecord(quote);
+  const saved = await createQuoteRecord(quote);
 
   await sendQuoteNotifications(saved);
 
