@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { createQuoteRequest } from "./quotes.service.js";
 import { quoteRequestRateLimit } from "./quotes.rateLimit.js";
+import { requireTurnstile } from "./quotes.turnstile.js";
 
 const router = Router();
 
@@ -14,7 +15,7 @@ router.get("/", (_req, res) => {
   });
 });
 
-router.post("/", quoteRequestRateLimit, async (req, res, next) => {
+router.post("/", quoteRequestRateLimit, requireTurnstile, async (req, res, next) => {
   try {
     const quote = await createQuoteRequest(req.body);
 
