@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
 import { packageCategories, tourPackages } from "../data/tourPackages.js";
@@ -62,6 +62,7 @@ export default function TourPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const tourCollectionRef = useRef(null);
   const { openQuoteModal, addProgram, isProgramSelected } = useJourney();
 
   // Auto-advance hero route stack every 5 seconds
@@ -109,6 +110,29 @@ export default function TourPage() {
   const visibleTours = filteredTours.slice(startIndex, startIndex + PAGE_SIZE);
   const showingFrom = filteredTours.length === 0 ? 0 : startIndex + 1;
   const showingTo = Math.min(startIndex + PAGE_SIZE, filteredTours.length);
+
+  const goToPage = (nextPage) => {
+    let shouldScroll = false;
+
+    setCurrentPage((prev) => {
+      const resolvedPage =
+        typeof nextPage === "function" ? nextPage(prev) : nextPage;
+
+      const safePage = Math.min(Math.max(resolvedPage, 1), totalPages);
+      shouldScroll = safePage !== prev;
+
+      return safePage;
+    });
+
+    if (!shouldScroll) return;
+
+    window.requestAnimationFrame(() => {
+      tourCollectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
 
   return (
     <>
@@ -254,7 +278,7 @@ export default function TourPage() {
       </div>
 
       {/* ── TOUR COLLECTION ── */}
-      <div id="tour-collection">
+      <div id="tour-collection" ref={tourCollectionRef}>
         <HeritageSection variant="primary" className="py-16 md:py-20">
           <div className="container-page">
             <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -410,7 +434,7 @@ export default function TourPage() {
                     <button
                       type="button"
                       disabled={currentPage === 1}
-                      onClick={() => setCurrentPage((p) => p - 1)}
+                      onClick={() => goToPage((p) => p - 1)}
                       className="rounded-full border border-cream-200 px-3 py-1.5 text-xs text-coffee-700 transition hover:border-gold-400/50 hover:bg-cream-50 disabled:cursor-not-allowed disabled:text-coffee-700/30 disabled:hover:border-cream-200 disabled:hover:bg-transparent"
                     >
                       ← Prev
@@ -419,7 +443,7 @@ export default function TourPage() {
                       <button
                         key={p}
                         type="button"
-                        onClick={() => setCurrentPage(p)}
+                        onClick={() => goToPage(p)}
                         className={`h-8 w-8 rounded-full text-xs font-semibold transition ${
                           p === currentPage
                             ? "bg-coffee-900 text-cream-50"
@@ -432,7 +456,7 @@ export default function TourPage() {
                     <button
                       type="button"
                       disabled={currentPage === totalPages}
-                      onClick={() => setCurrentPage((p) => p + 1)}
+                      onClick={() => goToPage((p) => p + 1)}
                       className="rounded-full border border-cream-200 px-3 py-1.5 text-xs text-coffee-700 transition hover:border-gold-400/50 hover:bg-cream-50 disabled:cursor-not-allowed disabled:text-coffee-700/30 disabled:hover:border-cream-200 disabled:hover:bg-transparent"
                     >
                       Next →
