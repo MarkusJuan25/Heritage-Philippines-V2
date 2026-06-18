@@ -8,6 +8,30 @@ import { useJourney } from "../context/JourneyContext";
 
 const PAGE_SIZE = 9;
 
+const getPaginationItems = (currentPage, totalPages) => {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  if (currentPage <= 3) {
+    return [1, 2, 3, "ellipsis", totalPages];
+  }
+
+  if (currentPage >= totalPages - 2) {
+    return [1, "ellipsis", totalPages - 2, totalPages - 1, totalPages];
+  }
+
+  return [
+    1,
+    "ellipsis-start",
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    "ellipsis-end",
+    totalPages,
+  ];
+};
+
 const heroRoutes = [
   {
     label: "LUZON",
@@ -106,32 +130,36 @@ export default function TourPage() {
   });
 
   const totalPages = Math.max(1, Math.ceil(filteredTours.length / PAGE_SIZE));
+  const paginationItems = getPaginationItems(currentPage, totalPages);
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const visibleTours = filteredTours.slice(startIndex, startIndex + PAGE_SIZE);
   const showingFrom = filteredTours.length === 0 ? 0 : startIndex + 1;
   const showingTo = Math.min(startIndex + PAGE_SIZE, filteredTours.length);
 
-  const goToPage = (nextPage) => {
-    let shouldScroll = false;
+  const scrollToTourCollection = () => {
+    window.setTimeout(() => {
+      const target = tourCollectionRef.current;
+      if (!target) return;
 
-    setCurrentPage((prev) => {
-      const resolvedPage =
-        typeof nextPage === "function" ? nextPage(prev) : nextPage;
+      const navbarOffset = 96;
+      const targetTop =
+        target.getBoundingClientRect().top + window.scrollY - navbarOffset;
 
-      const safePage = Math.min(Math.max(resolvedPage, 1), totalPages);
-      shouldScroll = safePage !== prev;
-
-      return safePage;
-    });
-
-    if (!shouldScroll) return;
-
-    window.requestAnimationFrame(() => {
-      tourCollectionRef.current?.scrollIntoView({
+      window.scrollTo({
+        top: Math.max(targetTop, 0),
         behavior: "smooth",
-        block: "start",
       });
-    });
+    }, 0);
+  };
+
+  const goToPage = (nextPage) => {
+    const resolvedPage =
+      typeof nextPage === "function" ? nextPage(currentPage) : nextPage;
+
+    const safePage = Math.min(Math.max(resolvedPage, 1), totalPages);
+
+    setCurrentPage(safePage);
+    scrollToTourCollection();
   };
 
   return (
@@ -439,20 +467,30 @@ export default function TourPage() {
                     >
                       ← Prev
                     </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                      <button
-                        key={p}
-                        type="button"
-                        onClick={() => goToPage(p)}
-                        className={`h-8 w-8 rounded-full text-xs font-semibold transition ${
-                          p === currentPage
-                            ? "bg-coffee-900 text-cream-50"
-                            : "border border-cream-200 text-coffee-700 hover:border-gold-400/50 hover:bg-cream-50"
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    ))}
+                    {paginationItems.map((item) =>
+                      typeof item === "string" ? (
+                        <span
+                          key={`pagination-${item}`}
+                          className="px-1.5 text-xs font-semibold text-coffee-700/45"
+                          aria-hidden="true"
+                        >
+                          ...
+                        </span>
+                      ) : (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => goToPage(item)}
+                          className={`h-8 w-8 rounded-full text-xs font-semibold transition ${
+                            item === currentPage
+                              ? "bg-coffee-900 text-cream-50"
+                              : "border border-cream-200 text-coffee-700 hover:border-gold-400/50 hover:bg-cream-50"
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      )
+                    )}
                     <button
                       type="button"
                       disabled={currentPage === totalPages}
