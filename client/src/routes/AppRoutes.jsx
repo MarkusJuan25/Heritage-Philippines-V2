@@ -5,6 +5,7 @@ import AdminLayout from "../layouts/AdminLayout.jsx";
 import HomePage from "../pages/HomePage.jsx";
 import PackagesPage from "../pages/PackagesPage.jsx";
 import TourPage from "../pages/TourPage.jsx";
+import TourDetailPage from "../pages/TourDetailPage.jsx";
 import GalleryPage from "../pages/GalleryPage.jsx";
 import StoriesPage from "../pages/StoriesPage.jsx";
 import AboutPage from "../pages/AboutPage.jsx";
@@ -22,6 +23,7 @@ export default function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/packages" element={<PackagesPage />} />
         <Route path="/tour" element={<TourPage />} />
+        <Route path="/tour/:slug" element={<TourDetailPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/stories" element={<StoriesPage />} />
         <Route path="/about" element={<AboutPage />} />

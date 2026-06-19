@@ -326,75 +326,425 @@ const regionTone = {
     "southern landscapes, cultural communities, highland routes, coastal heritage, food identity, and living traditions",
 };
 
-// Province-specific metadata for provinces with known reference itineraries.
-// itineraryPdf reserved for PackageDetailPage — not rendered on /tour.
+// V1 source: 5 PDF itineraries covering 6 provinces.
+// Benguet (Baguio Tour), Bataan, Albay (Bicol Day Tour),
+// Quezon (Alibijaban Island), Negros Occidental, Iloilo (Bacolod-Iloilo combined).
+// No 82-province draft file exists in this project.
+// All other provinces use the generic 3-day fallback in createProvincePackage.
 const itineraryMetadataByProvince = {
-  Quezon: {
-    duration: "3 Days / 2 Nights",
-    itinerarySummary:
-      "A Quezon island getaway reference shaped around Alibijaban, coastal pacing, and a short restorative route.",
-    highlights: [
-      "Alibijaban island escape reference",
-      "Three-day coastal pacing",
-      "Private or family route coordination",
-      "Hotel, transfer, and travel support planning",
-    ],
-  },
-  Iloilo: {
-    duration: "5 Days / 4 Nights",
-    itinerarySummary:
-      "A Western Visayas reference route connecting Iloilo heritage, food memory, and a Bacolod extension.",
-    highlights: [
-      "Iloilo and Bacolod heritage route reference",
-      "Western Visayas food and culture pacing",
-      "Five-day private or family itinerary foundation",
-      "Hotel, ferry, transfer, and travel support planning",
-    ],
-  },
-  "Negros Occidental": {
-    duration: "5 Days / 4 Nights",
-    itinerarySummary:
-      "A Bacolod-Iloilo reference route for sugar heritage, food memory, and Western Visayas city culture.",
-    highlights: [
-      "Bacolod and Iloilo heritage route reference",
-      "Sugar heritage, food culture, and city stops",
-      "Five-day private or family itinerary foundation",
-      "Hotel, ferry, transfer, and travel support planning",
-    ],
-  },
+
   Benguet: {
     duration: "3 Days / 2 Nights",
-    itinerarySummary:
-      "A Baguio and Benguet highland reference route for cool-weather heritage, scenic stops, and gentle pacing.",
+    gatewayBase: "Baguio City, Benguet (Burnham Suites)",
+    transport:
+      "Bus from Metro Manila (Cubao or Pasay terminals) via Victory Liner, Genesis, or Dagupan Bus. Approximately 5–6 hours to Baguio City.",
+    bestFor: "Highland heritage families, cool-weather retreats, cultural explorers, small groups",
+    costingNote:
+      "Package rates are inquiry-based. Hotel selection and transport confirmed after consultation based on group type and schedule.",
+    supplierChecks: [
+      "Burnham Suites or equivalent hotel coordination",
+      "Local guide or driver for Day 2 highland circuit",
+      "La Trinidad Strawberry Farm and Mines View access coordination",
+    ],
     highlights: [
-      "Baguio and Benguet highland route reference",
-      "Three-day mountain city pacing",
-      "Scenic, cultural, and food memory stops",
-      "Hotel, transfer, and travel support planning",
+      "La Trinidad Strawberry Farm — strawberry picking and farm visit",
+      "Burnham Park boating, cycling, and Rose Garden walk",
+      "Mines View Park and Wright Park horseback riding",
+      "Baguio Night Market — ukay-ukay, souvenirs, street food",
+      "Camp John Hay morning walk among pine trees",
+    ],
+    itinerary: [
+      {
+        day: "Day 1",
+        title: "Manila to Baguio City — City Orientation",
+        details: [
+          "9:00 AM — Arrival in Baguio City via bus",
+          "10:00 AM–12:00 PM — La Trinidad Strawberry Farm: strawberry picking and farm visit",
+          "12:00 PM — Lunch at Kabunian Cafe and Restaurant",
+          "2:00 PM — Check-in at Burnham Suites; freshen up and prepare for afternoon walk",
+          "3:00–4:00 PM — Session Road walk: shops, cafes, and the main commercial strip",
+          "4:00–5:30 PM — Burnham Park: boating at Burnham Lake, bike rental, Rose Garden walk",
+          "6:00–7:30 PM — Dinner at Burnham Suites",
+          "7:40–9:00 PM — SM City Baguio: shopping and rooftop overlooking view of the city skyline",
+        ],
+      },
+      {
+        day: "Day 2",
+        title: "Baguio Heritage and Scenic Circuit",
+        details: [
+          "7:00–8:30 AM — Breakfast at the hotel",
+          "9:00–10:00 AM — Baguio Botanical Garden: pine tree garden pathways and cultural attire photos",
+          "10:10–11:00 AM — Wright Park: horseback riding, scenic stair walk toward The Mansion",
+          "11:00–11:30 AM — The Mansion: official summer residence of the Philippine President",
+          "12:00–12:45 PM — Lunch near Mines View area",
+          "1:00–2:00 PM — Mines View Park: panoramic views, souvenir stalls, Igorot costume photo stop",
+          "3:00–4:30 PM — Mirador Jesuit Villa Retreat House: prayer garden and bamboo eco-trails",
+          "6:00–7:30 PM — Dinner at Good Taste Restaurant",
+          "8:00–9:30 PM — Baguio Night Market: ukay-ukay, souvenirs, and local street food",
+        ],
+      },
+      {
+        day: "Day 3",
+        title: "Final Baguio Morning and Departure",
+        details: [
+          "7:00–8:30 AM — Breakfast at the hotel",
+          "9:00–11:00 AM — Camp John Hay: relaxing morning walk among pine trees",
+          "12:00 PM — Lunch at Choco-laté de Batirol: traditional hot chocolate and Filipino dishes",
+          "1:30–2:30 PM — Baguio Public Market: fresh produce, local delicacies, handicrafts, and souvenirs",
+          "3:00 PM — Proceed to bus terminal and depart from Baguio",
+        ],
+      },
     ],
   },
+
   Bataan: {
     duration: "3 Days / 2 Nights",
-    itinerarySummary:
-      "A Bataan reference route for historical landscapes, family reflection, and a short heritage-focused journey.",
+    gatewayBase: "Balanga City, Bataan (Crown Royale Hotel)",
+    transport:
+      "Bus from Metro Manila (Cubao, Monumento, or SM Caloocan) via Genesis Transport to Balanga City. Approximately 2 hours 39 minutes (128 km). Local transfers by private van.",
+    bestFor: "Historical heritage travelers, WWII reflection tours, family groups, school and cultural tours",
+    costingNote:
+      "Package rates are inquiry-based. Hotel and transport confirmed after consultation.",
+    supplierChecks: [
+      "Crown Royale Hotel or equivalent coordination",
+      "Local heritage guide for WWII and historical sites",
+      "Las Casas Filipinas de Acuzar day tour booking",
+      "Playa La Caleta resort coordination",
+    ],
     highlights: [
-      "Bataan historical route reference",
-      "Three-day heritage and reflection pacing",
-      "Private or family route coordination",
-      "Hotel, transfer, and travel support planning",
+      "Dambana ng Kagitingan / Mt. Samat National Shrine and Death March Monument",
+      "Zero Kilometer Death March Marker and Japan-Philippines Friendship Tower",
+      "Bataan World War II Museum",
+      "Las Casas Filipinas de Acuzar — restored Spanish colonial heritage walk",
+      "Playa La Caleta beachfront",
+      "Pawikan Conservation Center — sea turtle education and exhibit",
+    ],
+    itinerary: [
+      {
+        day: "Day 1",
+        title: "Historical Exploration — Manila to Bataan",
+        details: [
+          "8:00 AM — Depart from Manila (approximately 2h 39m, 128 km via Genesis Transport)",
+          "11:45 AM–1:00 PM — Arrival at Buenas Ridge: lunch with scenic views of Bataan",
+          "1:00–2:00 PM — Travel to Crown Royale Hotel in Balanga City; hotel check-in",
+          "2:30–3:15 PM — Flaming Sword monument: symbolic WWII landmark of Filipino and American bravery",
+          "3:30–4:30 PM — Bataan World War II Museum: artifacts, photographs, and historical exhibits",
+          "4:35–5:15 PM — Plaza Mayor De Ciudad de Balanga: leisure walk and local snacks",
+          "5:15–5:30 PM — Cathedral Shrine and Parish of St. Joseph: architecture and quiet reflection",
+          "6:00–7:00 PM — Dinner at The Bethany restaurant",
+          "7:00 PM — Return to hotel and rest",
+        ],
+      },
+      {
+        day: "Day 2",
+        title: "Heritage Shrines and Beachfront Relaxation",
+        details: [
+          "7:00–8:00 AM — Breakfast at the hotel",
+          "8:00–9:30 AM — Dambana ng Kagitingan / Mt. Samat National Shrine: scenic drive and Death March Monument",
+          "9:30–10:20 AM — Japan-Philippines Friendship Tower: solemn reflection",
+          "10:20–10:35 AM — Zero Kilometer Death March Marker",
+          "10:35–11:40 AM — Las Casas Filipinas de Acuzar: guided heritage walk through restored Spanish colonial houses",
+          "11:40 AM–12:40 PM — Lunch at Hotel de Oriente, Binondo Hall inside Las Casas",
+          "1:10–6:00 PM — Playa La Caleta: swimming, shoreside relaxation, and coastal rest",
+          "6:00–7:00 PM — Dinner at Playa La Caleta beachfront",
+          "7:00 PM — Return to hotel",
+        ],
+      },
+      {
+        day: "Day 3",
+        title: "Eco Tour — Crafts, Conservation, and Departure",
+        details: [
+          "7:00–8:00 AM — Breakfast at the hotel",
+          "8:00–9:15 AM — Pulo Handicraft in Orani: locally made bamboo, wood, and native fiber crafts",
+          "9:15–10:30 AM — Pawikan Conservation Center, Morong: sea turtle conservation education and exhibit",
+          "10:30 AM–12:00 PM — Return to hotel and check out",
+          "12:10–12:40 PM — Bataan Tourism Park: souvenir shopping and local delicacies",
+          "12:40–1:40 PM — Lunch at Mesa Feliz Restaurant",
+          "2:00 PM — Depart from Bataan and return to Manila",
+        ],
+      },
     ],
   },
+
   Albay: {
     duration: "Day Tour",
-    itinerarySummary:
-      "A Bicol and Albay day tour reference centered on Mayon, local culture, and a concise scenic route.",
+    gatewayBase: "Legazpi City, Albay (Bicol International Airport)",
+    transport:
+      "Direct flight from Manila to Legazpi (approximately 1 hour). Or overnight bus from Pasay terminals (approximately 9–10 hours).",
+    bestFor: "Volcano landscape travelers, Bicol food adventure, ATV and adventure tours, photography groups",
+    costingNote:
+      "Day tour rates are inquiry-based. Guide and transport within Albay confirmed per group size.",
+    supplierChecks: [
+      "Mayon SkyDrive ATV Adventure booking",
+      "Cagsawa Ruins local guide coordination",
+      "Waway's Restaurant reservation",
+      "Airport-to-site transport coordination",
+    ],
     highlights: [
-      "Bicol and Albay day tour reference",
-      "Mayon landscape and local culture pacing",
-      "Concise scenic route planning",
-      "Transfer and travel support coordination",
+      "Mayon SkyDrive ATV Adventure — off-road trail and river crossing toward Mayon Volcano",
+      "Cagsawa Ruins — 1814 eruption heritage landmark with Mayon backdrop",
+      "Colonial Creamery — sili (chili) ice cream",
+      "Daraga Church — baroque hilltop landmark overlooking Albay",
+      "Waway's Restaurant — Bicolano cuisine: laing, pinangat, Bicol Express",
+    ],
+    itinerary: [
+      {
+        day: "Day Tour",
+        title: "Bicol Spice Adventure — Mayon, Ruins, and Culture",
+        details: [
+          "8:00 AM — Arrival at Bicol International Airport, Legazpi City",
+          "8:25–10:30 AM — Mayon SkyDrive ATV Adventure: off-road trail crossing a 200-meter river toward Mayon Volcano; SkyDrive Combo Trail through grassland and Cagsawa forest",
+          "10:30–11:00 AM — Cagsawa Ruins: sightseeing at the 1814 Mayon eruption heritage landmark; souvenir stalls; sili ice cream at Colonial Creamery",
+          "11:20–11:40 AM — Daraga Church: baroque-style church on a hilltop overlooking Albay",
+          "12:00–1:00 PM — Lunch at Waway's Restaurant: Bicolano dishes including laing, pinangat, and Bicol Express",
+          "1:00–1:30 PM — Return to Bicol International Airport for departure",
+        ],
+      },
     ],
   },
+
+  Quezon: {
+    duration: "3 Days / 2 Nights",
+    gatewayBase: "San Andres Port, Quezon → Alabat Island (Nanay Santa's Garden Beach Resort)",
+    transport:
+      "Bus from Manila to San Andres Port, Quezon (approximately 6 hours). Boat transfer from San Andres Port to Alabat Island (approximately 45 minutes). Tricycle transfer on the island.",
+    bestFor: "Island escape travelers, couples, family groups, off-grid coastal rest, nature retreats",
+    costingNote:
+      "Package rates are inquiry-based. Island boat transfers, resort accommodation, and Alibijaban day tour included in coordination.",
+    supplierChecks: [
+      "Nanay Santa's Garden Beach Resort coordination (Alabat Island)",
+      "Bangka boat from San Andres Port to Alabat Island",
+      "Private boat for Alibijaban Island day tour",
+      "Island picnic lunch coordination",
+      "Travel insurance for island and water activities",
+    ],
+    highlights: [
+      "Alibijaban Island — pristine sandbar, crystal-clear water, mangroves, snorkeling",
+      "Nanay Santa's Garden Beach Resort — beachfront stay on Alabat Island",
+      "Private boat island-hopping experience",
+      "Fresh seafood and local island meals",
+      "Optional sunset cruise",
+    ],
+    itinerary: [
+      {
+        day: "Day 1",
+        title: "Manila to San Andres to Alabat Island",
+        details: [
+          "7:00 AM — Departure from Manila by land",
+          "1:00 PM — Arrival at San Andres Port, Quezon",
+          "1:30 PM — Boat transfer to Alabat Island: scenic ocean crossing",
+          "2:15 PM — Tricycle transfer to Nanay Santa's Garden Beach Resort",
+          "2:30 PM — Check-in at the resort and settle in",
+          "Afternoon — Relax by the shore, swim, or unwind at the beachfront",
+          "Evening — Fresh seafood and local island specialties by the beach",
+        ],
+      },
+      {
+        day: "Day 2",
+        title: "Alibijaban Island Private Tour",
+        details: [
+          "7:00 AM — Breakfast of fresh tropical fruits and local delicacies at Nanay Santa's",
+          "8:00 AM — Private boat to Alibijaban Island: exclusive ocean crossing",
+          "Island activities — Sandbar walk at low tide, swimming in clear waters, mangrove exploration, optional snorkeling",
+          "12:30 PM — Picnic lunch on the sandbar",
+          "3:00 PM — Return to Nanay Santa's Beach Resort; afternoon rest or beach leisure",
+          "5:00 PM — Optional sunset cruise or leisurely shoreline stroll",
+          "7:00 PM — Private beach dinner",
+        ],
+      },
+      {
+        day: "Day 3",
+        title: "Leisure and Departure — Alabat to Manila",
+        details: [
+          "6:30 AM — Sunrise view and light breakfast by the beach",
+          "Morning — Leisure time: swimming, spa, or photo session around the resort",
+          "11:00 AM — Check-out and transfer to the port on Alabat Island",
+          "11:30 AM — Boat back to San Andres Port on the mainland",
+          "12:30 PM — Depart for Manila by land",
+          "6:30 PM — Arrival in Manila",
+        ],
+      },
+    ],
+  },
+
+  Iloilo: {
+    duration: "5 Days / 4 Nights",
+    gatewayBase: "Bacolod City, Negros Occidental → Iloilo City, Iloilo (combined Western Visayas route)",
+    transport:
+      "Direct flight from Manila to Bacolod-Silay International Airport, then OceanJet or Weesam Express ferry to Iloilo (Guimaras Strait crossing, approx. 1.5 hours). Or fly directly to Iloilo International Airport.",
+    bestFor: "Heritage city explorers, Western Visayas food and culture, combined Bacolod-Iloilo route, family groups",
+    costingNote:
+      "Package rates are inquiry-based. Combined Bacolod-Iloilo tour. Hotel, ferry, and inter-city transport confirmed after consultation.",
+    supplierChecks: [
+      "Park Inn by Radisson Iloilo coordination",
+      "OceanJet or Weesam Express ferry scheduling (BREDCO Port Bacolod to Iloilo)",
+      "Silay City and Bacolod heritage guide",
+      "Restaurant reservations: Netong's, Tatoy's, Breakthrough, Tong Yang Plus",
+    ],
+    highlights: [
+      "Molo Church and Molo Mansion — Gothic heritage and ancestral house",
+      "Jaro Metropolitan Cathedral — Marian shrine of Our Lady of the Candles",
+      "Camina Balay nga Bato — heritage house with tsokolate de batirol",
+      "Netong's Original La Paz Batchoy — Iloilo's iconic noodle dish",
+      "Festive Walk Iloilo — evening shopping and dining at Iloilo Business Park",
+      "Biscocho Haus — biscocho, butterscotch, barquillos, and Ilonggo pasalubong",
+    ],
+    itinerary: [
+      {
+        day: "Day 1",
+        title: "Arrival in Bacolod City — Heritage and Food Introduction",
+        details: [
+          "9:00 AM — Arrival in Bacolod City and check-in at Seda Hotel",
+          "1:00–2:00 PM — Lunch at Manokan Country Premiere: Bacolod's famous Chicken Inasal",
+          "2:30–3:00 PM — San Sebastian Cathedral: heritage church for quiet reflection and architecture",
+          "3:30–4:30 PM — The Ruins: the 'Taj Mahal of Negros' — sugar heritage landmark and sunset photos",
+          "5:00–6:00 PM — Bacolod Public Plaza: leisurely walk and sightseeing",
+          "6:30 PM — Dinner at the hotel",
+        ],
+      },
+      {
+        day: "Day 2",
+        title: "Silay City Heritage Circuit — Sugar Baron Ancestral Homes",
+        details: [
+          "7:00–8:30 AM — Breakfast at the hotel",
+          "9:00–10:00 AM — Negros Museum: Negros Island history, culture, and artistic heritage",
+          "10:30 AM–12:30 PM — Balay Negrense: preserved Gaston family ancestral house, sugar baron era antiques and furnishings",
+          "12:30–1:30 PM — Lunch in Silay at a heritage restaurant",
+          "2:00–3:00 PM — Bernardino Jalandoni Museum: ancestral home with antique furniture and sugar baron family history",
+          "4:30–6:00 PM — Capitol Lagoon Park in Bacolod: scenic lagoon walk in front of the Provincial Capitol",
+          "7:00 PM — Dinner at a local Bacolod restaurant",
+        ],
+      },
+      {
+        day: "Day 3",
+        title: "Ferry to Iloilo — Molo Church and River Esplanade",
+        details: [
+          "7:00–8:00 AM — Breakfast at the hotel in Bacolod City",
+          "9:00 AM — Transfer to BREDCO Port",
+          "9:30–11:00 AM — Ferry to Iloilo City via OceanJet or Weesam Express across the Guimaras Strait",
+          "11:30 AM — Hotel check-in at Park Inn by Radisson Iloilo",
+          "12:30–1:30 PM — Lunch at Netong's Original La Paz Batchoy in the La Paz district",
+          "2:00–2:40 PM — Molo Church (St. Anne Parish Church): Gothic heritage church with female saint statues",
+          "2:50–5:00 PM — Molo Mansion: restored heritage house with souvenir shops and local crafts",
+          "5:30–7:30 PM — Iloilo River Esplanade: sunset walk along one of the Philippines' longest river esplanades",
+          "7:30 PM — Dinner at Breakthrough Restaurant: Ilonggo seafood and classic local dishes",
+        ],
+      },
+      {
+        day: "Day 4",
+        title: "Iloilo Heritage and Cultural Landmarks",
+        details: [
+          "7:00–8:30 AM — Breakfast at Park Inn by Radisson Iloilo",
+          "9:30–10:30 AM — Museo Iloilo: archaeological finds, historical artifacts, and Western Visayas cultural heritage",
+          "12:00–1:00 PM — Lunch at Tatoy's Manokan and Seafood: grilled seafood and native lechon manok",
+          "2:30–3:30 PM — Jaro Metropolitan Cathedral: Marian shrine of Our Lady of the Candles",
+          "4:00–4:30 PM — Camina Balay nga Bato: heritage house with traditional tsokolate de batirol",
+          "6:00–7:30 PM — Festive Walk Iloilo: evening shopping and dining at Iloilo Business Park",
+          "8:00 PM — Dinner at Tong Yang Plus buffet (Festive Walk Mall)",
+        ],
+      },
+      {
+        day: "Day 5",
+        title: "Pasalubong Shopping and Departure from Iloilo",
+        details: [
+          "7:00–8:00 AM — Final breakfast at Park Inn by Radisson Iloilo",
+          "8:30–10:00 AM — Pasalubong shopping at Biscocho Haus: biscocho, butterscotch, barquillos, and Ilonggo sweets",
+          "10:30 AM — Hotel check-out",
+          "Transfer to Iloilo International Airport for departure flight",
+        ],
+      },
+    ],
+  },
+
+  "Negros Occidental": {
+    duration: "5 Days / 4 Nights",
+    gatewayBase: "Bacolod City, Negros Occidental (Seda Hotel Bacolod) → Iloilo City (Park Inn by Radisson)",
+    transport:
+      "Direct flight from Manila to Bacolod-Silay International Airport. Or fly to Iloilo and take OceanJet or Weesam Express ferry across the Guimaras Strait to Bacolod (approximately 1.5 hours). Inter-city transfers by private van.",
+    bestFor: "Sugar heritage and Silay City history, Bacolod food culture, Western Visayas combined route, city and heritage travelers",
+    costingNote:
+      "Package rates are inquiry-based. Combined Bacolod-Iloilo tour. Hotel, ferry, and inter-city transport confirmed after consultation.",
+    supplierChecks: [
+      "Seda Hotel Bacolod coordination",
+      "OceanJet or Weesam Express ferry scheduling (BREDCO Port, Bacolod to Iloilo)",
+      "Silay City heritage guide — Balay Negrense and Bernardino Jalandoni Museum",
+      "Restaurant reservations: Manokan Country, Tatoy's, Netong's, Breakthrough",
+    ],
+    highlights: [
+      "The Ruins — the 'Taj Mahal of Negros,' sugar baron heritage landmark",
+      "Balay Negrense and Bernardino Jalandoni Museum — Silay City sugar baron ancestral homes",
+      "San Sebastian Cathedral — Bacolod heritage church",
+      "Manokan Country Premiere — Bacolod Chicken Inasal",
+      "Capitol Lagoon Park — lagoon view and city walk",
+      "Negros Museum — Negros Island cultural and historical exhibits",
+    ],
+    itinerary: [
+      {
+        day: "Day 1",
+        title: "Arrival in Bacolod City — Heritage and Food Introduction",
+        details: [
+          "9:00 AM — Arrival in Bacolod City and check-in at Seda Hotel",
+          "1:00–2:00 PM — Lunch at Manokan Country Premiere: Bacolod's famous Chicken Inasal",
+          "2:30–3:00 PM — San Sebastian Cathedral: heritage church for quiet reflection and architecture",
+          "3:30–4:30 PM — The Ruins: the 'Taj Mahal of Negros' — sugar heritage landmark and sunset photos",
+          "5:00–6:00 PM — Bacolod Public Plaza: leisurely walk and sightseeing",
+          "6:30 PM — Dinner at the hotel",
+        ],
+      },
+      {
+        day: "Day 2",
+        title: "Silay City Heritage Circuit — Sugar Baron Ancestral Homes",
+        details: [
+          "7:00–8:30 AM — Breakfast at the hotel",
+          "9:00–10:00 AM — Negros Museum: Negros Island history, culture, and artistic heritage",
+          "10:30 AM–12:30 PM — Balay Negrense: preserved Gaston family ancestral house, sugar baron era antiques and furnishings",
+          "12:30–1:30 PM — Lunch in Silay at a heritage restaurant",
+          "2:00–3:00 PM — Bernardino Jalandoni Museum: ancestral home with antique furniture and sugar baron family history",
+          "4:30–6:00 PM — Capitol Lagoon Park in Bacolod: scenic lagoon walk in front of the Provincial Capitol",
+          "7:00 PM — Dinner at a local Bacolod restaurant",
+        ],
+      },
+      {
+        day: "Day 3",
+        title: "Ferry to Iloilo — Molo Church and River Esplanade",
+        details: [
+          "7:00–8:00 AM — Breakfast at the hotel in Bacolod City",
+          "9:00 AM — Transfer to BREDCO Port",
+          "9:30–11:00 AM — Ferry to Iloilo City via OceanJet or Weesam Express across the Guimaras Strait",
+          "11:30 AM — Hotel check-in at Park Inn by Radisson Iloilo",
+          "12:30–1:30 PM — Lunch at Netong's Original La Paz Batchoy in the La Paz district",
+          "2:00–2:40 PM — Molo Church (St. Anne Parish Church): Gothic heritage church with female saint statues",
+          "2:50–5:00 PM — Molo Mansion: restored heritage house with souvenir shops and local crafts",
+          "5:30–7:30 PM — Iloilo River Esplanade: sunset walk along one of the Philippines' longest river esplanades",
+          "7:30 PM — Dinner at Breakthrough Restaurant: Ilonggo seafood and classic local dishes",
+        ],
+      },
+      {
+        day: "Day 4",
+        title: "Iloilo Heritage and Cultural Landmarks",
+        details: [
+          "7:00–8:30 AM — Breakfast at Park Inn by Radisson Iloilo",
+          "9:30–10:30 AM — Museo Iloilo: archaeological finds, historical artifacts, and Western Visayas cultural heritage",
+          "12:00–1:00 PM — Lunch at Tatoy's Manokan and Seafood: grilled seafood and native lechon manok",
+          "2:30–3:30 PM — Jaro Metropolitan Cathedral: Marian shrine of Our Lady of the Candles",
+          "4:00–4:30 PM — Camina Balay nga Bato: heritage house with traditional tsokolate de batirol",
+          "6:00–7:30 PM — Festive Walk Iloilo: evening shopping and dining at Iloilo Business Park",
+          "8:00 PM — Dinner at Tong Yang Plus buffet (Festive Walk Mall)",
+        ],
+      },
+      {
+        day: "Day 5",
+        title: "Pasalubong Shopping and Departure from Iloilo",
+        details: [
+          "7:00–8:00 AM — Final breakfast at Park Inn by Radisson Iloilo",
+          "8:30–10:00 AM — Pasalubong shopping at Biscocho Haus: biscocho, butterscotch, barquillos, and Ilonggo sweets",
+          "10:30 AM — Hotel check-out",
+          "Transfer to Iloilo International Airport for departure flight",
+        ],
+      },
+    ],
+  },
+
 };
 
 function createProvincePackage({ province, region, islandGroup }) {

@@ -418,7 +418,7 @@ export default function TourPage() {
                               Request Quote
                             </button>
                             <Link
-                              to="/contact"
+                              to={`/tour/${tour.slug}`}
                               className="min-w-0 rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-[10px] font-semibold text-cream-50 transition hover:bg-coffee-800 sm:text-[11px]"
                             >
                               View Tour
