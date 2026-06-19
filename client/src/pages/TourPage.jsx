@@ -332,7 +332,7 @@ export default function TourPage() {
                   {visibleTours.map((tour) => (
                     <article
                       key={tour.slug}
-                      className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
+                      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
                     >
                       {/* Image */}
                       <div className="relative h-56 w-full overflow-hidden">
@@ -390,7 +390,7 @@ export default function TourPage() {
                         </div>
 
                         {/* Tags */}
-                        <div className="mt-3 flex flex-wrap gap-1.5">
+                        <div className="mt-3 flex flex-wrap gap-1.5 pb-4">
                           {tour.highlights.map((tag) => (
                             <span
                               key={tag}
@@ -402,7 +402,7 @@ export default function TourPage() {
                         </div>
 
                         {/* Action buttons — Request Quote · View Tour · Add Program */}
-                        <div className="mt-4 border-t border-cream-100 pt-4">
+                        <div className="mt-auto border-t border-cream-100 pt-4">
                           <div className="grid grid-cols-3 gap-1.5">
                             <button
                               type="button"
