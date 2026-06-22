@@ -81,6 +81,33 @@ const destinations = [
 ];
 
 
+// --- Sort / interleave helpers ---
+
+const getTourSortName = (tour) => tour.province || tour.title || "";
+
+const sortToursByProvince = (tours) =>
+  [...tours].sort((a, b) =>
+    getTourSortName(a).localeCompare(getTourSortName(b), undefined, { sensitivity: "base" })
+  );
+
+const ISLAND_GROUP_ORDER = ["Luzon", "Visayas", "Mindanao"];
+
+const interleaveByIslandGroup = (tours) => {
+  const buckets = ISLAND_GROUP_ORDER.map((group) =>
+    sortToursByProvince(tours.filter((t) => t.islandGroup === group))
+  );
+  const result = [];
+  const maxLen = Math.max(0, ...buckets.map((b) => b.length));
+  for (let i = 0; i < maxLen; i++) {
+    for (const bucket of buckets) {
+      if (i < bucket.length) result.push(bucket[i]);
+    }
+  }
+  return result;
+};
+
+const getHighlightLabel = (highlight = "") => highlight.split(" — ")[0].trim();
+
 export default function TourPage() {
   const [activeRouteIdx, setActiveRouteIdx] = useState(0);
   const [activeFilter, setActiveFilter] = useState("All");
@@ -104,11 +131,12 @@ export default function TourPage() {
 
   const activeRoute = heroRoutes[activeRouteIdx] ?? heroRoutes[0];
 
-  const filteredTours = tourPackages.filter((tour) => {
+  const q = searchQuery.trim().toLowerCase();
+
+  const matchingTours = tourPackages.filter((tour) => {
     const matchesFilter =
       activeFilter === "All" || tour.islandGroup === activeFilter;
 
-    const q = searchQuery.trim().toLowerCase();
     const matchesSearch =
       !q ||
       [
@@ -120,6 +148,9 @@ export default function TourPage() {
         tour.region ?? "",
         tour.islandGroup ?? "",
         tour.slug ?? "",
+        tour.gatewayBase ?? "",
+        tour.bestFor ?? "",
+        tour.transport ?? "",
         ...(tour.highlights || []),
       ]
         .join(" ")
@@ -128,6 +159,13 @@ export default function TourPage() {
 
     return matchesFilter && matchesSearch;
   });
+
+  const filteredTours =
+    q
+      ? sortToursByProvince(matchingTours)
+      : activeFilter === "All"
+      ? interleaveByIslandGroup(matchingTours)
+      : sortToursByProvince(matchingTours);
 
   const totalPages = Math.max(1, Math.ceil(filteredTours.length / PAGE_SIZE));
   const paginationItems = getPaginationItems(currentPage, totalPages);
@@ -295,8 +333,8 @@ export default function TourPage() {
           <div className="min-w-[180px] flex-1 md:ml-auto md:w-[280px] md:flex-none lg:w-[320px] xl:w-[340px]">
             <input
               type="search"
-              aria-label="Search tours"
-              placeholder="Search province, place, or route"
+              aria-label="Search provinces, destinations, and tour routes"
+              placeholder="Search province, destination, or route"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-full border border-cream-200 bg-white px-4 py-2 text-xs text-coffee-900 placeholder-coffee-700/40 transition focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/20"
@@ -390,15 +428,20 @@ export default function TourPage() {
                         </div>
 
                         {/* Tags */}
-                        <div className="mt-3 flex flex-wrap gap-1.5 pb-4">
-                          {tour.highlights.map((tag) => (
-                            <span
-                              key={tag}
-                              className="rounded-full bg-cream-100 px-2.5 py-1 text-[11px] font-medium text-coffee-700"
-                            >
-                              {tag}
-                            </span>
-                          ))}
+                        <div className="mt-3 pb-4">
+                          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-coffee-700/45">
+                            Popular stops
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {tour.highlights.slice(0, 3).map((tag) => (
+                              <span
+                                key={tag}
+                                className="rounded-full bg-cream-100 px-2.5 py-1 text-[11px] font-medium text-coffee-700"
+                              >
+                                {getHighlightLabel(tag)}
+                              </span>
+                            ))}
+                          </div>
                         </div>
 
                         {/* Action buttons: Request Quote, View Tour, Add Program */}
