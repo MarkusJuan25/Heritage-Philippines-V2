@@ -401,7 +401,7 @@ export default function TourPage() {
                           ))}
                         </div>
 
-                        {/* Action buttons — Request Quote · View Tour · Add Program */}
+                        {/* Action buttons: Request Quote, View Tour, Add Program */}
                         <div className="mt-auto border-t border-cream-100 pt-4">
                           <div className="grid grid-cols-3 gap-1.5">
                             <button
@@ -413,13 +413,13 @@ export default function TourPage() {
                                   location: tour.location,
                                 })
                               }
-                              className="min-w-0 rounded-full bg-gold-500 px-2 py-2 text-center text-[10px] font-bold text-coffee-950 transition hover:bg-gold-400 sm:text-[11px]"
+                              className="flex min-h-10 min-w-0 items-center justify-center rounded-full bg-gold-500 px-2 py-2 text-center text-[10px] font-bold leading-tight text-coffee-950 transition hover:bg-gold-400 sm:text-[11px]"
                             >
                               Request Quote
                             </button>
                             <Link
                               to={`/tour/${tour.slug}`}
-                              className="min-w-0 rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-[10px] font-semibold text-cream-50 transition hover:bg-coffee-800 sm:text-[11px]"
+                              className="flex min-h-10 min-w-0 items-center justify-center rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-[10px] font-semibold leading-tight text-cream-50 transition hover:bg-coffee-800 sm:text-[11px]"
                             >
                               View Tour
                             </Link>
@@ -433,7 +433,7 @@ export default function TourPage() {
                                   type: "tour",
                                 })
                               }
-                              className={`min-w-0 rounded-full border px-2 py-2 text-[10px] font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 sm:text-[11px] ${
+                              className={`flex min-h-10 min-w-0 items-center justify-center rounded-full border px-2 py-2 text-center text-[10px] font-bold leading-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 sm:text-[11px] ${
                                 isProgramSelected(tour.slug)
                                   ? "cursor-default border-gold-400/60 bg-gold-50 text-gold-700"
                                   : "border-gold-400/70 bg-gradient-to-br from-cream-50 via-gold-50 to-gold-100 text-coffee-900 shadow-warm hover:-translate-y-0.5 hover:border-gold-500 hover:bg-gold-100 hover:shadow-premium"
