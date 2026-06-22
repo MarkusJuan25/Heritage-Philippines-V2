@@ -165,7 +165,15 @@ export default function PackagesPage() {
   const [isCustomPkg, setIsCustomPkg] = useState(false);
   const [isCustomDest, setIsCustomDest] = useState(false);
   const quotePanelRef = useRef(null);
-  const { addProgram, isProgramSelected, openQuoteModal, programs } = useJourney();
+  const { addProgram, isProgramSelected, openQuoteModal, programs, quoteResetVersion } = useJourney();
+
+  const isFirstMount = useRef(true);
+  useEffect(() => {
+    if (isFirstMount.current) { isFirstMount.current = false; return; }
+    setQuote({ ...defaultQuote });
+    setIsCustomPkg(false);
+    setIsCustomDest(false);
+  }, [quoteResetVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-cycle showcase; pauses on hover / quote panel focus
   useEffect(() => {

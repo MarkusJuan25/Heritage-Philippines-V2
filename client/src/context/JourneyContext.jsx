@@ -9,7 +9,9 @@ export function JourneyProvider({ children }) {
   const location = useLocation();
 
   const [programs, setPrograms] = useState([]);
-  const [modal, setModal] = useState({ open: false, data: null });
+  const [modal, setModal] = useState({ open: false, data: null, startBlank: false });
+  const [startNextQuoteBlank, setStartNextQuoteBlank] = useState(false);
+  const [quoteResetVersion, setQuoteResetVersion] = useState(0);
   const [personalDraft, setPersonalDraft] = useState({
     clientName: "",
     email: "",
@@ -42,8 +44,13 @@ export function JourneyProvider({ children }) {
   );
 
   const openQuoteModal = useCallback(
-    (data) => setModal({ open: true, data }),
-    []
+    (data) => {
+      setModal({ open: true, data, startBlank: startNextQuoteBlank });
+      if (startNextQuoteBlank) {
+        setStartNextQuoteBlank(false);
+      }
+    },
+    [startNextQuoteBlank]
   );
   const closeQuoteModal = useCallback(
     () => setModal({ open: false, data: null }),
@@ -55,17 +62,13 @@ export function JourneyProvider({ children }) {
     []
   );
 
-  const clearPersonalDraft = useCallback(
-    () =>
-      setPersonalDraft({
-        clientName: "",
-        email: "",
-        phone: "",
-        groupType: "",
-        numberOfTravelers: "",
-        message: "",
-        consent: false,
-      }),
+  const clearPersonalDraft = useCallback(() => {
+    setPersonalDraft({ ...EMPTY_QUOTE_FORM });
+    setStartNextQuoteBlank(true);
+  }, []);
+
+  const incrementQuoteResetVersion = useCallback(
+    () => setQuoteResetVersion((v) => v + 1),
     []
   );
 
@@ -82,6 +85,7 @@ export function JourneyProvider({ children }) {
         personalDraft,
         savePersonalDraft,
         clearPersonalDraft,
+        quoteResetVersion,
       }}
     >
       {children}
@@ -103,6 +107,8 @@ export function JourneyProvider({ children }) {
           onSaveDraft={savePersonalDraft}
           onClearDraft={clearPersonalDraft}
           onClearPrograms={clearPrograms}
+          onIncrementResetVersion={incrementQuoteResetVersion}
+          startBlank={modal.startBlank}
         />
       )}
     </JourneyContext.Provider>
@@ -440,6 +446,13 @@ function fmtDate(dateStr) {
   return `${d}/${m}/${y}`;
 }
 
+function getLocalISODate(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 // ─── DateField: dd/mm/yyyy text input + smart calendar popover ───────────────
 
 const DF_CAL_W = 284;
@@ -464,6 +477,8 @@ function DateField({ id, value, onChange, min, label }) {
     value ? parseInt(value.split("-")[1], 10) - 1 : new Date().getMonth()
   );
   const containerRef = useRef(null);
+  const inputRef = useRef(null);
+  const calendarRef = useRef(null);
 
   useEffect(() => {
     setDisplayVal(toDisplay(value));
@@ -477,17 +492,20 @@ function DateField({ id, value, onChange, min, label }) {
   useEffect(() => {
     if (!calOpen) return;
     const onKey = (e) => { if (e.key === "Escape") setCalOpen(false); };
-    const onDown = (e) => {
-      if (containerRef.current && !containerRef.current.contains(e.target))
+    const onPointerDown = (e) => {
+      const clickedField = containerRef.current?.contains(e.target);
+      const clickedCalendar = calendarRef.current?.contains(e.target);
+      if (!clickedField && !clickedCalendar) {
         setCalOpen(false);
+      }
     };
     const onScroll = () => setCalOpen(false);
     document.addEventListener("keydown", onKey);
-    document.addEventListener("mousedown", onDown);
+    document.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("scroll", onScroll, { capture: true, passive: true });
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("scroll", onScroll, { capture: true });
     };
   }, [calOpen]);
@@ -551,7 +569,27 @@ function DateField({ id, value, onChange, min, label }) {
     setCalOpen(true);
   };
 
-  const selectDay = (iso) => { onChange(iso); setCalOpen(false); };
+  const selectDay = (iso) => { setInputErr(""); onChange(iso); setCalOpen(false); };
+
+  const handleInputClick = () => {
+    if (window.innerWidth >= 640) {
+      openCal();
+    }
+  };
+
+  const handleCalendarButtonClick = () => {
+    inputRef.current?.blur();
+    openCal();
+  };
+
+  const handleInputBlur = () => {
+    if (!displayVal) return;
+    const digits = displayVal.replace(/\D/g, "");
+    if (digits.length > 0 && digits.length < 8) {
+      setInputErr("Enter a complete date in dd/mm/yyyy format.");
+      onChange("");
+    }
+  };
 
   const prevMonth = () => {
     const d = new Date(viewYear, viewMonth - 1, 1);
@@ -564,7 +602,7 @@ function DateField({ id, value, onChange, min, label }) {
     setViewMonth(d.getMonth());
   };
 
-  const todayISO = new Date().toISOString().split("T")[0];
+  const todayISO = getLocalISODate();
   const firstDow = new Date(viewYear, viewMonth, 1).getDay();
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString("en-US", {
@@ -573,7 +611,12 @@ function DateField({ id, value, onChange, min, label }) {
   });
 
   const calPanel = (
-    <div className="w-[284px] select-none rounded-xl border border-cream-200 bg-white p-3 shadow-premium">
+    <div
+      ref={calendarRef}
+      role="dialog"
+      aria-label={`${label} calendar`}
+      className="w-[284px] select-none rounded-xl border border-cream-200 bg-white p-3 shadow-premium"
+    >
       <div className="mb-2 flex items-center justify-between">
         <button
           type="button"
@@ -642,13 +685,14 @@ function DateField({ id, value, onChange, min, label }) {
     <div ref={containerRef} className="relative">
       <div className="relative">
         <input
+          ref={inputRef}
           id={id}
           type="text"
           inputMode="numeric"
           value={displayVal}
           onChange={handleTextChange}
-          onClick={openCal}
-          onFocus={openCal}
+          onClick={handleInputClick}
+          onBlur={handleInputBlur}
           placeholder="dd/mm/yyyy"
           autoComplete="off"
           aria-label={label}
@@ -660,9 +704,10 @@ function DateField({ id, value, onChange, min, label }) {
         />
         <button
           type="button"
-          onClick={openCal}
-          tabIndex={-1}
+          onClick={handleCalendarButtonClick}
           aria-label={`Open calendar for ${label}`}
+          aria-haspopup="dialog"
+          aria-expanded={calOpen}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-coffee-700/50 transition hover:text-coffee-900 focus:outline-none"
         >
           <svg
@@ -741,9 +786,22 @@ const PERSONAL_FIELDS = [
   "startDate", "endDate",
 ];
 
-function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onClearDraft, onClearPrograms }) {
+const EMPTY_QUOTE_FORM = {
+  clientName: "",
+  email: "",
+  phone: "",
+  groupType: "",
+  numberOfTravelers: "",
+  message: "",
+  consent: false,
+  preferredDestination: "",
+  startDate: "",
+  endDate: "",
+};
+
+function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onClearDraft, onClearPrograms, onIncrementResetVersion, startBlank = false }) {
   const navigate = useNavigate();
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalISODate();
 
   // Context fields re-initialize fresh from data on each open;
   // personal fields (including preferredDestination) are restored from session draft.
@@ -756,21 +814,23 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     return data.destinationArea || "";
   })();
 
-  const [form, setForm] = useState({
-    // Personal — restored from draft; groupType falls back to planner packageType if draft is empty
-    clientName: personalDraft.clientName,
-    email: personalDraft.email,
-    phone: personalDraft.phone,
-    groupType: personalDraft.groupType || data.packageType || "",
-    numberOfTravelers: personalDraft.numberOfTravelers,
-    message: personalDraft.message,
-    consent: personalDraft.consent,
-    // preferredDestination: prefer user's prior manual input, otherwise derive from context
-    preferredDestination: personalDraft.preferredDestination || computedDestPrefill,
-    // Planner dates — prefer draft (user's prior input); fall back to card data
-    startDate: personalDraft.startDate || data.startDate || "",
-    endDate: personalDraft.endDate || data.endDate || "",
-  });
+  const [form, setForm] = useState(() =>
+    startBlank
+      ? { ...EMPTY_QUOTE_FORM }
+      : {
+          clientName: personalDraft.clientName || "",
+          email: personalDraft.email || "",
+          phone: personalDraft.phone || "",
+          groupType: personalDraft.groupType || data.packageType || "",
+          numberOfTravelers: personalDraft.numberOfTravelers || "",
+          message: personalDraft.message || "",
+          consent: Boolean(personalDraft.consent),
+          preferredDestination:
+            personalDraft.preferredDestination || computedDestPrefill,
+          startDate: personalDraft.startDate || data.startDate || "",
+          endDate: personalDraft.endDate || data.endDate || "",
+        }
+  );
   const [errors, setErrors ] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -860,8 +920,13 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
 
     try {
       await createQuoteRequest(buildQuotePayload());
+
+      setForm({ ...EMPTY_QUOTE_FORM });
+      setErrors({});
+      setSubmitError("");
       onClearDraft();
       onClearPrograms();
+      onIncrementResetVersion();
       setSubmitted(true);
     } catch (error) {
       const details = error.response?.data?.details;
@@ -1093,7 +1158,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
                 type="text"
                 value={form.preferredDestination}
                 onChange={(e) => upd("preferredDestination", e.target.value)}
-                placeholder="e.g. Ilocos Heritage Trail, Bataan Route…"
+                placeholder="Choose Package / Destination"
                 className="field-input"
               />
             </EnquiryField>
@@ -1105,12 +1170,19 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
                 value={form.startDate}
                 min={today}
                 onChange={(iso) => {
-                  setForm((f) => ({
-                    ...f,
+                  const nextEndDate =
+                    form.endDate && iso && form.endDate < iso ? "" : form.endDate;
+
+                  setForm((current) => ({
+                    ...current,
                     startDate: iso,
-                    endDate: f.endDate && f.endDate < iso ? "" : f.endDate,
+                    endDate: nextEndDate,
                   }));
-                  onSaveDraft({ startDate: iso });
+
+                  onSaveDraft({
+                    startDate: iso,
+                    endDate: nextEndDate,
+                  });
                 }}
               />
             </EnquiryField>
