@@ -366,7 +366,7 @@ export default function TourPage() {
 
             {visibleTours.length > 0 ? (
               <>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {visibleTours.map((tour) => (
                     <article
                       key={tour.slug}
