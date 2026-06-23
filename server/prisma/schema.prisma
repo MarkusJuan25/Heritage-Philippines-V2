@@ -26,43 +26,43 @@ enum BookingStatus {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  passwordHash  String
-  fullName      String?
-  role          UserRole       @default(USER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String?
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   refreshTokens RefreshToken[]
   bookings      Booking[]
 }
 
 model RefreshToken {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  revokedAt  DateTime?
-  createdAt  DateTime @default(now())
+  id        String    @id @default(cuid())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
 
   @@index([userId])
 }
 
 model Package {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  title       String
-  summary     String?
-  description String?
-  priceCents  Int?
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  summary      String?
+  description  String?
+  priceCents   Int?
   durationDays Int?
-  isPublished Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  isPublished  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  bookings    Booking[]
+  bookings Booking[]
 }
 
 // Field names mirror quotes.validation.js and quotes.repository.js so the
@@ -90,6 +90,29 @@ model QuoteRequest {
   status           String   @default("received")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ContactInquiry {
+  id                 String   @id
+  status             String   @default("received")
+  name               String
+  email              String
+  phone              String
+  countryCode        String   @default("")
+  inquiryType        String   @default("")
+  destination        String   @default("")
+  startDate          String   @default("")
+  endDate            String   @default("")
+  message            String
+  consent            Boolean
+  source             String   @default("contact-page")
+  notificationStatus String   @default("pending")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   @@index([email])
   @@index([status])

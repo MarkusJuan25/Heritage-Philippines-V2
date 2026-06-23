@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import HeritageSection from "../components/HeritageSection";
+import { createContactInquiry } from "../services/contactService";
 
 // TODO: Confirm official public contact details before deployment.
 const CONTACT = {
@@ -80,16 +81,61 @@ export default function ContactPage() {
   const [openFaq, setOpenFaq]         = useState(null);
   const [countryCode, setCountryCode] = useState("PH");
   const [customCode, setCustomCode]   = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError]   = useState(null);
+  const formRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Wire to backend API when ready.
-    // POST /api/contact with payload including:
-    //   countryCode, customCountryCode: customCode,
-    //   contactNumber: e.currentTarget.contactNumber.value,
-    //   finalContactNumber: (dial + " " + contactNumber).trim()
-    //   where dial = countryCode === "OTHER" ? customCode : matched COUNTRY_CODES entry .dial
-    setSubmitted(true);
+    if (isSubmitting) return;
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const contactNumberRaw = data.get("contactNumber") || "";
+    const dial =
+      countryCode === "OTHER"
+        ? customCode
+        : (COUNTRY_CODES.find((c) => c.code === countryCode)?.dial ?? "");
+    const phone = dial
+      ? `${dial} ${contactNumberRaw}`.trim()
+      : contactNumberRaw.trim();
+
+    const payload = {
+      name: (data.get("fullName") || "").trim(),
+      email: (data.get("email") || "").trim(),
+      phone,
+      countryCode,
+      inquiryType: data.get("inquiryType") || "",
+      destination: data.get("destination") || "",
+      startDate: data.get("travelStart") || "",
+      endDate: data.get("travelEnd") || "",
+      message: (data.get("message") || "").trim(),
+      consent: true,
+      source: "contact-page",
+    };
+
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      await createContactInquiry(payload);
+      formRef.current?.reset();
+      setCountryCode("PH");
+      setCustomCode("");
+      setSubmitted(true);
+    } catch (err) {
+      const serverMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        null;
+      setSubmitError(
+        serverMessage ||
+          "Something went wrong. Please try again or contact us directly.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleFaq = (i) => setOpenFaq(openFaq === i ? null : i);
@@ -171,6 +217,7 @@ export default function ContactPage() {
 
           {/* Right: inquiry form */}
           <form
+            ref={formRef}
             onSubmit={handleSubmit}
             className="relative overflow-hidden rounded-3xl border border-cream-200 bg-gradient-to-br from-white via-cream-50 to-cream-100 p-6 shadow-premium md:p-8"
           >
@@ -370,15 +417,29 @@ export default function ContactPage() {
 
                 </div>
 
-                <div className="relative mt-6 flex flex-col gap-3 border-t border-cream-200 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-xs text-coffee-700/75">
-                    Fields marked{" "}
-                    <span className="text-gold-500">*</span> are required. We
-                    typically reply within two business days.
-                  </p>
-                  <button type="submit" className="btn-primary shrink-0">
-                    Send Inquiry
-                  </button>
+                <div className="relative mt-6 flex flex-col gap-3 border-t border-cream-200 pt-5">
+                  {submitError && (
+                    <p
+                      role="alert"
+                      className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                    >
+                      {submitError}
+                    </p>
+                  )}
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-xs text-coffee-700/75">
+                      Fields marked{" "}
+                      <span className="text-gold-500">*</span> are required. We
+                      typically reply within two business days.
+                    </p>
+                    <button
+                      type="submit"
+                      className="btn-primary shrink-0 disabled:opacity-60"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Sending Inquiry…" : "Send Inquiry"}
+                    </button>
+                  </div>
                 </div>
               </>
             )}
