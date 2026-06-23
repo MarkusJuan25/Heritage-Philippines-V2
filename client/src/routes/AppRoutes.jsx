@@ -1,45 +1,51 @@
-import { Route, Routes } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout.jsx";
-import MemberLayout from "../layouts/MemberLayout.jsx";
-import AdminLayout from "../layouts/AdminLayout.jsx";
-import HomePage from "../pages/HomePage.jsx";
-import PackagesPage from "../pages/PackagesPage.jsx";
-import TourPage from "../pages/TourPage.jsx";
-import TourDetailPage from "../pages/TourDetailPage.jsx";
-import GalleryPage from "../pages/GalleryPage.jsx";
-import StoriesPage from "../pages/StoriesPage.jsx";
-import AboutPage from "../pages/AboutPage.jsx";
-import ContactPage from "../pages/ContactPage.jsx";
-import MemberHomePage from "../pages/member/MemberHomePage.jsx";
-import JourneyPage from "../pages/member/JourneyPage.jsx";
-import BookingsPage from "../pages/member/BookingsPage.jsx";
-import DocumentsPage from "../pages/member/DocumentsPage.jsx";
-import AdminHomePage from "../pages/admin/AdminHomePage.jsx";
+
+const HomePage       = lazy(() => import("../pages/HomePage.jsx"));
+const PackagesPage   = lazy(() => import("../pages/PackagesPage.jsx"));
+const TourPage       = lazy(() => import("../pages/TourPage.jsx"));
+const TourDetailPage = lazy(() => import("../pages/TourDetailPage.jsx"));
+const GalleryPage    = lazy(() => import("../pages/GalleryPage.jsx"));
+const StoriesPage    = lazy(() => import("../pages/StoriesPage.jsx"));
+const AboutPage      = lazy(() => import("../pages/AboutPage.jsx"));
+const ContactPage    = lazy(() => import("../pages/ContactPage.jsx"));
+
+function RouteFallback() {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-[40vh] items-center justify-center"
+    >
+      <p className="text-sm font-medium tracking-wide text-coffee-700/60">
+        Loading page…
+      </p>
+    </div>
+  );
+}
+
+const renderLazyPage = (PageComponent) => (
+  <Suspense fallback={<RouteFallback />}>
+    <PageComponent />
+  </Suspense>
+);
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<PublicLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/packages" element={<PackagesPage />} />
-        <Route path="/tour" element={<TourPage />} />
-        <Route path="/tour/:slug" element={<TourDetailPage />} />
-        <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/stories" element={<StoriesPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/"          element={renderLazyPage(HomePage)} />
+        <Route path="/packages"  element={renderLazyPage(PackagesPage)} />
+        <Route path="/tour"      element={renderLazyPage(TourPage)} />
+        <Route path="/tour/:slug" element={renderLazyPage(TourDetailPage)} />
+        <Route path="/gallery"   element={renderLazyPage(GalleryPage)} />
+        <Route path="/stories"   element={renderLazyPage(StoriesPage)} />
+        <Route path="/about"     element={renderLazyPage(AboutPage)} />
+        <Route path="/contact"   element={renderLazyPage(ContactPage)} />
       </Route>
 
-      <Route path="/member" element={<MemberLayout />}>
-        <Route index element={<MemberHomePage />} />
-        <Route path="journey" element={<JourneyPage />} />
-        <Route path="bookings" element={<BookingsPage />} />
-        <Route path="documents" element={<DocumentsPage />} />
-      </Route>
-
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminHomePage />} />
-      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
