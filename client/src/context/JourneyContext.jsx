@@ -1,5 +1,6 @@
 import { createQuoteRequest } from "../services/quotesService";
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import TurnstileWidget from "../components/TurnstileWidget";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -799,6 +800,9 @@ const EMPTY_QUOTE_FORM = {
   endDate: "",
 };
 
+// Public Turnstile site key — safe to expose in the browser bundle.
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || "";
+
 function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onClearDraft, onClearPrograms, onIncrementResetVersion, startBlank = false }) {
   const navigate = useNavigate();
   const today = getLocalISODate();
@@ -835,6 +839,18 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileWidgetError, setTurnstileWidgetError] = useState("");
+  const [turnstileResetVersion, setTurnstileResetVersion] = useState(0);
+
+  const siteKeyActive = Boolean(TURNSTILE_SITE_KEY);
+  const isProd = import.meta.env.PROD;
+
+  const resetTurnstile = () => {
+    setTurnstileToken("");
+    setTurnstileWidgetError("");
+    setTurnstileResetVersion((v) => v + 1);
+  };
 
   // upd saves personal fields to the session draft automatically
   const upd = (field, value) => {
@@ -898,6 +914,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     province: data.province || "",
     source: data.source || "",
     destinationArea: data.destinationArea || "",
+    ...(turnstileToken ? { turnstileToken } : {}),
     selectedPrograms: programs.map((program) => ({
       id: program.id,
       title: program.title,
@@ -916,6 +933,16 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
       return;
     }
 
+    if (isProd && !siteKeyActive) {
+      setSubmitError("Security configuration error. Please contact the site administrator.");
+      return;
+    }
+
+    if (siteKeyActive && !turnstileToken) {
+      setSubmitError("Please complete the security verification before submitting.");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -927,6 +954,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
       onClearDraft();
       onClearPrograms();
       onIncrementResetVersion();
+      resetTurnstile();
       setSubmitted(true);
     } catch (error) {
       const details = error.response?.data?.details;
@@ -953,6 +981,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
           apiMessage ||
           "We could not send your quote request right now. Please try again."
       );
+      resetTurnstile();
     } finally {
       setSubmitting(false);
     }
@@ -1307,6 +1336,30 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
           )}
         </div>
 
+        {siteKeyActive && (
+          <div>
+            <TurnstileWidget
+              siteKey={TURNSTILE_SITE_KEY}
+              onSuccess={(token) => {
+                setTurnstileToken(token);
+                setTurnstileWidgetError("");
+              }}
+              onExpire={() => setTurnstileToken("")}
+              onError={() => {
+                setTurnstileToken("");
+                setTurnstileWidgetError("Verification failed. Please try again.");
+                setTurnstileResetVersion((v) => v + 1);
+              }}
+              resetVersion={turnstileResetVersion}
+            />
+            {turnstileWidgetError && (
+              <p role="alert" className="mt-2 text-xs text-red-500">
+                {turnstileWidgetError}
+              </p>
+            )}
+          </div>
+        )}
+
         {submitError && (
           <p
             className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
@@ -1320,7 +1373,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
         <div className="flex flex-col gap-3 border-t border-cream-200 pt-5 sm:flex-row">
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || (siteKeyActive && !turnstileToken)}
             className="btn-primary flex-1 text-sm disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Sending..." : "Send Quote Request →"}
