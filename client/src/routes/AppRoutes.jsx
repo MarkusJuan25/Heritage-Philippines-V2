@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout.jsx";
+import RouteSkeleton from "../components/RouteSkeleton.jsx";
 
 const HomePage       = lazy(() => import("../pages/HomePage.jsx"));
 const PackagesPage   = lazy(() => import("../pages/PackagesPage.jsx"));
@@ -11,22 +12,8 @@ const StoriesPage    = lazy(() => import("../pages/StoriesPage.jsx"));
 const AboutPage      = lazy(() => import("../pages/AboutPage.jsx"));
 const ContactPage    = lazy(() => import("../pages/ContactPage.jsx"));
 
-function RouteFallback() {
-  return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="flex min-h-[40vh] items-center justify-center"
-    >
-      <p className="text-sm font-medium tracking-wide text-coffee-700/60">
-        Loading page…
-      </p>
-    </div>
-  );
-}
-
 const renderLazyPage = (PageComponent) => (
-  <Suspense fallback={<RouteFallback />}>
+  <Suspense fallback={<RouteSkeleton />}>
     <PageComponent />
   </Suspense>
 );
