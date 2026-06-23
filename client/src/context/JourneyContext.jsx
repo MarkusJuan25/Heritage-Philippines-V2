@@ -818,9 +818,23 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     return data.destinationArea || "";
   })();
 
+  // True when the modal was opened with explicit tour/package/planner context.
+  const hasDestinationContext = Boolean(
+    data.source ||
+    data.province ||
+    data.destinationArea ||
+    programs.length
+  );
+
   const [form, setForm] = useState(() =>
     startBlank
-      ? { ...EMPTY_QUOTE_FORM }
+      ? {
+          ...EMPTY_QUOTE_FORM,
+          groupType: data.packageType || "",
+          preferredDestination: computedDestPrefill || "",
+          startDate: data.startDate || "",
+          endDate: data.endDate || "",
+        }
       : {
           clientName: personalDraft.clientName || "",
           email: personalDraft.email || "",
@@ -829,10 +843,11 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
           numberOfTravelers: personalDraft.numberOfTravelers || "",
           message: personalDraft.message || "",
           consent: Boolean(personalDraft.consent),
-          preferredDestination:
-            personalDraft.preferredDestination || computedDestPrefill,
-          startDate: personalDraft.startDate || data.startDate || "",
-          endDate: personalDraft.endDate || data.endDate || "",
+          preferredDestination: hasDestinationContext
+            ? computedDestPrefill
+            : personalDraft.preferredDestination || "",
+          startDate: data.startDate || personalDraft.startDate || "",
+          endDate: data.endDate || personalDraft.endDate || "",
         }
   );
   const [errors, setErrors ] = useState({});
@@ -1064,6 +1079,8 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
               <input
                 id="qm-client-name"
                 type="text"
+                name="name"
+                autoComplete="name"
                 value={form.clientName}
                 onChange={(e) => {
                   upd("clientName", e.target.value);
@@ -1085,6 +1102,9 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
               <input
                 id="qm-email"
                 type="email"
+                name="email"
+                inputMode="email"
+                autoComplete="email"
                 value={form.email}
                 onChange={(e) => {
                   upd("email", e.target.value);
@@ -1106,6 +1126,9 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
               <input
                 id="qm-phone"
                 type="tel"
+                name="tel"
+                inputMode="tel"
+                autoComplete="tel"
                 value={form.phone}
                 onChange={(e) => upd("phone", e.target.value)}
                 placeholder="+63 917 000 0000"
