@@ -11,6 +11,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/users/users.routes.js";
 import quoteRoutes from "./modules/quotes/quotes.routes.js";
+import contactRoutes from "./modules/contact/contact.routes.js";
 import packageRoutes from "./modules/packages/packages.routes.js";
 import bookingRoutes from "./modules/bookings/bookings.routes.js";
 import adminRoutes from "./modules/admin/admin.routes.js";
@@ -44,6 +45,7 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/quotes", quoteRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/api/packages", packageRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
