@@ -1,7 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
+import PageMeta from "../components/PageMeta.jsx";
 import { findPackageBySlug, getRelatedPackages } from "../data/tourPackages.js";
 import { useJourney } from "../context/JourneyContext";
+
+function buildTourDescription(pkg) {
+  const raw = pkg.overview || "";
+  const text = raw.replace(/\s+/g, " ").trim();
+  if (!text) {
+    return `Explore the ${pkg.title} — a curated heritage journey through ${pkg.location || pkg.region}, Philippines.`;
+  }
+  if (text.length <= 160) return text;
+  const cut = text.slice(0, 157);
+  const lastSpace = cut.lastIndexOf(" ");
+  return (lastSpace > 80 ? cut.slice(0, lastSpace) : cut) + "…";
+}
 
 export default function TourDetailPage() {
   const { slug } = useParams();
@@ -10,7 +23,13 @@ export default function TourDetailPage() {
 
   if (!pkg) {
     return (
-      <HeritageSection variant="primary" className="py-32">
+      <>
+        <PageMeta
+          title="Tour Not Found | Heritage Philippines"
+          description="The requested Heritage Philippines tour could not be found or may have moved. Browse the complete collection of Philippine heritage tours."
+          robots="noindex, nofollow"
+        />
+        <HeritageSection variant="primary" className="py-32">
         <div className="container-page text-center">
           <p className="font-serif text-5xl text-coffee-900/20">404</p>
           <h1 className="mt-4 font-serif text-2xl text-coffee-900">
@@ -27,6 +46,7 @@ export default function TourDetailPage() {
           </Link>
         </div>
       </HeritageSection>
+      </>
     );
   }
 
@@ -34,6 +54,12 @@ export default function TourDetailPage() {
 
   return (
     <>
+      <PageMeta
+        title={`${pkg.title} | Heritage Philippines`}
+        description={buildTourDescription(pkg)}
+        image={pkg.image}
+        type="website"
+      />
       {/* ── HERO ── */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
