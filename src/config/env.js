@@ -27,6 +27,20 @@ if (env.nodeEnv === "production") {
   ) {
     missing.push("TURNSTILE_SECRET_KEY (or set TURNSTILE_ENABLED=false)");
   }
+  // Email notifications (validated only when EMAIL_NOTIFICATIONS_ENABLED=true)
+  if (process.env.EMAIL_NOTIFICATIONS_ENABLED === "true") {
+    if (!process.env.RESEND_API_KEY) {
+      missing.push("RESEND_API_KEY");
+    }
+    if (!process.env.EMAIL_FROM) {
+      missing.push("EMAIL_FROM");
+    }
+    if (!process.env.QUOTE_ADMIN_EMAIL) {
+      missing.push("QUOTE_ADMIN_EMAIL");
+    }
+    // CONTACT_ADMIN_EMAIL is optional; contact handler falls back to QUOTE_ADMIN_EMAIL
+  }
+
   if (missing.length) {
     console.error("[env] missing required production config:", missing);
     process.exit(1);
