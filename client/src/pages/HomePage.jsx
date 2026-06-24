@@ -120,7 +120,10 @@ export default function HomePage() {
       </section>
 
       {/* HERITAGE DESTINATION TOUR */}
-      <HeritageSection variant="primary" className="py-20 md:py-24">
+      <HeritageSection
+        variant="primary"
+        className="pt-16 pb-10 md:pt-20 md:pb-12 lg:pt-16 lg:pb-8"
+      >
         <div className="container-page relative">
           <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
             <div>
@@ -180,7 +183,7 @@ export default function HomePage() {
       </HeritageSection>
 
       {/* CUSTOM PLAN */}
-      <HeritageSection variant="secondary" className="py-20 md:py-24">
+      <HeritageSection variant="secondary" className="py-12 md:py-14 lg:py-10">
         <div className="container-page relative grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative">
             <div className="relative overflow-hidden rounded-3xl border border-cream-200 shadow-premium">
@@ -242,7 +245,7 @@ export default function HomePage() {
       </HeritageSection>
 
       {/* POPULAR HERITAGE TOURS */}
-      <HeritageSection variant="primary" className="py-20 md:py-24">
+      <HeritageSection variant="primary" className="py-12 md:py-14 lg:py-10">
         <div className="container-page relative">
           <div className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
             <div>
@@ -308,7 +311,11 @@ export default function HomePage() {
       </HeritageSection>
 
       {/* CONCIERGE TRAVEL-CARE CTA */}
-      <HeritageSection variant="secondary" grow className="py-20 md:py-24">
+      <HeritageSection
+        variant="secondary"
+        grow
+        className="pt-10 pb-16 md:pt-12 md:pb-20 lg:pt-8 lg:pb-14"
+      >
         <div className="container-page relative">
           <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-gold-400/20 bg-coffee-950 px-7 py-14 text-center text-cream-50 shadow-premium sm:px-12 md:py-16">
             <div

@@ -76,9 +76,9 @@ function FloatingNav() {
               loading="eager"
             />
           </span>
-          <span className="hidden leading-tight sm:block">
-            <span className="font-serif text-[15px] tracking-wide text-cream-50">
-              Heritage Philippines
+          <span className="hidden sm:block">
+            <span className="font-serif text-[12px] leading-[1.2] tracking-[0.04em] text-cream-50 lg:text-[14px] lg:tracking-wide">
+              HERITAGE HOMECOMING PHILIPPINES
             </span>
           </span>
         </Link>
@@ -156,7 +156,7 @@ export default function PublicLayout() {
           <div className="container-page grid gap-10 py-16 md:grid-cols-12 lg:gap-12">
             {/* BRAND + ACCREDITATION */}
             <div className="md:col-span-12 lg:col-span-4">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3 md:justify-start">
                 <span className="grid h-12 w-12 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
                   <img
                     src="/images/heritage-logo.png"
@@ -169,14 +169,14 @@ export default function PublicLayout() {
                 </span>
               </div>
 
-              <h3 className="mt-8 font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+              <h3 className="mt-8 text-center font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300 md:text-left">
                 Accreditation &amp; Affiliations
               </h3>
               <span
                 aria-hidden="true"
-                className="mt-3 block h-px w-10 bg-gold-400/60"
+                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
-              <div className="mt-5 flex flex-wrap items-center gap-4">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-4 md:justify-start">
                 {[
                   {
                     src: "/footer/dot-logo-1.png",
@@ -200,13 +200,13 @@ export default function PublicLayout() {
             </div>
 
             {/* QUICK LINKS */}
-            <div className="md:col-span-4 lg:col-span-2">
+            <div className="text-center md:col-span-4 md:text-left lg:col-span-2">
               <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
                 Quick Links
               </h3>
               <span
                 aria-hidden="true"
-                className="mt-3 block h-px w-10 bg-gold-400/60"
+                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
               <ul className="mt-4 space-y-2.5 text-sm">
                 {[
@@ -230,13 +230,13 @@ export default function PublicLayout() {
             </div>
 
             {/* SERVICES */}
-            <div className="md:col-span-4 lg:col-span-3">
+            <div className="text-center md:col-span-4 md:text-left lg:col-span-3">
               <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
                 Services
               </h3>
               <span
                 aria-hidden="true"
-                className="mt-3 block h-px w-10 bg-gold-400/60"
+                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
               <ul className="mt-4 space-y-2.5 text-sm text-cream-200/80">
                 <li>Curated Heritage Tours</li>
@@ -248,13 +248,13 @@ export default function PublicLayout() {
             </div>
 
             {/* OFFICE ADDRESS */}
-            <div className="md:col-span-4 lg:col-span-3">
+            <div className="text-center md:col-span-4 md:text-left lg:col-span-3">
               <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
                 Office Address
               </h3>
               <span
                 aria-hidden="true"
-                className="mt-3 block h-px w-10 bg-gold-400/60"
+                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
               <address className="mt-4 text-sm not-italic leading-relaxed text-cream-200/80">
                 Unit 603, 6th Floor, West Insula Condominium
@@ -274,15 +274,25 @@ export default function PublicLayout() {
 
           {/* BOTTOM BAR */}
           <div className="border-t border-gold-400/15">
-            <div className="container-page flex flex-col gap-3 py-5 text-xs text-cream-200/60 sm:flex-row sm:items-center sm:justify-between">
+            <div className="container-page flex flex-col items-center gap-3 py-5 text-xs text-cream-200/60 sm:flex-row sm:items-center sm:justify-between">
               <span>
                 &copy; {new Date().getFullYear()} Heritage Philippines. All
                 rights reserved.
               </span>
               <div className="flex items-center gap-3 text-cream-200/45">
-                <span>Privacy Policy</span>
+                <Link
+                  to="/privacy-policy"
+                  className="transition-colors hover:text-gold-300"
+                >
+                  Privacy Policy
+                </Link>
                 <span aria-hidden="true" className="text-gold-300/30">|</span>
-                <span>Terms &amp; Conditions</span>
+                <Link
+                  to="/terms-and-conditions"
+                  className="transition-colors hover:text-gold-300"
+                >
+                  Terms &amp; Conditions
+                </Link>
               </div>
             </div>
           </div>
