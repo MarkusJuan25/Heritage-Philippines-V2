@@ -1,8 +1,14 @@
 import axios from "axios";
 
-const baseURL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, "") ||
-  "http://localhost:5000";
+const rawUrl = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, "");
+
+if (import.meta.env.PROD && !rawUrl) {
+  throw new Error(
+    "[apiClient] VITE_API_BASE_URL is not configured for production."
+  );
+}
+
+const baseURL = rawUrl || "http://localhost:5000";
 
 export const apiClient = axios.create({
   baseURL: `${baseURL}/api`,
