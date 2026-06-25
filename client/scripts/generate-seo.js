@@ -59,11 +59,10 @@ function xmlEscape(str) {
     .replace(/'/g, "&apos;");
 }
 
-function urlEntry({ loc, lastmod, changefreq, priority }) {
+function urlEntry({ loc, changefreq, priority }) {
   return [
     "  <url>",
     `    <loc>${xmlEscape(loc)}</loc>`,
-    `    <lastmod>${lastmod}</lastmod>`,
     `    <changefreq>${changefreq}</changefreq>`,
     `    <priority>${priority}</priority>`,
     "  </url>",
@@ -75,10 +74,8 @@ function urlEntry({ loc, lastmod, changefreq, priority }) {
 // ---------------------------------------------------------------------------
 
 const siteUrl = resolveSiteUrl().replace(/\/+$/, "");
-const today   = new Date().toISOString().slice(0, 10);
 
 console.log(`[seo] site URL : ${siteUrl}`);
-console.log(`[seo] lastmod  : ${today}`);
 
 // ---------------------------------------------------------------------------
 // validate tour data
@@ -106,7 +103,7 @@ const STATIC_PAGES = [
 ];
 
 const staticEntries = STATIC_PAGES.map(({ path, changefreq, priority }) =>
-  urlEntry({ loc: `${siteUrl}${path}`, lastmod: today, changefreq, priority })
+  urlEntry({ loc: `${siteUrl}${path}`, changefreq, priority })
 );
 
 // ---------------------------------------------------------------------------
@@ -129,7 +126,6 @@ for (const pkg of provincePackages) {
   tourEntries.push(
     urlEntry({
       loc:        `${siteUrl}/tour/${pkg.slug}`,
-      lastmod:    today,
       changefreq: "monthly",
       priority:   "0.8",
     })
