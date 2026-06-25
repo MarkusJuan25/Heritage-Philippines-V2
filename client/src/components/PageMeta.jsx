@@ -30,6 +30,7 @@ export default function PageMeta({
   image = "/images/heritage-logo.png",
   type = "website",
   robots = "index, follow",
+  structuredData,
 }) {
   const { pathname } = useLocation();
 
@@ -62,7 +63,37 @@ export default function PageMeta({
     setMeta("name", "twitter:image", absImage);
 
     setCanonical(canonical);
-  }, [title, description, image, type, robots, pathname]);
+
+    // JSON-LD structured data — remove stale scripts, then inject fresh ones
+    document.head
+      .querySelectorAll('script[data-page-meta-jsonld="true"]')
+      .forEach((s) => s.remove());
+
+    const injected = [];
+    if (structuredData != null) {
+      const items = Array.isArray(structuredData) ? structuredData : [structuredData];
+      for (const item of items) {
+        if (item == null || typeof item !== "object" || Array.isArray(item)) continue;
+        let json;
+        try {
+          json = JSON.stringify(item);
+        } catch {
+          continue;
+        }
+        if (typeof json !== "string" || !json) continue;
+        const script = document.createElement("script");
+        script.type = "application/ld+json";
+        script.setAttribute("data-page-meta-jsonld", "true");
+        script.textContent = json;
+        document.head.appendChild(script);
+        injected.push(script);
+      }
+    }
+
+    return () => {
+      injected.forEach((s) => s.remove());
+    };
+  }, [title, description, image, type, robots, pathname, structuredData]);
 
   return null;
 }

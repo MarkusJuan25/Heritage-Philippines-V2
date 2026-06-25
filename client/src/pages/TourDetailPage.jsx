@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
 import PageMeta from "../components/PageMeta.jsx";
@@ -20,6 +21,72 @@ export default function TourDetailPage() {
   const { slug } = useParams();
   const pkg = findPackageBySlug(slug);
   const { openQuoteModal, addProgram, isProgramSelected } = useJourney();
+
+  const structuredData = useMemo(() => {
+    if (!pkg) return null;
+
+    const base = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/+$/, "");
+    const canonicalUrl = `${base}/tour/${pkg.slug}`;
+    const absImage = pkg.image
+      ? pkg.image.startsWith("http")
+        ? pkg.image
+        : `${base}${pkg.image.startsWith("/") ? pkg.image : `/${pkg.image}`}`
+      : null;
+
+    const breadcrumb = {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": base },
+        { "@type": "ListItem", "position": 2, "name": "Tours", "item": `${base}/tour` },
+        { "@type": "ListItem", "position": 3, "name": pkg.title, "item": canonicalUrl },
+      ],
+    };
+
+    const trip = {
+      "@type": "TouristTrip",
+      "@id": `${canonicalUrl}#tour`,
+      "name": pkg.title,
+      "description": buildTourDescription(pkg),
+      "url": canonicalUrl,
+      "provider": { "@id": `${base}#organization` },
+    };
+
+    if (absImage) trip.image = absImage;
+
+    if (Array.isArray(pkg.itinerary)) {
+      const usableEntries = pkg.itinerary.filter((day) => {
+        const hasTitle = typeof day.title === "string" && day.title.trim() !== "";
+        const hasDetails =
+          Array.isArray(day.details) &&
+          day.details.some((d) => typeof d === "string" && d.trim() !== "");
+        return hasTitle || hasDetails;
+      });
+
+      if (usableEntries.length > 0) {
+        trip.itinerary = {
+          "@type": "ItemList",
+          "itemListElement": usableEntries.map((day, index) => {
+            const listItem = { "@type": "ListItem", "position": index + 1 };
+            if (typeof day.title === "string" && day.title.trim()) {
+              listItem.name = day.title;
+            }
+            const usableDetails = Array.isArray(day.details)
+              ? day.details.filter((d) => typeof d === "string" && d.trim() !== "")
+              : [];
+            if (usableDetails.length > 0) {
+              listItem.description = usableDetails.join(". ");
+            }
+            return listItem;
+          }),
+        };
+      }
+    }
+
+    return {
+      "@context": "https://schema.org",
+      "@graph": [breadcrumb, trip],
+    };
+  }, [pkg]);
 
   if (!pkg) {
     return (
@@ -59,6 +126,7 @@ export default function TourDetailPage() {
         description={buildTourDescription(pkg)}
         image={pkg.image}
         type="website"
+        structuredData={structuredData}
       />
       {/* ── HERO ── */}
       <section className="relative overflow-hidden">

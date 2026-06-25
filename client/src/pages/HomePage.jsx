@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import HeritageSection from "../components/HeritageSection";
+import PageMeta from "../components/PageMeta.jsx";
 
 const heroVideos = [
   "/videos/Create_a_premium_cinematic_mar.mp4",
@@ -67,8 +68,40 @@ export default function HomePage() {
     setVideoIndex((i) => (i + 1) % heroVideos.length);
   };
 
+  const structuredData = useMemo(() => {
+    const base = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/+$/, "");
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TravelAgency",
+          "@id": `${base}#organization`,
+          "name": "Heritage Philippines",
+          "url": base,
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${base}/images/heritage-logo.png`,
+          },
+          "description": "Discover carefully hosted cultural journeys, heritage destinations, and meaningful travel experiences across the Philippine archipelago.",
+        },
+        {
+          "@type": "WebSite",
+          "@id": `${base}#website`,
+          "name": "Heritage Philippines",
+          "url": base,
+          "publisher": { "@id": `${base}#organization` },
+        },
+      ],
+    };
+  }, []);
+
   return (
     <>
+      <PageMeta
+        title="Heritage Philippines | Curated Cultural Journeys"
+        description="Discover carefully hosted cultural journeys, heritage destinations, and meaningful travel experiences across the Philippine archipelago."
+        structuredData={structuredData}
+      />
       {/* CINEMATIC HERO */}
       <section className="cinematic-hero min-h-[100svh]">
         <div className="cinematic-hero__media">

@@ -28,11 +28,7 @@ export default function AppRoutes() {
       <Route element={<PublicLayout />}>
         <Route
           path="/"
-          element={renderLazyPage(HomePage, {
-            title: "Heritage Philippines | Curated Cultural Journeys",
-            description:
-              "Discover carefully hosted cultural journeys, heritage destinations, and meaningful travel experiences across the Philippine archipelago.",
-          })}
+          element={renderLazyPage(HomePage)}
         />
         <Route
           path="/packages"
