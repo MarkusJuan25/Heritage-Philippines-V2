@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PublicLayout from "../layouts/PublicLayout.jsx";
 import RouteSkeleton from "../components/RouteSkeleton.jsx";
 import PageMeta from "../components/PageMeta.jsx";
@@ -14,6 +14,7 @@ const AboutPage            = lazy(() => import("../pages/AboutPage.jsx"));
 const ContactPage          = lazy(() => import("../pages/ContactPage.jsx"));
 const PrivacyPolicyPage    = lazy(() => import("../pages/PrivacyPolicyPage.jsx"));
 const TermsConditionsPage  = lazy(() => import("../pages/TermsConditionsPage.jsx"));
+const NotFoundPage         = lazy(() => import("../pages/NotFoundPage.jsx"));
 
 const renderLazyPage = (PageComponent, meta) => (
   <Suspense fallback={<RouteSkeleton />}>
@@ -95,9 +96,8 @@ export default function AppRoutes() {
               "Review the terms and conditions governing the use of the Heritage Philippines website, travel inquiries, and related services.",
           })}
         />
+        <Route path="*" element={renderLazyPage(NotFoundPage)} />
       </Route>
-
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

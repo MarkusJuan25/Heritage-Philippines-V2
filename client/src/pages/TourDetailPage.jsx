@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
+import { resolveAbsoluteUrl } from "../utils/seoUrl.js";
 import HeritageSection from "../components/HeritageSection";
 import PageMeta from "../components/PageMeta.jsx";
 import { findPackageBySlug, getRelatedPackages } from "../data/tourPackages.js";
@@ -27,11 +28,7 @@ export default function TourDetailPage() {
 
     const base = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/+$/, "");
     const canonicalUrl = `${base}/tour/${pkg.slug}`;
-    const absImage = pkg.image
-      ? pkg.image.startsWith("http")
-        ? pkg.image
-        : `${base}${pkg.image.startsWith("/") ? pkg.image : `/${pkg.image}`}`
-      : null;
+    const absImage = resolveAbsoluteUrl(pkg.image, base);
 
     const breadcrumb = {
       "@type": "BreadcrumbList",

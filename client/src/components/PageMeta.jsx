@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { resolveAbsoluteUrl } from "../utils/seoUrl.js";
 
 const SITE_NAME = "Heritage Philippines";
 
@@ -39,11 +40,12 @@ export default function PageMeta({
       import.meta.env.VITE_SITE_URL || window.location.origin
     ).replace(/\/+$/, "");
 
-    const canonical = `${base}${pathname}`;
+    const canonical = resolveAbsoluteUrl(pathname, base) ?? `${base}${pathname}`;
 
-    const absImage = image.startsWith("http")
-      ? image
-      : `${base}${image.startsWith("/") ? image : `/${image}`}`;
+    const absImage =
+      resolveAbsoluteUrl(image, base) ??
+      resolveAbsoluteUrl("/images/heritage-logo.png", base) ??
+      "";
 
     document.title = title;
 
