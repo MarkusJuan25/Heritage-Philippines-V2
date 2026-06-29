@@ -694,7 +694,7 @@ function DateField({ id, value, onChange, min, label }) {
           onChange={handleTextChange}
           onClick={handleInputClick}
           onBlur={handleInputBlur}
-          placeholder="dd/mm/yyyy"
+          placeholder="Select date"
           autoComplete="off"
           aria-label={label}
           aria-describedby={inputErr ? `${id}-df-err` : undefined}
@@ -1024,32 +1024,34 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
   if (submitted) {
     return (
       <ModalShell onClose={onClose}>
-        <div className="flex flex-col items-center py-10 text-center">
-          <span className="mb-4 text-5xl text-gold-500" aria-hidden="true">
-            ✓
-          </span>
-          <span className="eyebrow">Request Prepared</span>
-          <h2 className="mt-2 font-serif text-2xl text-coffee-900">
-            Your request is noted.
-          </h2>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-coffee-800/70">
-            Your quote request was sent successfully. Our team will review the details and respond as soon as possible.
-          </p>
-          <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn-primary text-sm"
-            >
-              Continue Browsing
-            </button>
-            <Link
-              to="/contact"
-              onClick={onClose}
-              className="text-center text-sm font-semibold text-coffee-800/60 transition hover:text-coffee-900"
-            >
-              Contact us →
-            </Link>
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8">
+          <div className="flex flex-col items-center py-10 text-center">
+            <span className="mb-4 text-5xl text-gold-500" aria-hidden="true">
+              ✓
+            </span>
+            <span className="eyebrow">Request Prepared</span>
+            <h2 className="mt-2 font-serif text-2xl text-coffee-900">
+              Your request is noted.
+            </h2>
+            <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-coffee-800/70">
+              Your quote request was sent successfully. Our team will review the details and respond as soon as possible.
+            </p>
+            <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="btn-primary text-sm"
+              >
+                Continue Browsing
+              </button>
+              <Link
+                to="/contact"
+                onClick={onClose}
+                className="text-center text-sm font-semibold text-coffee-800/60 transition hover:text-coffee-900"
+              >
+                Contact us →
+              </Link>
+            </div>
           </div>
         </div>
       </ModalShell>
@@ -1058,278 +1060,281 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
 
   return (
     <ModalShell onClose={onClose}>
-      <span className="eyebrow">Request a Quote</span>
-      <h2 className="mt-2 font-serif text-2xl text-coffee-900">
-        Tell us about your journey
-      </h2>
-      <p className="mt-1 text-sm leading-relaxed text-coffee-800/70">
-        Share the basics — our team shapes the route, pricing, and support
-        around your group and dates.
-      </p>
+      {/* ── Scrollable form body ── */}
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8 pb-10">
+        <span className="eyebrow">Request a Quote</span>
+        <h2 className="mt-2 font-serif text-2xl text-coffee-900">
+          Tell us about your journey
+        </h2>
+        <p className="mt-1 text-sm leading-relaxed text-coffee-800/70">
+          Share the basics — our team shapes the route, pricing, and support
+          around your group and dates.
+        </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="mt-6 space-y-5"
-        noValidate
-      >
-        {/* ── Section 1: Your Details ── */}
-        <EnquirySection title="Your Details">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <EnquiryField label="Client Name *" htmlFor="qm-client-name">
-              <input
-                id="qm-client-name"
-                type="text"
-                name="name"
-                autoComplete="name"
-                value={form.clientName}
-                onChange={(e) => {
-                  upd("clientName", e.target.value);
-                  if (errors.clientName) clearErr("clientName");
-                }}
-                placeholder="Your full name"
-                className={`field-input${errors.clientName ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
-                aria-invalid={errors.clientName ? "true" : undefined}
-                aria-describedby={errors.clientName ? "qm-cn-err" : undefined}
-              />
-              {errors.clientName && (
-                <p id="qm-cn-err" className="mt-1 text-xs text-red-500" role="alert">
-                  {errors.clientName}
-                </p>
-              )}
-            </EnquiryField>
-
-            <EnquiryField label="Email Address *" htmlFor="qm-email">
-              <input
-                id="qm-email"
-                type="email"
-                name="email"
-                inputMode="email"
-                autoComplete="email"
-                value={form.email}
-                onChange={(e) => {
-                  upd("email", e.target.value);
-                  if (errors.email) clearErr("email");
-                }}
-                placeholder="you@email.com"
-                className={`field-input${errors.email ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
-                aria-invalid={errors.email ? "true" : undefined}
-                aria-describedby={errors.email ? "qm-em-err" : undefined}
-              />
-              {errors.email && (
-                <p id="qm-em-err" className="mt-1 text-xs text-red-500" role="alert">
-                  {errors.email}
-                </p>
-              )}
-            </EnquiryField>
-
-            <EnquiryField label="Phone / WhatsApp (optional)" htmlFor="qm-phone">
-              <input
-                id="qm-phone"
-                type="tel"
-                name="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                value={form.phone}
-                onChange={(e) => upd("phone", e.target.value)}
-                placeholder="+63 917 000 0000"
-                className="field-input"
-              />
-            </EnquiryField>
-          </div>
-        </EnquirySection>
-
-        {/* ── Section 2: Trip Details ── */}
-        <EnquirySection title="Trip Details">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <EnquiryField label="Group Type" htmlFor="qm-group-type">
-              <select
-                id="qm-group-type"
-                value={form.groupType}
-                onChange={(e) => upd("groupType", e.target.value)}
-                className="field-input"
-              >
-                <option value="">Select…</option>
-                {GROUP_TYPES.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-            </EnquiryField>
-
-            <EnquiryField
-              label={form.groupType === "Solo" ? "Number of Travelers" : "Number of Travelers *"}
-              htmlFor="qm-travelers"
-            >
-              {form.groupType === "Solo" ? (
+        <form
+          id="qm-form"
+          onSubmit={handleSubmit}
+          className="mt-4 space-y-4"
+          noValidate
+        >
+          {/* ── Section 1: Your Details ── */}
+          <EnquirySection title="Your Details">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+              <EnquiryField label="Client Name *" htmlFor="qm-client-name">
                 <input
-                  id="qm-travelers"
-                  type="number"
-                  name="numberOfTravelers"
-                  value="1"
-                  min="1"
-                  disabled
-                  className="field-input opacity-80"
+                  id="qm-client-name"
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  value={form.clientName}
+                  onChange={(e) => {
+                    upd("clientName", e.target.value);
+                    if (errors.clientName) clearErr("clientName");
+                  }}
+                  placeholder="Your full name"
+                  className={`field-input${errors.clientName ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
+                  aria-invalid={errors.clientName ? "true" : undefined}
+                  aria-describedby={errors.clientName ? "qm-cn-err" : undefined}
                 />
-              ) : (
-                <>
-                  <select
-                    id="qm-travelers"
-                    value={form.numberOfTravelers}
-                    onChange={(e) => {
-                      upd("numberOfTravelers", e.target.value);
-                      if (errors.numberOfTravelers) clearErr("numberOfTravelers");
-                    }}
-                    className={`field-input${errors.numberOfTravelers ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
-                    aria-invalid={errors.numberOfTravelers ? "true" : undefined}
-                    aria-describedby={errors.numberOfTravelers ? "qm-tr-err" : undefined}
-                  >
-                    <option value="">Select…</option>
-                    <option value="1">1 — Solo</option>
-                    <option value="2">2 — Couple</option>
-                    <option value="3">3 people</option>
-                    <option value="4-6">4–6 people</option>
-                    <option value="7-10">7–10 people</option>
-                    <option value="11-20">11–20 people</option>
-                    <option value="20+">20+ people</option>
-                  </select>
-                  {errors.numberOfTravelers && (
-                    <p id="qm-tr-err" className="mt-1 text-xs text-red-500" role="alert">
-                      {errors.numberOfTravelers}
-                    </p>
-                  )}
-                </>
-              )}
-            </EnquiryField>
-
-            <EnquiryField
-              label="Preferred Destination / Package"
-              htmlFor="qm-destination"
-              wide
-            >
-              <input
-                id="qm-destination"
-                type="text"
-                value={form.preferredDestination}
-                onChange={(e) => upd("preferredDestination", e.target.value)}
-                placeholder="Choose Package / Destination"
-                className="field-input"
-              />
-            </EnquiryField>
-
-            <EnquiryField label="Preferred Start Date" htmlFor="qm-start-date">
-              <DateField
-                id="qm-start-date"
-                label="Preferred Start Date"
-                value={form.startDate}
-                min={today}
-                onChange={(iso) => {
-                  const nextEndDate =
-                    form.endDate && iso && form.endDate < iso ? "" : form.endDate;
-
-                  setForm((current) => ({
-                    ...current,
-                    startDate: iso,
-                    endDate: nextEndDate,
-                  }));
-
-                  onSaveDraft({
-                    startDate: iso,
-                    endDate: nextEndDate,
-                  });
-                }}
-              />
-            </EnquiryField>
-
-            <EnquiryField label="Preferred End Date" htmlFor="qm-end-date">
-              <DateField
-                id="qm-end-date"
-                label="Preferred End Date"
-                value={form.endDate}
-                min={form.startDate || today}
-                onChange={(iso) => upd("endDate", iso)}
-              />
-            </EnquiryField>
-          </div>
-        </EnquirySection>
-
-        {/* ── Section 3: Selected Package / Program (read-only context) ── */}
-        {showContextSection && (
-          <EnquirySection title="Selected Package / Program" muted>
-            {/* Context header: card/planner that opened the modal */}
-            {hasContextHeader && (
-              <dl className="space-y-2.5">
-                {data.packageType && (
-                  <QuoteRow label="Package Style" value={data.packageType} />
+                {errors.clientName && (
+                  <p id="qm-cn-err" className="mt-1 text-xs text-red-500" role="alert">
+                    {errors.clientName}
+                  </p>
                 )}
-                {data.source && (
-                  <QuoteRow label="Package / Tour" value={data.source} />
-                )}
-                {contextDest && (
-                  <QuoteRow label="Destination" value={contextDest} />
-                )}
-                {data.duration && (
-                  <QuoteRow label="Duration" value={data.duration} />
-                )}
-                {data.startDate && (
-                  <QuoteRow
-                    label="Planner Dates"
-                    value={`${fmtDate(data.startDate)} – ${fmtDate(data.endDate)}`}
-                  />
-                )}
-              </dl>
-            )}
+              </EnquiryField>
 
-            {/* My Journey programs — always live from context */}
-            {hasJourneyPrograms && (
-              <div className={hasContextHeader ? "mt-3 border-t border-cream-200 pt-3" : ""}>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-coffee-800/50">
-                  Also included from My Journey
-                </p>
-                <ul className="space-y-1">
-                  {programs.map((p) => (
-                    <li
-                      key={p.id}
-                      className="flex items-start gap-1.5 text-sm text-coffee-900"
-                    >
-                      <span className="text-gold-500" aria-hidden="true">✓</span>
-                      {p.title}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              <EnquiryField label="Email Address *" htmlFor="qm-email">
+                <input
+                  id="qm-email"
+                  type="email"
+                  name="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={(e) => {
+                    upd("email", e.target.value);
+                    if (errors.email) clearErr("email");
+                  }}
+                  placeholder="you@email.com"
+                  className={`field-input${errors.email ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
+                  aria-invalid={errors.email ? "true" : undefined}
+                  aria-describedby={errors.email ? "qm-em-err" : undefined}
+                />
+                {errors.email && (
+                  <p id="qm-em-err" className="mt-1 text-xs text-red-500" role="alert">
+                    {errors.email}
+                  </p>
+                )}
+              </EnquiryField>
 
-            {/* Add another package — closes modal and navigates to tour collection */}
-            <div className="mt-3 border-t border-cream-200 pt-3">
-              <button
-                type="button"
-                onClick={() => { onSaveDraft(form); onClose(); navigate("/tour#tour-collection"); }}
-                className="text-xs font-semibold text-gold-600 transition hover:text-gold-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
-              >
-                + Add another package
-              </button>
+              <EnquiryField label="Phone / WhatsApp (optional)" htmlFor="qm-phone">
+                <input
+                  id="qm-phone"
+                  type="tel"
+                  name="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  value={form.phone}
+                  onChange={(e) => upd("phone", e.target.value)}
+                  placeholder="+63 917 000 0000"
+                  className="field-input"
+                />
+              </EnquiryField>
             </div>
           </EnquirySection>
-        )}
 
-        {/* ── Section 4: Special Requirements ── */}
-        <EnquirySection title="Additional Details">
-          <EnquiryField
-            label="Special Requirements or Message (optional)"
-            htmlFor="qm-message"
-            wide
-          >
-            <textarea
-              id="qm-message"
-              rows={3}
-              value={form.message}
-              onChange={(e) => upd("message", e.target.value)}
-              placeholder="Dietary needs, accessibility, cultural interests, anniversary, or family-specific notes…"
-              className="field-input resize-none"
-            />
-          </EnquiryField>
-        </EnquirySection>
+          {/* ── Section 2: Trip Details ── */}
+          <EnquirySection title="Trip Details">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <EnquiryField label="Group Type" htmlFor="qm-group-type">
+                <select
+                  id="qm-group-type"
+                  value={form.groupType}
+                  onChange={(e) => upd("groupType", e.target.value)}
+                  className="field-input"
+                >
+                  <option value="">Select…</option>
+                  {GROUP_TYPES.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+              </EnquiryField>
 
-        {/* ── Consent ── */}
+              <EnquiryField
+                label={form.groupType === "Solo" ? "Number of Travelers" : "Number of Travelers *"}
+                htmlFor="qm-travelers"
+              >
+                {form.groupType === "Solo" ? (
+                  <input
+                    id="qm-travelers"
+                    type="number"
+                    name="numberOfTravelers"
+                    value="1"
+                    min="1"
+                    disabled
+                    className="field-input opacity-80"
+                  />
+                ) : (
+                  <>
+                    <select
+                      id="qm-travelers"
+                      value={form.numberOfTravelers}
+                      onChange={(e) => {
+                        upd("numberOfTravelers", e.target.value);
+                        if (errors.numberOfTravelers) clearErr("numberOfTravelers");
+                      }}
+                      className={`field-input${errors.numberOfTravelers ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
+                      aria-invalid={errors.numberOfTravelers ? "true" : undefined}
+                      aria-describedby={errors.numberOfTravelers ? "qm-tr-err" : undefined}
+                    >
+                      <option value="">Select…</option>
+                      <option value="1">1 — Solo</option>
+                      <option value="2">2 — Couple</option>
+                      <option value="3">3 people</option>
+                      <option value="4-6">4–6 people</option>
+                      <option value="7-10">7–10 people</option>
+                      <option value="11-20">11–20 people</option>
+                      <option value="20+">20+ people</option>
+                    </select>
+                    {errors.numberOfTravelers && (
+                      <p id="qm-tr-err" className="mt-1 text-xs text-red-500" role="alert">
+                        {errors.numberOfTravelers}
+                      </p>
+                    )}
+                  </>
+                )}
+              </EnquiryField>
+
+              <EnquiryField
+                label="Preferred Destination / Package"
+                htmlFor="qm-destination"
+                wide
+              >
+                <input
+                  id="qm-destination"
+                  type="text"
+                  value={form.preferredDestination}
+                  onChange={(e) => upd("preferredDestination", e.target.value)}
+                  placeholder="Choose Package / Destination"
+                  className="field-input"
+                />
+              </EnquiryField>
+
+              <EnquiryField label="Preferred Start Date" htmlFor="qm-start-date">
+                <DateField
+                  id="qm-start-date"
+                  label="Preferred Start Date"
+                  value={form.startDate}
+                  min={today}
+                  onChange={(iso) => {
+                    const nextEndDate =
+                      form.endDate && iso && form.endDate < iso ? "" : form.endDate;
+
+                    setForm((current) => ({
+                      ...current,
+                      startDate: iso,
+                      endDate: nextEndDate,
+                    }));
+
+                    onSaveDraft({
+                      startDate: iso,
+                      endDate: nextEndDate,
+                    });
+                  }}
+                />
+              </EnquiryField>
+
+              <EnquiryField label="Preferred End Date" htmlFor="qm-end-date">
+                <DateField
+                  id="qm-end-date"
+                  label="Preferred End Date"
+                  value={form.endDate}
+                  min={form.startDate || today}
+                  onChange={(iso) => upd("endDate", iso)}
+                />
+              </EnquiryField>
+            </div>
+          </EnquirySection>
+
+          {/* ── Section 3: Selected Package / Program (read-only context) ── */}
+          {showContextSection && (
+            <EnquirySection title="Selected Package / Program" muted>
+              {hasContextHeader && (
+                <dl className="space-y-2">
+                  {data.packageType && (
+                    <QuoteRow label="Package Style" value={data.packageType} />
+                  )}
+                  {data.source && (
+                    <QuoteRow label="Package / Tour" value={data.source} />
+                  )}
+                  {contextDest && (
+                    <QuoteRow label="Destination" value={contextDest} />
+                  )}
+                  {data.duration && (
+                    <QuoteRow label="Duration" value={data.duration} />
+                  )}
+                  {data.startDate && (
+                    <QuoteRow
+                      label="Planner Dates"
+                      value={`${fmtDate(data.startDate)} – ${fmtDate(data.endDate)}`}
+                    />
+                  )}
+                </dl>
+              )}
+
+              {hasJourneyPrograms && (
+                <div className={hasContextHeader ? "mt-2 border-t border-cream-200 pt-2" : ""}>
+                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-coffee-800/50">
+                    Also included from My Journey
+                  </p>
+                  <ul className="space-y-1">
+                    {programs.map((p) => (
+                      <li
+                        key={p.id}
+                        className="flex items-start gap-1.5 text-sm text-coffee-900"
+                      >
+                        <span className="text-gold-500" aria-hidden="true">✓</span>
+                        {p.title}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-2 border-t border-cream-200 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { onSaveDraft(form); onClose(); navigate("/tour#tour-collection"); }}
+                  className="text-xs font-semibold text-gold-600 transition hover:text-gold-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
+                >
+                  + Add another package
+                </button>
+              </div>
+            </EnquirySection>
+          )}
+
+          {/* ── Section 4: Special Requirements ── */}
+          <EnquirySection title="Additional Details">
+            <EnquiryField
+              label="Special Requirements or Message (optional)"
+              htmlFor="qm-message"
+              wide
+            >
+              <textarea
+                id="qm-message"
+                rows={2}
+                value={form.message}
+                onChange={(e) => upd("message", e.target.value)}
+                placeholder="Dietary needs, accessibility, cultural interests, anniversary, or family-specific notes…"
+                className="field-input resize-y"
+              />
+            </EnquiryField>
+          </EnquirySection>
+        </form>
+      </div>
+
+      {/* ── Pinned footer: consent, verification, submit ── */}
+      <div className="flex-none border-t border-cream-200 bg-white px-6 sm:px-8 pt-4 space-y-3" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom, 0px))" }}>
         <div>
           <label
             className="flex cursor-pointer items-start gap-3"
@@ -1392,17 +1397,17 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
           </p>
         )}
 
-        {/* ── CTA ── */}
-        <div className="flex flex-col gap-3 border-t border-cream-200 pt-5 sm:flex-row">
+        <div className="flex flex-col gap-3 pt-1 sm:flex-row">
           <button
             type="submit"
+            form="qm-form"
             disabled={submitting || (siteKeyActive && !turnstileToken)}
             className="btn-primary flex-1 text-sm disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Sending..." : "Send Quote Request →"}
           </button>
         </div>
-      </form>
+      </div>
     </ModalShell>
   );
 }
@@ -1410,7 +1415,6 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
 // ─── Shared modal shell ───────────────────────────────────────────────────────
 
 function ModalShell({ children, onClose }) {
-  // Prevent body scroll while modal is open
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -1419,7 +1423,7 @@ function ModalShell({ children, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[9000] flex items-start justify-center overflow-y-auto p-4 sm:p-6"
+      className="fixed inset-0 z-[9000] flex items-center justify-center p-4 sm:p-6"
       role="dialog"
       aria-modal="true"
     >
@@ -1428,7 +1432,7 @@ function ModalShell({ children, onClose }) {
         onClick={onClose}
         aria-hidden="true"
       />
-      <div className="relative z-10 my-4 w-full max-w-2xl rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-premium sm:my-8">
+      <div className="relative z-10 flex w-full max-w-[920px] max-h-[92vh] flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-premium">
         <button
           type="button"
           onClick={onClose}
@@ -1437,7 +1441,7 @@ function ModalShell({ children, onClose }) {
         >
           ✕
         </button>
-        <div className="p-6 sm:p-8">{children}</div>
+        {children}
       </div>
     </div>
   );

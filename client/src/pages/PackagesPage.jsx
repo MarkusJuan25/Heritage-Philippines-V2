@@ -158,6 +158,21 @@ function getPackageStackPosition(index, activeIdx) {
   return "is-hidden";
 }
 
+function openDatePicker(inputRef) {
+  const input = inputRef.current;
+  if (!input) return;
+  try {
+    if (typeof input.showPicker === "function") {
+      input.showPicker();
+    } else {
+      input.focus();
+      input.click();
+    }
+  } catch {
+    input.focus();
+  }
+}
+
 export default function PackagesPage() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -168,6 +183,8 @@ export default function PackagesPage() {
   const { addProgram, isProgramSelected, openQuoteModal, programs, quoteResetVersion } = useJourney();
 
   const isFirstMount = useRef(true);
+  const startDateRef = useRef(null);
+  const endDateRef = useRef(null);
   useEffect(() => {
     if (isFirstMount.current) { isFirstMount.current = false; return; }
     setQuote({ ...defaultQuote });
@@ -539,41 +556,99 @@ export default function PackagesPage() {
               </label>
             )}
 
-            {/* Dates — native inputs (V1 custom DatePickerField not yet ported) */}
+            {/* Dates — native inputs with custom empty-state overlay */}
             <div className="grid grid-cols-2 gap-3">
               <label
                 className="package-card-quote-field package-card-quote-field--date"
                 htmlFor="package-quote-startDate"
               >
                 <span>Start Date</span>
-                <input
-                  id="package-quote-startDate"
-                  type="date"
-                  min={today}
-                  value={quote.startDate}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setQuote((q) => ({
-                      ...q,
-                      startDate: val,
-                      endDate:
-                        q.endDate && q.endDate < val ? "" : q.endDate,
-                    }));
-                  }}
-                />
+                <div className="relative cursor-pointer">
+                  {/* Calendar icon — always visible on the left */}
+                  <div
+                    className="pointer-events-none absolute inset-y-0 left-3 z-20 flex items-center"
+                    aria-hidden="true"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-coffee-700/50">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  </div>
+                  {/* Empty-state overlay: covers browser native format text, shows "Select date" */}
+                  {!quote.startDate && (
+                    <div
+                      className="pointer-events-none absolute inset-0 z-10 flex items-center rounded-lg border border-cream-200 bg-cream-50 pl-9 pr-4"
+                      aria-hidden="true"
+                    >
+                      <span className="text-sm text-coffee-700/50">Select date</span>
+                    </div>
+                  )}
+                  <input
+                    ref={startDateRef}
+                    id="package-quote-startDate"
+                    type="date"
+                    min={today}
+                    value={quote.startDate}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setQuote((q) => ({
+                        ...q,
+                        startDate: val,
+                        endDate:
+                          q.endDate && q.endDate < val ? "" : q.endDate,
+                      }));
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDatePicker(startDateRef);
+                    }}
+                    style={{ paddingLeft: "2.5rem" }}
+                  />
+                </div>
               </label>
               <label
                 className="package-card-quote-field package-card-quote-field--date"
                 htmlFor="package-quote-endDate"
               >
                 <span>End Date</span>
-                <input
-                  id="package-quote-endDate"
-                  type="date"
-                  min={quote.startDate || today}
-                  value={quote.endDate}
-                  onChange={(e) => updateQuote("endDate", e.target.value)}
-                />
+                <div className="relative cursor-pointer">
+                  {/* Calendar icon — always visible on the left */}
+                  <div
+                    className="pointer-events-none absolute inset-y-0 left-3 z-20 flex items-center"
+                    aria-hidden="true"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-coffee-700/50">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                  </div>
+                  {/* Empty-state overlay: covers browser native format text, shows "Select date" */}
+                  {!quote.endDate && (
+                    <div
+                      className="pointer-events-none absolute inset-0 z-10 flex items-center rounded-lg border border-cream-200 bg-cream-50 pl-9 pr-4"
+                      aria-hidden="true"
+                    >
+                      <span className="text-sm text-coffee-700/50">Select date</span>
+                    </div>
+                  )}
+                  <input
+                    ref={endDateRef}
+                    id="package-quote-endDate"
+                    type="date"
+                    min={quote.startDate || today}
+                    value={quote.endDate}
+                    onChange={(e) => updateQuote("endDate", e.target.value)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDatePicker(endDateRef);
+                    }}
+                    style={{ paddingLeft: "2.5rem" }}
+                  />
+                </div>
               </label>
             </div>
 
