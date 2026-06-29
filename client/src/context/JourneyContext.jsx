@@ -1,5 +1,5 @@
 import { createQuoteRequest } from "../services/quotesService";
-import { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useRef, useMemo } from "react";
 import TurnstileWidget from "../components/TurnstileWidget";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -73,24 +73,39 @@ export function JourneyProvider({ children }) {
     []
   );
 
+  const contextValue = useMemo(
+    () => ({
+      programs,
+      addProgram,
+      removeProgram,
+      clearPrograms,
+      isProgramSelected,
+      openQuoteModal,
+      closeQuoteModal,
+      personalDraft,
+      savePersonalDraft,
+      clearPersonalDraft,
+      quoteResetVersion,
+    }),
+    [
+      programs,
+      addProgram,
+      removeProgram,
+      clearPrograms,
+      isProgramSelected,
+      openQuoteModal,
+      closeQuoteModal,
+      personalDraft,
+      savePersonalDraft,
+      clearPersonalDraft,
+      quoteResetVersion,
+    ]
+  );
+
   return (
-    <JourneyContext.Provider
-      value={{
-        programs,
-        addProgram,
-        removeProgram,
-        clearPrograms,
-        isProgramSelected,
-        openQuoteModal,
-        closeQuoteModal,
-        personalDraft,
-        savePersonalDraft,
-        clearPersonalDraft,
-        quoteResetVersion,
-      }}
-    >
+    <JourneyContext.Provider value={contextValue}>
       {children}
-      {showJourneyDock && (
+      {showJourneyDock && !modal.open && (
         <MyJourneyWidget
           programs={programs}
           onOpenQuoteModal={() => openQuoteModal({ programs, fromWidget: true })}
@@ -867,21 +882,26 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     setTurnstileResetVersion((v) => v + 1);
   };
 
-  // upd saves personal fields to the session draft automatically
+  // upd only touches local form state — draft is flushed on close via handleClose.
   const upd = (field, value) => {
     setForm((f) => ({ ...f, [field]: value }));
-    if (PERSONAL_FIELDS.includes(field)) {
-      onSaveDraft({ [field]: value });
-    }
   };
   const clearErr = (field) => setErrors((e) => ({ ...e, [field]: "" }));
 
+  // Flush personal fields to the session draft, then close.
+  const handleClose = useCallback(() => {
+    const draft = {};
+    PERSONAL_FIELDS.forEach((f) => { draft[f] = form[f]; });
+    onSaveDraft(draft);
+    onClose();
+  }, [form, onSaveDraft, onClose]);
+
   // ESC close
   useEffect(() => {
-    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    const handler = (e) => { if (e.key === "Escape") handleClose(); };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [onClose]);
+  }, [handleClose]);
 
   const validate = () => {
     const errs = {};
@@ -1059,7 +1079,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
   }
 
   return (
-    <ModalShell onClose={onClose}>
+    <ModalShell onClose={handleClose}>
       {/* ── Scrollable form body ── */}
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8 pb-10">
         <span className="eyebrow">Request a Quote</span>
@@ -1229,17 +1249,11 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
                   onChange={(iso) => {
                     const nextEndDate =
                       form.endDate && iso && form.endDate < iso ? "" : form.endDate;
-
                     setForm((current) => ({
                       ...current,
                       startDate: iso,
                       endDate: nextEndDate,
                     }));
-
-                    onSaveDraft({
-                      startDate: iso,
-                      endDate: nextEndDate,
-                    });
                   }}
                 />
               </EnquiryField>
@@ -1375,15 +1389,25 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
               onExpire={() => setTurnstileToken("")}
               onError={() => {
                 setTurnstileToken("");
-                setTurnstileWidgetError("Verification failed. Please try again.");
-                setTurnstileResetVersion((v) => v + 1);
+                setTurnstileWidgetError(
+                  "Verification could not be completed. Please retry."
+                );
               }}
               resetVersion={turnstileResetVersion}
             />
             {turnstileWidgetError && (
-              <p role="alert" className="mt-2 text-xs text-red-500">
-                {turnstileWidgetError}
-              </p>
+              <div className="mt-2 flex items-center gap-3">
+                <p role="alert" className="text-xs text-red-500">
+                  {turnstileWidgetError}
+                </p>
+                <button
+                  type="button"
+                  onClick={resetTurnstile}
+                  className="shrink-0 text-xs font-semibold text-gold-600 transition hover:text-gold-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
+                >
+                  Retry verification
+                </button>
+              </div>
             )}
           </div>
         )}
@@ -1428,7 +1452,7 @@ function ModalShell({ children, onClose }) {
       aria-modal="true"
     >
       <div
-        className="absolute inset-0 bg-coffee-950/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-coffee-950/80 sm:backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />

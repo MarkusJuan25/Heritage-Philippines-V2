@@ -17,7 +17,7 @@ const STORIES = [
     traveler: "A.R., Heritage traveler",
     body: "The Dambana ng Kagitingan on Mount Samat marks the ground where the Battle of Bataan was fought in 1942. The cross rises 95 meters, visible from much of the province. Inside the base, mosaic murals line the walls, and the names of the fallen are recorded in stone. Families visit on quiet weekdays, not just on ceremonial dates. That ordinariness is what makes it stay with you. Bataan is not a museum exhibit — it is a province that continues to live alongside its history.",
     image: img(
-      "/images/Luzon/Region III — Central Luzon/Crucible of History Mount Samat Cross.jpg"
+      "/images/luzon/region-iii-central-luzon/crucible-of-history-mount-samat-cross.jpg"
     ),
     thumbnailTitle: "Bataan",
   },
@@ -33,7 +33,7 @@ const STORIES = [
     traveler: "M.S., Heritage traveler",
     body: "Batanes sits at the northernmost tip of the Philippine archipelago, closer to Taiwan than to Manila. The Ivatan people have lived on these islands for centuries, developing a culture that reflects the isolation — stone homes called sinadumparan, the practice of vakul headgear, and a calendar tied to the sea. The Marlboro Hills near Batan Island's interior are rolling, open, and treeless. Standing there, it is possible to see both coasts of the island at once. The quiet is earned by the distance it takes to get here.",
     image: img(
-      "/images/Luzon/Region II — Cagayan Valley/Marlboro Hills Batanes.jpg"
+      "/images/luzon/region-ii-cagayan-valley/marlboro-hills-batanes.jpg"
     ),
     thumbnailTitle: "Batanes",
   },
@@ -49,7 +49,7 @@ const STORIES = [
     traveler: "J.D., Heritage traveler",
     body: "Benguet is one of the more underexplored provinces of the Cordillera Administrative Region. Its roads are winding and altitude-dependent — the drive up from the lowlands takes time and rewards patience. The province is home to the Ibaloi and Kankanaey peoples, whose relationship with the land shapes everything from agriculture to burial practice. Strawberry farms and cut-flower markets cluster near La Trinidad. Higher up, the pines take over, and the towns become quieter, colder, and more particular. A multi-day stay here reveals the province's own rhythm, which is not in a hurry to match yours.",
     image: img(
-      "/images/Luzon/CAR — Cordillera Administrative Region/Winding Mountain Roads Benguet.jpg"
+      "/images/luzon/car-cordillera-administrative-region/winding-mountain-roads-benguet.jpg"
     ),
     thumbnailTitle: "Benguet",
   },
@@ -65,7 +65,7 @@ const STORIES = [
     traveler: "C.V., Heritage traveler",
     body: "The Miagao Church — formally Santo Tomás de Villanueva Parish Church — was built in 1797 and is one of four Baroque churches in the Philippines listed as UNESCO World Heritage Sites. The facade is the most remarkable part: local stone carved into scenes of Philippine flora, with papaya, coconut, and guava trees arranged alongside Saint Christopher crossing what appears to be a Philippine river, not a European one. The adaptation is deliberate and specific. Iloilo's weaving tradition is another layer — hablon cloth, woven on wooden looms in towns like Miag-ao and Molo, carries patterns that are still locally taught.",
     image: img(
-      "/images/Visayas/Region VI — Western Visayas/Preserved Heritage Weaving and the Miagao Church.jpg"
+      "/images/visayas/region-vi-western-visayas/preserved-heritage-weaving-and-the-miagao-church.jpg"
     ),
     thumbnailTitle: "Iloilo",
   },
@@ -81,7 +81,7 @@ const STORIES = [
     traveler: "R.M., Heritage traveler",
     body: "Mount Mayon rises 2,463 meters above the Bicol plains and has erupted more than fifty times since records were first kept. The towns below it — Legazpi, Daraga, Santo Domingo — are built on lava fields from previous eruptions, and the communities have developed evacuation protocols as part of ordinary life. That coexistence is not denial; it is practical, generational knowledge. The Bicol food tradition is equally grounded: laing, pinangat, and Bicolano pili nut dishes tell the story of what the land grows and how people learned to use it.",
     image: img(
-      "/images/Luzon/Region V — Bicol Region/The Volcano and the Plains Mount Mayon.jpg"
+      "/images/luzon/region-v-bicol-region/the-volcano-and-the-plains-mount-mayon.jpg"
     ),
     thumbnailTitle: "Albay",
   },
@@ -97,7 +97,7 @@ const STORIES = [
     traveler: "L.T., Heritage traveler",
     body: "Silay City in Negros Occidental is sometimes called the City of Gentle People, and more informally the Paris of Negros — a reference not to Europe but to the concentration of preserved bahay na bato houses that line its streets. The sugar industry brought significant wealth to these families in the nineteenth and early twentieth centuries, and several invested it in homes built to last. Thirty of these houses remain standing today, many of them privately occupied. The Balay Negrense Museum, the Hofileña Heritage House, and the ancestral home of Bernardino Jalandoni are among those open to visitors. The city's food culture — buñuelos, puto maya, and muscovado-sweetened sweets — runs alongside its architecture as a form of local memory.",
     image: img(
-      "/images/Visayas/NIR — Negros Island Region/Negros Occidental The Sugar Capital Silay City.jpg"
+      "/images/visayas/nir-negros-island-region/negros-occidental-the-sugar-capital-silay-city.jpg"
     ),
     thumbnailTitle: "Negros Occidental",
   },

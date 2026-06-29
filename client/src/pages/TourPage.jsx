@@ -37,19 +37,19 @@ const heroRoutes = [
     label: "LUZON",
     title: "Luzon Heritage Routes",
     number: "01",
-    image: "/images/Luzon/Region I — Ilocos Region/The Spanish Heritage of Vigan Ilocos Sur.jpg",
+    image: "/images/luzon/region-i-ilocos-region/the-spanish-heritage-of-vigan-ilocos-sur.jpg",
   },
   {
     label: "VISAYAS",
     title: "Visayas Island Heritage",
     number: "02",
-    image: "/images/Visayas/Region VII — Central Visayas/Bohol - The Geological Wonders Chocolate Hills.jpg",
+    image: "/images/visayas/region-vii-central-visayas/bohol-the-geological-wonders-chocolate-hills.jpg",
   },
   {
     label: "MINDANAO",
     title: "Mindanao Cultural Journeys",
     number: "03",
-    image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
+    image: "/images/mindanao/region-x-northern-mindanao/bukidnon-the-land-of-rolling-plateaus.jpg",
   },
 ];
 
@@ -58,25 +58,25 @@ const destinations = [
     number: "01",
     title: "Ilocos Heritage Trail",
     region: "Northern Luzon",
-    image: "/images/Luzon/Region I — Ilocos Region/The Spanish Heritage of Vigan Ilocos Sur.jpg",
+    image: "/images/luzon/region-i-ilocos-region/the-spanish-heritage-of-vigan-ilocos-sur.jpg",
   },
   {
     number: "02",
     title: "Cordillera Highland Loop",
     region: "Cordillera",
-    image: "/images/Luzon/CAR — Cordillera Administrative Region/The Rice Terraces of Ifugao Banaue.jpg",
+    image: "/images/luzon/car-cordillera-administrative-region/the-rice-terraces-of-ifugao-banaue.jpg",
   },
   {
     number: "03",
     title: "Visayas Island Circuit",
     region: "Visayas",
-    image: "/images/Visayas/Region VII — Central Visayas/Bohol - The Geological Wonders Chocolate Hills.jpg",
+    image: "/images/visayas/region-vii-central-visayas/bohol-the-geological-wonders-chocolate-hills.jpg",
   },
   {
     number: "04",
     title: "Mindanao Cultural Frontier",
     region: "Mindanao",
-    image: "/images/Mindanao/Region X — Northern Mindanao/Bukidnon The Land of Rolling Plateaus.jpg",
+    image: "/images/mindanao/region-x-northern-mindanao/bukidnon-the-land-of-rolling-plateaus.jpg",
   },
 ];
 

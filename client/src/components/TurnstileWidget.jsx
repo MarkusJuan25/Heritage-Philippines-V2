@@ -120,9 +120,18 @@ export default function TurnstileWidget({
           "expired-callback": () => {
             if (mountedRef.current) onExpireRef.current?.();
           },
-          "error-callback": () => {
-            if (mountedRef.current) onErrorRef.current?.();
+          "timeout-callback": () => {
+            // Challenge timed out before completion — treat as expiry.
+            if (mountedRef.current) onExpireRef.current?.();
           },
+          "error-callback": (errorCode) => {
+            if (mountedRef.current) onErrorRef.current?.(errorCode);
+            // Returning true signals that the application handled the failure;
+            // Turnstile will not automatically recreate the widget.
+            return true;
+          },
+          // Automatically refresh an expired token without user interaction.
+          "refresh-expired": "auto",
         });
       })
       .catch(() => {

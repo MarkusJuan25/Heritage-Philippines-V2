@@ -563,7 +563,7 @@ export default function PackagesPage() {
                 htmlFor="package-quote-startDate"
               >
                 <span>Start Date</span>
-                <div className="relative cursor-pointer">
+                <div className="relative cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-gold-500/20">
                   {/* Calendar icon — always visible on the left */}
                   <div
                     className="pointer-events-none absolute inset-y-0 left-3 z-20 flex items-center"
@@ -576,7 +576,7 @@ export default function PackagesPage() {
                       <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
                   </div>
-                  {/* Empty-state overlay: covers browser native format text, shows "Select date" */}
+                  {/* Empty-state overlay: shows "Select date"; rendered above the transparent input */}
                   {!quote.startDate && (
                     <div
                       className="pointer-events-none absolute inset-0 z-10 flex items-center rounded-lg border border-cream-200 bg-cream-50 pl-9 pr-4"
@@ -591,6 +591,7 @@ export default function PackagesPage() {
                     type="date"
                     min={today}
                     value={quote.startDate}
+                    aria-label="Start date — select from calendar"
                     onChange={(e) => {
                       const val = e.target.value;
                       setQuote((q) => ({
@@ -604,7 +605,12 @@ export default function PackagesPage() {
                       e.stopPropagation();
                       openDatePicker(startDateRef);
                     }}
-                    style={{ paddingLeft: "2.5rem" }}
+                    style={{
+                      paddingLeft: "2.5rem",
+                      // Transparent when empty so the custom overlay shows through on
+                      // mobile browsers that paint the native control above z-indexed layers.
+                      opacity: quote.startDate ? 1 : 0,
+                    }}
                   />
                 </div>
               </label>
@@ -613,7 +619,7 @@ export default function PackagesPage() {
                 htmlFor="package-quote-endDate"
               >
                 <span>End Date</span>
-                <div className="relative cursor-pointer">
+                <div className="relative cursor-pointer rounded-lg focus-within:ring-2 focus-within:ring-gold-500/20">
                   {/* Calendar icon — always visible on the left */}
                   <div
                     className="pointer-events-none absolute inset-y-0 left-3 z-20 flex items-center"
@@ -626,7 +632,7 @@ export default function PackagesPage() {
                       <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
                   </div>
-                  {/* Empty-state overlay: covers browser native format text, shows "Select date" */}
+                  {/* Empty-state overlay: shows "Select date"; rendered above the transparent input */}
                   {!quote.endDate && (
                     <div
                       className="pointer-events-none absolute inset-0 z-10 flex items-center rounded-lg border border-cream-200 bg-cream-50 pl-9 pr-4"
@@ -641,12 +647,16 @@ export default function PackagesPage() {
                     type="date"
                     min={quote.startDate || today}
                     value={quote.endDate}
+                    aria-label="End date — select from calendar"
                     onChange={(e) => updateQuote("endDate", e.target.value)}
                     onClick={(e) => {
                       e.stopPropagation();
                       openDatePicker(endDateRef);
                     }}
-                    style={{ paddingLeft: "2.5rem" }}
+                    style={{
+                      paddingLeft: "2.5rem",
+                      opacity: quote.endDate ? 1 : 0,
+                    }}
                   />
                 </div>
               </label>
