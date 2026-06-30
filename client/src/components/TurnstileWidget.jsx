@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
 const SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
@@ -62,7 +62,7 @@ function loadTurnstileScript() {
  *   onError()      – called when the widget encounters an error
  *   resetVersion   – increment this number to remove and re-render the widget
  */
-export default function TurnstileWidget({
+const TurnstileWidget = memo(function TurnstileWidget({
   siteKey,
   onSuccess,
   onExpire,
@@ -152,4 +152,6 @@ export default function TurnstileWidget({
   }, [siteKey, resetVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div ref={containerRef} />;
-}
+});
+
+export default TurnstileWidget;

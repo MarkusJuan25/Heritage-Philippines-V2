@@ -510,6 +510,14 @@ function patchSourceFiles(renameMap, sourceFiles) {
   return { filesPatched, totalReplaced };
 }
 
+// OS-generated metadata files that are not real content.
+const OS_METADATA_FILES = new Set([
+  "thumbs.db",
+  ".ds_store",
+  "desktop.ini",
+  ".directory",
+]);
+
 function removeEmptyDirs(baseDir) {
   function tryRemove(dir) {
     if (dir === baseDir) return;
@@ -519,9 +527,19 @@ function removeEmptyDirs(baseDir) {
     } catch {
       return;
     }
-    if (entries.length === 0) {
-      fs.rmdirSync(dir);
-      tryRemove(path.dirname(dir));
+    // Directories whose only contents are OS metadata count as effectively empty.
+    const meaningful = entries.filter(
+      (e) => !OS_METADATA_FILES.has(e.toLowerCase())
+    );
+    if (meaningful.length === 0) {
+      // Delete metadata stragglers first so the directory becomes truly empty.
+      for (const e of entries) {
+        try { fs.unlinkSync(path.join(dir, e)); } catch { /* best-effort */ }
+      }
+      try {
+        fs.rmdirSync(dir);
+        tryRemove(path.dirname(dir));
+      } catch { /* ignore races */ }
     }
   }
   function walk(dir) {
@@ -568,7 +586,16 @@ function removeEmptyDirs(baseDir) {
   }
 
   if (renameMap.length === 0) {
-    console.log("No image files need renaming. Nothing to do.");
+    // Image files are already clean. Still run directory cleanup when --apply is
+    // set so that legacy directories containing only OS metadata (Thumbs.db,
+    // .DS_Store) are removed even if nothing needed renaming this run.
+    if (APPLY) {
+      console.log("No image files need renaming. Cleaning up legacy directories...");
+      removeEmptyDirs(IMAGES_DIR);
+      console.log("Done.");
+    } else {
+      console.log("No image files need renaming. Nothing to do.");
+    }
     return;
   }
 

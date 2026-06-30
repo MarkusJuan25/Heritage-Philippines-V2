@@ -896,6 +896,22 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     onClose();
   }, [form, onSaveDraft, onClose]);
 
+  // Stable Turnstile callbacks — useCallback prevents TurnstileWidget's ref-sync
+  // effects from firing on every QuoteModal re-render (e.g., every keystroke).
+  const handleTurnstileSuccess = useCallback((token) => {
+    setTurnstileToken(token);
+    setTurnstileWidgetError("");
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken("");
+    setTurnstileWidgetError("Verification could not be completed. Please retry.");
+  }, []);
+
   // ESC close
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") handleClose(); };
@@ -1382,17 +1398,9 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
           <div>
             <TurnstileWidget
               siteKey={TURNSTILE_SITE_KEY}
-              onSuccess={(token) => {
-                setTurnstileToken(token);
-                setTurnstileWidgetError("");
-              }}
-              onExpire={() => setTurnstileToken("")}
-              onError={() => {
-                setTurnstileToken("");
-                setTurnstileWidgetError(
-                  "Verification could not be completed. Please retry."
-                );
-              }}
+              onSuccess={handleTurnstileSuccess}
+              onExpire={handleTurnstileExpire}
+              onError={handleTurnstileError}
               resetVersion={turnstileResetVersion}
             />
             {turnstileWidgetError && (
@@ -1440,32 +1448,72 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
 
 function ModalShell({ children, onClose }) {
   useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+    // iOS Safari ignores overflow:hidden on body alone. The reliable fix is to
+    // freeze the body with position:fixed at the current scroll offset.
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const prev = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+      paddingRight: body.style.paddingRight,
+    };
+    // Compensate for scrollbar width to prevent layout shift.
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      // Restore every property we touched — runs on unmount, route change, or
+      // unexpected close so the body is never left in a locked state.
+      body.style.overflow = prev.overflow;
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.width = prev.width;
+      body.style.paddingRight = prev.paddingRight;
+      // position:fixed resets the scroll offset on iOS — restore it explicitly.
+      window.scrollTo(0, scrollY);
+    };
   }, []);
 
   return (
+    // Outer: fixed full-screen, scrollable so the panel is reachable on
+    // very small screens where even a constrained panel might overflow.
     <div
-      className="fixed inset-0 z-[9000] flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-[9000] overflow-y-auto overscroll-contain"
       role="dialog"
       aria-modal="true"
     >
-      <div
-        className="absolute inset-0 bg-coffee-950/80 sm:backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      <div className="relative z-10 flex w-full max-w-[920px] max-h-[92vh] flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-premium">
-        <button
-          type="button"
+      <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+        {/* Backdrop is fixed (not absolute) so it stays pinned during outer scroll. */}
+        <div
+          className="fixed inset-0 bg-coffee-950/80 sm:backdrop-blur-sm"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-coffee-800/60 transition hover:bg-cream-100 hover:text-coffee-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300"
-          aria-label="Close"
+          aria-hidden="true"
+        />
+        {/* Panel: max-h fallback (92vh) + dvh override for mobile browser chrome. */}
+        <div
+          className="relative z-10 flex w-full max-w-[920px] max-h-[92vh] flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-premium"
+          style={{ maxHeight: "92dvh" }}
         >
-          ✕
-        </button>
-        {children}
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full text-coffee-800/60 transition hover:bg-cream-100 hover:text-coffee-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-300"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          {children}
+        </div>
       </div>
     </div>
   );

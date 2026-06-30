@@ -78,35 +78,36 @@ const featuredItineraries = [
       "Corregidor Island optional daytrip",
       "Local craft and coastal stop",
     ],
-    image: "/images/a-glimpse-of-vigan-city.jpg",
+    image:
+      "/images/luzon/region-iii-central-luzon/crucible-of-history-mount-samat-cross.jpg",
   },
   {
     title: "Bicol Adventure Day Tour",
     duration: "Day Tour",
     tag: "Adventure",
     text: "A full-day Bicol circuit — Mayon Volcano ATV, Cagsawa Ruins, Daraga Church, a local Bicol Express food stop, and a scenic return by evening.",
-    image: "/images/experiences-destinations/enjoying-the-spot.jpg",
+    image: "/images/bicol-adventure-day-tour-mayon.png",
   },
   {
     title: "Baguio Cool Highlands Escape",
     duration: "3D2N",
     tag: "Highlands",
     text: "Three days in the highland city — Strawberry Farm, Burnham Park, Botanical Garden, Mines View, Camp John Hay, pine forest walks, and a Baguio night market experience.",
-    image: "/images/home-hero-story-preview/misty-mountain.jpg",
+    image: "/images/beach-images/mines-view-park-baguio.jpg",
   },
   {
     title: "Bacolod-Iloilo Heritage & Food Trail",
     duration: "5D4N",
     tag: "Food & Heritage",
     text: "Five days across Western Visayas — Bacolod sugar heritage, Silay ancestral houses, the Iloilo river esplanade, Miagao Church, regional food stops, and a negrense feast before departure.",
-    image: "/images/journey-culture-movement/family-cooking.jpg",
+    image: "/images/bacolod-iloilo-heritage-the-ruins.jpg",
   },
   {
     title: "Alibijaban Island Getaway",
     duration: "3D2N",
     tag: "Island Escape",
     text: "A Quezon island escape — Alibijaban sandbar, mangrove kayak, a quiet beach stretch, a private island dinner, and sunrise views before the return sea crossing.",
-    image: "/images/experiences-destinations/beach-lagoon.jpg",
+    image: "/images/alibijaban-island-gateway.jpg",
   },
 ];
 

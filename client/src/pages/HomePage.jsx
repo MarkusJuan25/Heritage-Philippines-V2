@@ -15,7 +15,7 @@ const signatureRoutes = [
     region: "Metro Manila",
     title: "Manila Heritage Gateway",
     text: "Old Manila, food memory, historic streets, and a gentle first return into the story.",
-    image: "/images/townscape-in-night-at-manila.jpg",
+    image: "/images/luzon/ncr-national-capital-region/intramuros-manila.jpg",
   },
   {
     index: "02",
@@ -221,7 +221,7 @@ export default function HomePage() {
           <div className="relative">
             <div className="relative overflow-hidden rounded-3xl border border-cream-200 shadow-premium">
               <img
-                src="/images/a-glimpse-of-vigan-city.jpg"
+                src="/images/bataan-heritage-route-las-casas.jpg"
                 alt="Heritage route planning in the Philippines"
                 loading="lazy"
                 className="h-[24rem] w-full object-cover"

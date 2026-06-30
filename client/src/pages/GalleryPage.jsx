@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const GALLERY_IMAGE_FALLBACK = "/images/kamayan-style.jpg";
 
@@ -78,7 +79,7 @@ const PHOTOS = [
     caption: "Manila at Night",
     location: "Metro Manila",
     category: "Culture",
-    image: "/images/townscape-in-night-at-manila.jpg",
+    image: "/images/manila-cathedral-at-night.jpg",
   },
   {
     id: "palawan",
@@ -120,42 +121,42 @@ const PHOTOS = [
     caption: "Weaving Hands",
     location: "Visayas",
     category: "Crafts",
-    image: "/images/fundacion-pacita.jpg",
+    image: "/images/visayas-pinya-weaving-hands-aklan.jpg",
   },
   {
     id: "culture",
     caption: "A Touch of Culture",
     location: "Philippines",
     category: "Culture",
-    image: "/images/homecoming.jpg",
+    image: "/images/philippines-a-touch-of-culture-parol.jpg",
   },
   {
     id: "palmtrees",
     caption: "Island Palms",
     location: "Philippines",
     category: "Landscapes",
-    image: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
+    image: "/images/gallery-visual-impact/a-line-of-palmtrees-you-miss.jpg",
   },
   {
     id: "hangingcoffin",
     caption: "Hanging Coffins of Sagada",
     location: "Mountain Province",
     category: "Heritage",
-    image: "/images/marlboro-country-batanes-lanscapes.jpg",
+    image: "/images/hanging-coffin.jpg",
   },
   {
     id: "faces",
-    caption: "Smiling Faces",
+    caption: "Heritage at Home",
     location: "Philippines",
-    category: "People",
-    image: "/images/homecoming.jpg",
+    category: "Architecture",
+    image: "/images/heritage-home.jpg",
   },
   {
     id: "weavingfabric",
     caption: "Woven Heritage",
     location: "Visayas",
     category: "Crafts",
-    image: "/images/fundacion-pacita.jpg",
+    image: "/images/visayas-woven-heritage-aklan-pina.jpg",
   },
 ];
 
@@ -212,6 +213,21 @@ const VIDEOS = [
     externalUrl: "https://www.youtube.com/watch?v=KlOIqPZ2S1s",
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Shuffle helper — Fisher-Yates, never mutates the original array.
+// ---------------------------------------------------------------------------
+function shufflePhotos(photos) {
+  const shuffled = [...photos];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [
+      shuffled[randomIndex],
+      shuffled[index],
+    ];
+  }
+  return shuffled;
+}
 
 // ---------------------------------------------------------------------------
 // Video embed helpers
@@ -351,7 +367,7 @@ function ReelCard({
 
   return (
     <article className={articleClass} aria-current={isSelected ? "true" : undefined}>
-      {/* ── Card media ──────────────────────────────────────────────── */}
+      {/* Card media */}
       <div className="gallery-reel-frame group">
         {featured && playing && embedProps ? (
           <iframe
@@ -444,7 +460,6 @@ function ReelCard({
   );
 }
 
-
 function PhotoLightbox({ photo, onClose, onPrev, onNext }) {
   const touchStartX = useRef(null);
 
@@ -523,7 +538,7 @@ function EmptyState({ query }) {
   return (
     <div className="gallery-empty-state">
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cream-100">
-        <span className="text-2xl text-coffee-700/40">⌕</span>
+        <span className="text-2xl text-coffee-700/40">○</span>
       </div>
       <p className="mt-4 font-serif text-xl text-coffee-900">
         No results for &ldquo;{query}&rdquo;
@@ -539,24 +554,31 @@ function EmptyState({ query }) {
 // Page
 // ---------------------------------------------------------------------------
 export default function GalleryPage() {
+  const shouldReduceMotion = useReducedMotion();
+
   const [mode, setMode]           = useState("photos");
   const [search, setSearch]       = useState("");
   const [playingId, setPlayingId] = useState(null);
   const [activeVideoIndex, setActiveVideoIndex] = useState(() =>
     getFirstPlayableVideoIndex(VIDEOS)
   );
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(-1);
+
+  // Shuffled photo order — initialized from PHOTOS, never mutates PHOTOS.
+  const [orderedPhotos, setOrderedPhotos] = useState(() => [...PHOTOS]);
+
+  // Lightbox identified by stable photo ID rather than array index.
+  const [activePhotoId, setActivePhotoId] = useState(null);
 
   const filteredPhotos = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return PHOTOS;
-    return PHOTOS.filter(
+    if (!q) return orderedPhotos;
+    return orderedPhotos.filter(
       (p) =>
         p.caption.toLowerCase().includes(q) ||
         p.location.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [search, orderedPhotos]);
 
   const filteredVideos = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -568,33 +590,73 @@ export default function GalleryPage() {
     );
   }, [search]);
 
-  // Derive the photo object from the index — null when closed.
-  const selectedPhoto =
-    selectedPhotoIndex >= 0 ? (filteredPhotos[selectedPhotoIndex] ?? null) : null;
+  // Derive active photo from its stable ID.
+  const activePhotoIndex = filteredPhotos.findIndex((p) => p.id === activePhotoId);
+  const activePhoto = activePhotoIndex >= 0 ? filteredPhotos[activePhotoIndex] : null;
 
-  const closePhoto = () => setSelectedPhotoIndex(-1);
-  const showPreviousPhoto = () =>
-    setSelectedPhotoIndex((i) => (i - 1 + filteredPhotos.length) % filteredPhotos.length);
-  const showNextPhoto = () =>
-    setSelectedPhotoIndex((i) => (i + 1) % filteredPhotos.length);
+  // Ref so the keyboard handler always sees the latest filtered list without
+  // needing filteredPhotos in its dependency array (which would re-register
+  // the listener on every shuffle).
+  const filteredPhotosRef = useRef(filteredPhotos);
+  useEffect(() => {
+    filteredPhotosRef.current = filteredPhotos;
+  }, [filteredPhotos]);
+
+  const closePhoto = () => setActivePhotoId(null);
+
+  const showPreviousPhoto = () => {
+    const photos = filteredPhotosRef.current;
+    const idx = photos.findIndex((p) => p.id === activePhotoId);
+    if (idx < 0) return;
+    setActivePhotoId(photos[(idx - 1 + photos.length) % photos.length].id);
+  };
+
+  const showNextPhoto = () => {
+    const photos = filteredPhotosRef.current;
+    const idx = photos.findIndex((p) => p.id === activePhotoId);
+    if (idx < 0) return;
+    setActivePhotoId(photos[(idx + 1) % photos.length].id);
+  };
 
   // Body scroll lock + keyboard navigation while lightbox is open.
   useEffect(() => {
-    if (selectedPhotoIndex < 0) return;
+    if (!activePhotoId) return undefined;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const total = filteredPhotos.length;
     const handleKey = (e) => {
-      if (e.key === "Escape")          setSelectedPhotoIndex(-1);
-      else if (e.key === "ArrowLeft")  setSelectedPhotoIndex((i) => (i - 1 + total) % total);
-      else if (e.key === "ArrowRight") setSelectedPhotoIndex((i) => (i + 1) % total);
+      if (e.key === "Escape") {
+        setActivePhotoId(null);
+      } else if (e.key === "ArrowLeft") {
+        setActivePhotoId((currentId) => {
+          const photos = filteredPhotosRef.current;
+          const idx = photos.findIndex((p) => p.id === currentId);
+          if (idx < 0) return currentId;
+          return photos[(idx - 1 + photos.length) % photos.length].id;
+        });
+      } else if (e.key === "ArrowRight") {
+        setActivePhotoId((currentId) => {
+          const photos = filteredPhotosRef.current;
+          const idx = photos.findIndex((p) => p.id === currentId);
+          if (idx < 0) return currentId;
+          return photos[(idx + 1) % photos.length].id;
+        });
+      }
     };
     document.addEventListener("keydown", handleKey);
     return () => {
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", handleKey);
     };
-  }, [selectedPhotoIndex, filteredPhotos.length]);
+  }, [activePhotoId]);
+
+  // Auto-shuffle every 10 seconds — pauses while the lightbox is open.
+  useEffect(() => {
+    if (activePhotoId !== null) return undefined;
+    const intervalId = window.setInterval(() => {
+      setOrderedPhotos((current) => shufflePhotos(current));
+    }, 10000);
+    return () => window.clearInterval(intervalId);
+  }, [activePhotoId]);
 
   const switchMode = (next) => {
     setMode(next);
@@ -605,6 +667,17 @@ export default function GalleryPage() {
     }
   };
 
+  // Shared layout transition — duration collapses to zero for reduced motion.
+  const layoutTransition = {
+    layout: {
+      duration: shouldReduceMotion ? 0 : 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+    opacity: {
+      duration: shouldReduceMotion ? 0 : 0.25,
+    },
+  };
+
   const featured   = filteredPhotos[0];
   const restPhotos = filteredPhotos.slice(1);
   const safeActiveVideoIndex =
@@ -612,22 +685,34 @@ export default function GalleryPage() {
       ? Math.min(activeVideoIndex, filteredVideos.length - 1)
       : 0;
   const selectedVideo = filteredVideos[safeActiveVideoIndex];
-  const videoChoices = filteredVideos;
+  const videoChoices  = filteredVideos;
 
   return (
     <>
     <main className="gallery-page-shell min-h-screen bg-warm-cream bg-heritage pb-20 pt-28 sm:pt-32 md:pt-36">
       <div className="container-page">
 
-        {/* ── Toolbar ──────────────────────────────────────────────────── */}
+        {/* Toolbar */}
         <div className="gallery-board-toolbar">
 
-          {/* Page title */}
-          <div>
-            <p className="eyebrow">Gallery</p>
-            <h1 className="mt-1 font-serif text-2xl text-coffee-900 sm:text-3xl">
-              Frames of the Archipelago
-            </h1>
+          {/* Page title + shuffle button */}
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Gallery</p>
+              <h1 className="mt-1 font-serif text-2xl text-coffee-900 sm:text-3xl">
+                Frames of the Archipelago
+              </h1>
+            </div>
+            {mode === "photos" && (
+              <button
+                type="button"
+                aria-label="Shuffle gallery photos"
+                onClick={() => setOrderedPhotos((current) => shufflePhotos(current))}
+                className="mb-0.5 shrink-0 self-end rounded-full border border-cream-200 bg-white/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-coffee-800 shadow-warm transition hover:border-gold-400/60 hover:bg-cream-50 hover:text-gold-700"
+              >
+                Shuffle gallery
+              </button>
+            )}
           </div>
 
           {/* Tab group + search */}
@@ -684,34 +769,54 @@ export default function GalleryPage() {
           </div>
         </div>
 
-        {/* ── Photo mode ───────────────────────────────────────────────── */}
+        {/* Photo mode */}
         {mode === "photos" && (
           filteredPhotos.length === 0 ? (
             <EmptyState query={search} />
           ) : (
             <div className="gallery-photo-experience">
               {featured && (
-                <FeaturedPhoto
-                  photo={featured}
-                  onOpen={() => setSelectedPhotoIndex(0)}
-                />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={featured.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.35 }}
+                  >
+                    <FeaturedPhoto
+                      photo={featured}
+                      onOpen={() => setActivePhotoId(featured.id)}
+                    />
+                  </motion.div>
+                </AnimatePresence>
               )}
               {restPhotos.length > 0 && (
                 <div className="gallery-grid">
-                  {restPhotos.map((p, i) => (
-                    <MemoryCard
-                      key={p.id}
-                      photo={p}
-                      onOpen={() => setSelectedPhotoIndex(i + 1)}
-                    />
-                  ))}
+                  <AnimatePresence>
+                    {restPhotos.map((p) => (
+                      <motion.div
+                        key={p.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.98 }}
+                        transition={layoutTransition}
+                      >
+                        <MemoryCard
+                          photo={p}
+                          onOpen={() => setActivePhotoId(p.id)}
+                        />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
                 </div>
               )}
             </div>
           )
         )}
 
-        {/* ── Video mode — unified reel board ─────────────────────────── */}
+        {/* Video mode — unified reel board */}
         {mode === "videos" && (
           filteredVideos.length === 0 ? (
             <EmptyState query={search} />
@@ -750,9 +855,9 @@ export default function GalleryPage() {
 
       </div>
     </main>
-    {selectedPhoto && (
+    {activePhoto && (
       <PhotoLightbox
-        photo={selectedPhoto}
+        photo={activePhoto}
         onClose={closePhoto}
         onPrev={showPreviousPhoto}
         onNext={showNextPhoto}

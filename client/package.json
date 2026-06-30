@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-seo.js",
+    "prebuild": "node scripts/generate-seo.js && node scripts/verify-image-paths.mjs",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verify": "node scripts/verify-image-paths.mjs",
+    "sanitize": "node scripts/sanitize-image-paths.mjs",
+    "sanitize:apply": "node scripts/sanitize-image-paths.mjs --apply"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.59.0",
