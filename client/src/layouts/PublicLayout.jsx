@@ -24,6 +24,27 @@ const mobileLinkClass = ({ isActive }) =>
       : "text-cream-100/80 hover:bg-cream-50/5 hover:text-gold-300"
   }`;
 
+const socialLinks = [
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61584374371729",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-6 w-6">
+        <path d="M15 8h-2c-.6 0-1 .4-1 1v2h3l-.4 3H12v7H9v-7H7v-3h2V9c0-2.2 1.3-4 3.8-4H15v3Z" />
+      </svg>
+    ),
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@HighlightToursPhilippines",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-6 w-6">
+        <path d="M21.4 7.2a2.8 2.8 0 0 0-2-2C17.7 4.7 12 4.7 12 4.7s-5.7 0-7.4.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 2.1 12a29 29 0 0 0 .5 4.8 2.8 2.8 0 0 0 2 2c1.7.5 7.4.5 7.4.5s5.7 0 7.4-.5a2.8 2.8 0 0 0 2-2 29 29 0 0 0 .5-4.8 29 29 0 0 0-.5-4.8ZM10 15.2V8.8l5.5 3.2-5.5 3.2Z" />
+      </svg>
+    ),
+  },
+];
+
 function FloatingNav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -31,17 +52,29 @@ function FloatingNav() {
   const close = () => setOpen(false);
 
   const scrollToTop = () => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.scrollTo({
+      top: 0,
+      behavior: reduced ? "auto" : "smooth",
+    });
   };
 
-  // Used by every navbar link: if the destination matches the current route,
-  // prevent the redundant navigation and scroll to top instead. Modifier-key
-  // and non-primary-button clicks are always passed through untouched so that
-  // Ctrl/Cmd/Shift/Alt/middle-click open-in-new-tab still works.
   const handleNavLinkClick = (to) => (event) => {
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    if (
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.button !== 0
+    ) {
+      return;
+    }
+
     close();
+
     if (pathname === to) {
       event.preventDefault();
       scrollToTop();
@@ -50,7 +83,15 @@ function FloatingNav() {
 
   const handleLogoHomeClick = (event) => {
     close();
-    if (pathname === "/" && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
+
+    if (
+      pathname === "/" &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.shiftKey &&
+      !event.altKey &&
+      event.button === 0
+    ) {
       event.preventDefault();
       scrollToTop();
     }
@@ -92,9 +133,9 @@ function FloatingNav() {
               loading="eager"
             />
           </span>
-          <span className="hidden sm:block">
-            <span className="font-serif text-[12px] leading-[1.2] tracking-[0.04em] text-cream-50 lg:text-[14px] lg:tracking-wide">
-              HERITAGE HOMECOMING PHILIPPINES
+          <span className="hidden leading-tight sm:block">
+            <span className="font-serif text-[15px] tracking-wide text-cream-50">
+              Heritage Philippines
             </span>
           </span>
         </Link>
@@ -103,7 +144,11 @@ function FloatingNav() {
           <ul className="flex items-center justify-end gap-1 pr-1 lg:gap-2">
             {navLinks.map((l) => (
               <li key={l.to}>
-                <NavLink to={l.to} onClick={handleNavLinkClick(l.to)} className={desktopLinkClass}>
+                <NavLink
+                  to={l.to}
+                  onClick={handleNavLinkClick(l.to)}
+                  className={desktopLinkClass}
+                >
                   {l.label}
                 </NavLink>
               </li>
@@ -169,49 +214,55 @@ export default function PublicLayout() {
           className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/55 to-transparent"
         />
         <div className="relative">
-          <div className="container-page grid gap-10 py-16 md:grid-cols-12 lg:gap-12">
+          <div className="mx-auto grid w-full max-w-[1500px] gap-8 px-6 py-10 sm:px-8 md:grid-cols-12 lg:gap-10 lg:px-12 lg:py-12 xl:px-14">
             {/* BRAND + ACCREDITATION */}
-            <div className="md:col-span-12 lg:col-span-4">
-              <div className="flex items-center justify-center gap-3 md:justify-start">
-                <span className="grid h-12 w-12 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
+            <div className="text-center md:col-span-12 md:text-left lg:col-span-3">
+              <div className="flex flex-col items-center gap-4 md:items-start">
+                <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full bg-coffee-900/60 shadow-[inset_0_1px_0_rgba(230,201,143,0.15)] ring-1 ring-gold-400/35">
                   <img
                     src="/images/heritage-logo.png"
                     alt="Heritage Philippines"
-                    className="h-8 w-8 object-contain"
+                    className="h-11 w-11 object-contain"
                   />
                 </span>
-                <span className="block font-serif text-xl leading-tight text-cream-50">
-                  Heritage Philippines
+                <span className="font-serif text-lg font-normal leading-snug tracking-[0.02em] text-cream-50">
+                  HERITAGE HOMECOMING PHILIPPINES
                 </span>
               </div>
 
-              <h3 className="mt-8 text-center font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300 md:text-left">
-                Accreditation &amp; Affiliations
-              </h3>
-              <span
-                aria-hidden="true"
-                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
-              />
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-4 md:justify-start">
-                {[
-                  {
-                    src: "/footer/dot-logo-1.png",
-                    alt: "Department of Tourism Philippines",
-                  },
-                  { src: "/footer/aita-logo2025.png", alt: "AITA" },
-                  {
-                    src: "/footer/ptaa-logo-transparent-clean.png",
-                    alt: "PTAA",
-                  },
-                ].map((logo) => (
-                  <img
-                    key={logo.src}
-                    src={logo.src}
-                    alt={logo.alt}
-                    loading="lazy"
-                    className="h-10 w-auto object-contain opacity-90"
-                  />
-                ))}
+              <div className="mt-6">
+                <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+                  Accreditation &amp; Affiliations
+                </h3>
+                <span
+                  aria-hidden="true"
+                  className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
+                />
+                <p className="mt-2 text-xs text-cream-200/70">
+                  A subsidiary of SHLT HIGH LIGHT TOURS
+                </p>
+
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                  {[
+                    {
+                      src: "/footer/dot-logo-1.png",
+                      alt: "Department of Tourism Philippines",
+                    },
+                    { src: "/footer/aita-logo2025.png", alt: "AITA" },
+                    {
+                      src: "/footer/ptaa-logo-transparent-clean.png",
+                      alt: "PTAA",
+                    },
+                  ].map((logo) => (
+                    <img
+                      key={logo.src}
+                      src={logo.src}
+                      alt={logo.alt}
+                      loading="lazy"
+                      className="h-8 w-auto object-contain opacity-90 lg:h-9"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -222,9 +273,9 @@ export default function PublicLayout() {
               </h3>
               <span
                 aria-hidden="true"
-                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
+                className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
-              <ul className="mt-4 space-y-2.5 text-sm">
+              <ul className="mt-3 space-y-2 text-sm">
                 {[
                   { to: "/tour", label: "Tour" },
                   { to: "/packages", label: "Packages" },
@@ -246,15 +297,15 @@ export default function PublicLayout() {
             </div>
 
             {/* SERVICES */}
-            <div className="text-center md:col-span-4 md:text-left lg:col-span-3">
+            <div className="text-center md:col-span-4 md:text-left lg:col-span-2">
               <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
                 Services
               </h3>
               <span
                 aria-hidden="true"
-                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
+                className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
-              <ul className="mt-4 space-y-2.5 text-sm text-cream-200/80">
+              <ul className="mt-3 space-y-2 text-sm text-cream-200/80">
                 <li>Curated Heritage Tours</li>
                 <li>Hotels &amp; Transfers</li>
                 <li>Visa and Insurance Assistance</li>
@@ -270,9 +321,12 @@ export default function PublicLayout() {
               </h3>
               <span
                 aria-hidden="true"
-                className="mx-auto mt-3 block h-px w-10 bg-gold-400/60 md:mx-0"
+                className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
               />
-              <address className="mt-4 text-sm not-italic leading-relaxed text-cream-200/80">
+              <address className="mt-3 text-sm not-italic leading-relaxed text-cream-200/80">
+                <span className="block font-semibold text-cream-100">
+                  SHLT HIGH LIGHT TOURS
+                </span>
                 Unit 603, 6th Floor, West Insula Condominium
                 <br />
                 135 West Avenue, Quezon City 1105
@@ -281,18 +335,45 @@ export default function PublicLayout() {
               </address>
               <Link
                 to="/contact"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-300 transition-all duration-200 hover:gap-2.5 hover:text-gold-200"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-300 transition-all duration-200 hover:gap-2.5 hover:text-gold-200"
               >
                 Contact our team <span aria-hidden="true">→</span>
               </Link>
+            </div>
+
+            {/* FOLLOW US */}
+            <div className="text-center md:col-span-12 md:text-left lg:col-span-2">
+              <h3 className="font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-gold-300">
+                Follow Us
+              </h3>
+              <span
+                aria-hidden="true"
+                className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
+              />
+              <div className="mt-4 flex items-center justify-center gap-3 md:justify-start">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={social.label}
+                    aria-label={`Visit Heritage Homecoming Philippines on ${social.label}`}
+                    className="grid h-12 w-12 place-items-center rounded-full border border-gold-300/55 bg-gold-400/15 text-gold-200 shadow-[0_4px_18px_rgba(212,168,67,0.12)] transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-300 hover:bg-gold-400 hover:text-coffee-950 hover:shadow-[0_6px_22px_rgba(212,168,67,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-300 focus-visible:ring-offset-2 focus-visible:ring-offset-coffee-950"
+                  >
+                    {social.icon}
+                    <span className="sr-only">{social.label}</span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* BOTTOM BAR */}
           <div className="border-t border-gold-400/15">
-            <div className="container-page flex flex-col items-center gap-3 py-5 text-xs text-cream-200/60 sm:flex-row sm:items-center sm:justify-between">
+            <div className="container-page flex flex-col items-center gap-3 py-4 text-xs text-cream-200/60 sm:flex-row sm:items-center sm:justify-between">
               <span>
-                &copy; {new Date().getFullYear()} Heritage Philippines. All
+                &copy; {new Date().getFullYear()} Heritage Homecoming Philippines. All
                 rights reserved.
               </span>
               <div className="flex items-center gap-3 text-cream-200/45">
