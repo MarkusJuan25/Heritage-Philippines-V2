@@ -929,8 +929,13 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
       errs.email = "Please enter a valid email address.";
     }
-    if (form.groupType !== "Solo" && !form.numberOfTravelers) {
-      errs.numberOfTravelers = "Number of travelers is required.";
+    if (form.groupType !== "Solo") {
+      const travelers = String(form.numberOfTravelers || "").trim();
+      if (!travelers) {
+        errs.numberOfTravelers = "Number of people is required.";
+      } else if (!/^[1-9]\d*$/.test(travelers)) {
+        errs.numberOfTravelers = "Please enter a whole number of people greater than zero.";
+      }
     }
     if (!form.consent) {
       errs.consent = "Please confirm you agree to be contacted.";
@@ -1197,7 +1202,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
               </EnquiryField>
 
               <EnquiryField
-                label={form.groupType === "Solo" ? "Number of Travelers" : "Number of Travelers *"}
+                label={form.groupType === "Solo" ? "Number of People" : "Number of People *"}
                 htmlFor="qm-travelers"
               >
                 {form.groupType === "Solo" ? (
@@ -1212,8 +1217,14 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
                   />
                 ) : (
                   <>
-                    <select
+                    <input
                       id="qm-travelers"
+                      type="number"
+                      name="numberOfTravelers"
+                      min="1"
+                      step="1"
+                      inputMode="numeric"
+                      placeholder="Enter number of people"
                       value={form.numberOfTravelers}
                       onChange={(e) => {
                         upd("numberOfTravelers", e.target.value);
@@ -1222,16 +1233,7 @@ function QuoteModal({ data, programs, onClose, personalDraft, onSaveDraft, onCle
                       className={`field-input${errors.numberOfTravelers ? " border-red-400 focus:border-red-400 focus:ring-red-400/20" : ""}`}
                       aria-invalid={errors.numberOfTravelers ? "true" : undefined}
                       aria-describedby={errors.numberOfTravelers ? "qm-tr-err" : undefined}
-                    >
-                      <option value="">Select…</option>
-                      <option value="1">1 — Solo</option>
-                      <option value="2">2 — Couple</option>
-                      <option value="3">3 people</option>
-                      <option value="4-6">4–6 people</option>
-                      <option value="7-10">7–10 people</option>
-                      <option value="11-20">11–20 people</option>
-                      <option value="20+">20+ people</option>
-                    </select>
+                    />
                     {errors.numberOfTravelers && (
                       <p id="qm-tr-err" className="mt-1 text-xs text-red-500" role="alert">
                         {errors.numberOfTravelers}

@@ -30,13 +30,29 @@ function FloatingNav() {
   const { pathname } = useLocation();
   const close = () => setOpen(false);
 
-  const handleLogoHomeClick = (event) => {
-    // Always close the mobile menu when the logo is tapped.
+  const scrollToTop = () => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+  };
+
+  // Used by every navbar link: if the destination matches the current route,
+  // prevent the redundant navigation and scroll to top instead. Modifier-key
+  // and non-primary-button clicks are always passed through untouched so that
+  // Ctrl/Cmd/Shift/Alt/middle-click open-in-new-tab still works.
+  const handleNavLinkClick = (to) => (event) => {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
     close();
-    // If we're already on home, scroll to top instead of re-navigating.
-    if (pathname === "/") {
+    if (pathname === to) {
       event.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      scrollToTop();
+    }
+  };
+
+  const handleLogoHomeClick = (event) => {
+    close();
+    if (pathname === "/" && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
+      event.preventDefault();
+      scrollToTop();
     }
   };
 
@@ -87,7 +103,7 @@ function FloatingNav() {
           <ul className="flex items-center justify-end gap-1 pr-1 lg:gap-2">
             {navLinks.map((l) => (
               <li key={l.to}>
-                <NavLink to={l.to} className={desktopLinkClass}>
+                <NavLink to={l.to} onClick={handleNavLinkClick(l.to)} className={desktopLinkClass}>
                   {l.label}
                 </NavLink>
               </li>
@@ -121,7 +137,7 @@ function FloatingNav() {
               <NavLink
                 key={l.to}
                 to={l.to}
-                onClick={close}
+                onClick={handleNavLinkClick(l.to)}
                 className={mobileLinkClass}
               >
                 {l.label}

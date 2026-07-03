@@ -35,18 +35,21 @@ const getPaginationItems = (currentPage, totalPages) => {
 const heroRoutes = [
   {
     label: "LUZON",
+    islandGroup: "Luzon",
     title: "Luzon Heritage Routes",
     number: "01",
     image: "/images/luzon/region-i-ilocos-region/the-spanish-heritage-of-vigan-ilocos-sur.jpg",
   },
   {
     label: "VISAYAS",
+    islandGroup: "Visayas",
     title: "Visayas Island Heritage",
     number: "02",
     image: "/images/visayas/region-vii-central-visayas/bohol-the-geological-wonders-chocolate-hills.jpg",
   },
   {
     label: "MINDANAO",
+    islandGroup: "Mindanao",
     title: "Mindanao Cultural Journeys",
     number: "03",
     image: "/images/mindanao/region-x-northern-mindanao/bukidnon-the-land-of-rolling-plateaus.jpg",
@@ -113,16 +116,19 @@ export default function TourPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [hasInteractedWithHero, setHasInteractedWithHero] = useState(false);
   const tourCollectionRef = useRef(null);
   const { openQuoteModal, addProgram, isProgramSelected } = useJourney();
 
-  // Auto-advance hero route stack every 5 seconds
+  // Auto-advance hero route stack every 5 seconds, until a visitor interacts manually
   useEffect(() => {
+    if (hasInteractedWithHero) return;
+
     const id = setInterval(() => {
       setActiveRouteIdx((i) => (i + 1) % heroRoutes.length);
     }, 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [hasInteractedWithHero]);
 
   // Reset to page 1 whenever filter or search changes
   useEffect(() => {
@@ -190,6 +196,15 @@ export default function TourPage() {
     }, 0);
   };
 
+  const handleHeroRouteSelect = (index, islandGroup) => {
+    setHasInteractedWithHero(true);
+    setActiveRouteIdx(index);
+    setActiveFilter(islandGroup);
+    setSearchQuery("");
+    setCurrentPage(1);
+    scrollToTourCollection();
+  };
+
   const goToPage = (nextPage) => {
     const resolvedPage =
       typeof nextPage === "function" ? nextPage(currentPage) : nextPage;
@@ -217,7 +232,7 @@ export default function TourPage() {
         <div className="container-page relative pb-20 pt-28 sm:pt-32 md:pb-24 md:pt-36">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
 
-            {/* Left — headline + copy + CTAs */}
+            {/* Left — headline + copy */}
             <div>
               <p className="eyebrow-light tracking-[0.2em]">
                 {heroRoutes[activeRouteIdx].label} HERITAGE ROUTES
@@ -234,14 +249,6 @@ export default function TourPage() {
                 ancestral homes, and northern landscapes shaped into calm
                 province-led journeys.
               </p>
-              <div className="mt-7 flex flex-wrap gap-4">
-                <a href="#tour-collection" className="btn-primary">
-                  Explore Tours
-                </a>
-                <a href="#regions" className="btn-ghost-light">
-                  Browse Regions
-                </a>
-              </div>
             </div>
 
             {/* Right — route stack */}
@@ -251,8 +258,8 @@ export default function TourPage() {
                   key={route.title}
                   type="button"
                   aria-pressed={idx === activeRouteIdx}
-                  aria-label={route.title}
-                  onClick={() => setActiveRouteIdx(idx)}
+                  aria-label={`View ${route.islandGroup} tours`}
+                  onClick={() => handleHeroRouteSelect(idx, route.islandGroup)}
                   className={`group flex cursor-pointer items-center gap-4 rounded-2xl border p-4 backdrop-blur-sm transition duration-300 ${
                     idx === activeRouteIdx
                       ? "border-gold-400/55 bg-coffee-800/90 shadow-warm"
@@ -290,6 +297,16 @@ export default function TourPage() {
                     >
                       {route.title}
                     </h3>
+                    <p
+                      aria-hidden="true"
+                      className={`mt-1 text-[11px] font-semibold tracking-wide transition duration-300 ${
+                        idx === activeRouteIdx
+                          ? "text-gold-300"
+                          : "text-gold-400/50"
+                      }`}
+                    >
+                      View {route.islandGroup} Tours →
+                    </p>
                   </div>
                   <span
                     aria-hidden="true"
@@ -388,26 +405,28 @@ export default function TourPage() {
 
                       {/* Body */}
                       <div className="flex flex-1 flex-col p-5">
-                        {/* Location row */}
-                        {tour.location && (
-                          <p className="mb-2 flex items-center gap-1.5 text-[11px] text-coffee-700/70">
-                            <svg
-                              aria-hidden="true"
-                              className="h-3 w-3 flex-shrink-0 text-gold-500"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            {tour.location}
-                          </p>
-                        )}
+                        {/* Location row — fixed min-height so titles align */}
+                        <div className="mb-2 min-h-8">
+                          {tour.location && (
+                            <p className="flex items-start gap-1.5 text-[11px] leading-4 text-coffee-700/70">
+                              <svg
+                                aria-hidden="true"
+                                className="mt-px h-3 w-3 flex-shrink-0 text-gold-500"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                              <span className="line-clamp-2">{tour.location}</span>
+                            </p>
+                          )}
+                        </div>
 
-                        <h3 className="font-serif text-xl text-coffee-900">
+                        <h3 className="line-clamp-2 min-h-[3.5rem] font-serif text-xl leading-snug text-coffee-900">
                           {tour.title}
                         </h3>
 
@@ -444,9 +463,9 @@ export default function TourPage() {
                           </div>
                         </div>
 
-                        {/* Action buttons: Request Quote, View Tour, Add Program */}
+                        {/* Action buttons: Request Quote | View Tour / Add Program full-width */}
                         <div className="mt-auto border-t border-cream-100 pt-4">
-                          <div className="grid grid-cols-3 gap-1.5">
+                          <div className="grid grid-cols-2 gap-2">
                             <button
                               type="button"
                               onClick={() =>
@@ -456,13 +475,13 @@ export default function TourPage() {
                                   location: tour.location,
                                 })
                               }
-                              className="flex min-h-10 min-w-0 items-center justify-center rounded-full bg-gold-500 px-2 py-2 text-center text-[10px] font-bold leading-tight text-coffee-950 transition hover:bg-gold-400 sm:text-[11px]"
+                              className="flex min-h-11 min-w-0 items-center justify-center rounded-full bg-gold-500 px-2 py-2 text-center text-xs font-bold leading-tight text-coffee-950 transition hover:bg-gold-400"
                             >
                               Request Quote
                             </button>
                             <Link
                               to={`/tour/${tour.slug}`}
-                              className="flex min-h-10 min-w-0 items-center justify-center rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-[10px] font-semibold leading-tight text-cream-50 transition hover:bg-coffee-800 sm:text-[11px]"
+                              className="flex min-h-11 min-w-0 items-center justify-center rounded-full border border-coffee-900 bg-coffee-900 px-2 py-2 text-center text-xs font-semibold leading-tight text-cream-50 transition hover:bg-coffee-800"
                             >
                               View Tour
                             </Link>
@@ -476,7 +495,7 @@ export default function TourPage() {
                                   type: "tour",
                                 })
                               }
-                              className={`flex min-h-10 min-w-0 items-center justify-center rounded-full border px-2 py-2 text-center text-[10px] font-bold leading-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 sm:text-[11px] ${
+                              className={`col-span-2 flex min-h-11 min-w-0 items-center justify-center rounded-full border px-2 py-2 text-center text-xs font-bold leading-tight transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 ${
                                 isProgramSelected(tour.slug)
                                   ? "cursor-default border-gold-400/60 bg-gold-50 text-gold-700"
                                   : "border-gold-400/70 bg-gradient-to-br from-cream-50 via-gold-50 to-gold-100 text-coffee-900 shadow-warm hover:-translate-y-0.5 hover:border-gold-500 hover:bg-gold-100 hover:shadow-premium"
@@ -486,7 +505,7 @@ export default function TourPage() {
                                 <span aria-hidden="true">
                                   {isProgramSelected(tour.slug) ? "✓" : "＋"}
                                 </span>
-                                {isProgramSelected(tour.slug) ? "Added" : "Add Program"}
+                                {isProgramSelected(tour.slug) ? "Added to Journey" : "Add Program"}
                               </span>
                             </button>
                           </div>
@@ -505,6 +524,7 @@ export default function TourPage() {
                     <button
                       type="button"
                       disabled={currentPage === 1}
+                      aria-label="Go to previous tour page"
                       onClick={() => goToPage((p) => p - 1)}
                       className="rounded-full border border-cream-200 px-3 py-1.5 text-xs text-coffee-700 transition hover:border-gold-400/50 hover:bg-cream-50 disabled:cursor-not-allowed disabled:text-coffee-700/30 disabled:hover:border-cream-200 disabled:hover:bg-transparent"
                     >
@@ -523,6 +543,8 @@ export default function TourPage() {
                         <button
                           key={item}
                           type="button"
+                          aria-label={`Go to page ${item}`}
+                          aria-current={item === currentPage ? "page" : undefined}
                           onClick={() => goToPage(item)}
                           className={`h-8 w-8 rounded-full text-xs font-semibold transition ${
                             item === currentPage
@@ -537,6 +559,7 @@ export default function TourPage() {
                     <button
                       type="button"
                       disabled={currentPage === totalPages}
+                      aria-label="Go to next tour page"
                       onClick={() => goToPage((p) => p + 1)}
                       className="rounded-full border border-cream-200 px-3 py-1.5 text-xs text-coffee-700 transition hover:border-gold-400/50 hover:bg-cream-50 disabled:cursor-not-allowed disabled:text-coffee-700/30 disabled:hover:border-cream-200 disabled:hover:bg-transparent"
                     >
@@ -572,7 +595,7 @@ export default function TourPage() {
           <div className="mb-10">
             <p className="eyebrow-light">Destination Recommendations</p>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
-              Top heritage destinations.
+              Explore more heritage routes.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-cream-100/70">
               Curated starting points across the archipelago — each route
@@ -609,7 +632,7 @@ export default function TourPage() {
                     to="/contact"
                     className="mt-2 inline-block text-[11px] font-semibold text-gold-300 transition hover:text-gold-200"
                   >
-                    View route →
+                    Inquire →
                   </Link>
                 </div>
               </article>

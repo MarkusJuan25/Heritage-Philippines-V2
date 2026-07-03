@@ -43,18 +43,21 @@ const popularTours = [
   {
     region: "Central Visayas",
     title: "Bohol Chocolate Hills Trail",
+    slug: "bohol-heritage-route",
     text: "Rolling hills, river heritage, and island towns paced for slow, comfortable discovery.",
     image: "/images/chocolate-hills.jpg",
   },
   {
     region: "Cordillera",
     title: "Banaue Rice Terraces Ascent",
+    slug: "ifugao-heritage-route",
     text: "Highland villages, ancient terraces, and living traditions carved into the northern mountains.",
     image: "/images/banaue-rice-terreces.jpg",
   },
   {
     region: "Palawan",
     title: "El Nido Coastal Homecoming",
+    slug: "palawan-heritage-route",
     text: "Crimson sunsets, hidden lagoons, and quiet coastal evenings to end the journey home.",
     image: "/images/palawan-sunset-el-nido-sunset-crimson-and-gold.jpg",
   },
@@ -115,6 +118,7 @@ export default function HomePage() {
             poster="/images/heritage-banner.jpg"
             aria-hidden="true"
             onEnded={handleEnded}
+            onError={handleEnded}
           >
             <source src={currentVideo} type="video/mp4" />
           </video>
@@ -294,14 +298,16 @@ export default function HomePage() {
 
           <div className="mt-12 grid gap-7 md:grid-cols-3">
             {popularTours.map((tour) => (
-              <article
+              <Link
                 key={tour.title}
+                to={`/tour/${tour.slug}`}
+                aria-label={`View tour: ${tour.title}`}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-cream-200/80 bg-gradient-to-b from-white to-cream-50 shadow-warm transition duration-500 hover:-translate-y-1 hover:shadow-premium"
               >
                 <div className="relative h-56 w-full overflow-hidden">
                   <img
                     src={tour.image}
-                    alt={tour.title}
+                    alt=""
                     loading="lazy"
                     className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                   />
@@ -324,14 +330,11 @@ export default function HomePage() {
                   <p className="mt-3 flex-1 text-[14.5px] leading-[1.7] text-coffee-800/80">
                     {tour.text}
                   </p>
-                  <Link
-                    to="/tour"
-                    className="mt-6 inline-flex w-fit items-center gap-1 text-sm font-semibold text-gold-600 transition group-hover:gap-2 hover:text-gold-700"
-                  >
+                  <span className="mt-6 inline-flex w-fit items-center gap-1 text-sm font-semibold text-gold-600 transition group-hover:gap-2 group-hover:text-gold-700">
                     View Tour <span aria-hidden="true">→</span>
-                  </Link>
+                  </span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
 

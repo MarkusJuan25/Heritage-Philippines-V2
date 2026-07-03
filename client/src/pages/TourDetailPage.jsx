@@ -218,7 +218,8 @@ export default function TourDetailPage() {
           <div className="grid gap-12 lg:grid-cols-[1fr_320px]">
 
             {/* Left column — main content */}
-            <div className="space-y-12">
+            <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-premium backdrop-blur-sm sm:p-7 lg:p-8">
+              <div className="space-y-12">
 
               {/* Overview */}
               {pkg.overview && (
@@ -423,12 +424,13 @@ export default function TourDetailPage() {
                   </p>
                 </section>
               )}
+              </div>
             </div>
 
             {/* Right column — sticky CTA card */}
             <aside>
               <div className="sticky top-24 rounded-2xl border border-cream-200 bg-white p-6 shadow-warm">
-                <p className="font-serif text-xl text-coffee-900">{pkg.title}</p>
+                <h2 className="font-serif text-xl text-coffee-900">Plan this route</h2>
 
                 <div className="mt-4 space-y-2 text-xs text-coffee-700/75">
                   {pkg.location && (

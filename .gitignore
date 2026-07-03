@@ -37,3 +37,6 @@ server/node_modules/.vite/
 Thumbs.db
 .vscode/
 .idea/.claude/settings.local.json
+
+# Generated Hostinger deployment archive
+heritage-frontend-hostinger.zip
