@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const GALLERY_IMAGE_FALLBACK = "/images/kamayan-style.jpg";
 
@@ -215,33 +214,25 @@ const VIDEOS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Shuffle helper — Fisher-Yates, never mutates the original array.
-// ---------------------------------------------------------------------------
-function shufflePhotos(photos) {
-  const shuffled = [...photos];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[randomIndex]] = [
-      shuffled[randomIndex],
-      shuffled[index],
-    ];
-  }
-  return shuffled;
-}
-
-// ---------------------------------------------------------------------------
 // Video embed helpers
 // ---------------------------------------------------------------------------
 function getYoutubeEmbedUrl(youtubeId) {
-  return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?rel=0&controls=1&playsinline=1`;
+  // autoplay=1 + mute=1 must be paired for browsers to permit autoplay at
+  // all; playsinline=1 keeps iOS Safari from forcing fullscreen playback.
+  return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?rel=0&controls=1&playsinline=1&autoplay=1&mute=1`;
 }
 
 function getFacebookEmbedUrl(facebookUrl) {
-  return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(facebookUrl)}&show_text=false&width=900`;
+  // Facebook's plugin auto-mutes autoplaying video per browser policy and
+  // exposes its own unmute control, so no separate mute param is needed.
+  return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(facebookUrl)}&show_text=false&width=900&autoplay=true`;
 }
 
+// "autoplay" must be explicitly granted here, or the browser's permissions
+// policy blocks it inside the iframe even when the URL itself requests it.
+// "fullscreen" is required for the Facebook player's own fullscreen control.
 const SAFE_VIDEO_IFRAME_ALLOW =
-  "clipboard-write; encrypted-media; picture-in-picture; web-share";
+  "autoplay; fullscreen; clipboard-write; encrypted-media; picture-in-picture; web-share";
 
 function getVideoEmbedProps(video) {
   if (video?.youtubeId) {
@@ -334,129 +325,210 @@ function MemoryCard({ photo, onOpen }) {
   );
 }
 
-// Unified reel card for the reel board variants.
-function ReelCard({
+// The single active reel: portrait media stage on the left (or on top, on
+// narrow screens) and an information panel with navigation on the right (or
+// below). Mounts an iframe only once this reel has been explicitly played.
+function ReelFeedItem({
   video,
-  variant = "featured",
-  playing = false,
+  index,
+  total,
+  playing,
   onPlay,
-  onSelect,
-  isSelected = false,
+  onPrev,
+  onNext,
+  disablePrev,
+  disableNext,
 }) {
-  const featured = variant === "featured";
-  const embedProps = featured ? getVideoEmbedProps(video) : null;
+  const embedProps = getVideoEmbedProps(video);
   const playable = !!embedProps;
-  const thumb = variant === "thumb";
-  const previewLabel = "Preview only";
+  const isEmbedding = playing && playable;
 
-  const articleClass = [
-    "gallery-reel-card",
-    `gallery-reel-card--${variant}`,
-    isSelected ? "gallery-reel-card--selected" : "",
-  ].filter(Boolean).join(" ");
+  const [embedStatus, setEmbedStatus] = useState("idle");
 
-  const handleAction = () => {
-    if (thumb) {
-      onSelect?.();
-      return;
-    }
-    if (playable) {
-      onPlay?.();
-    }
-  };
+  useEffect(() => {
+    setEmbedStatus(isEmbedding ? "loading" : "idle");
+    // embedProps is recreated on every render, so we key off its stable src
+    // instead of the object reference to avoid re-triggering the loading state.
+  }, [playing, video.id, embedProps?.src]);
 
   return (
-    <article className={articleClass} aria-current={isSelected ? "true" : undefined}>
-      {/* Card media */}
-      <div className="gallery-reel-frame group">
-        {featured && playing && embedProps ? (
-          <iframe
-            src={embedProps.src}
-            title={embedProps.title}
-            scrolling="no"
-            allow={embedProps.allow}
-            className="gallery-reel-embed"
-          />
-        ) : (
+    <article
+      className="gallery-reels-theatre"
+      aria-label={`Reel ${index + 1} of ${total}: ${video.title}`}
+    >
+      <div className="gallery-reels-stage">
+        <img
+          src={video.thumbnail}
+          alt={video.title}
+          loading="eager"
+          onError={handleImageFallback}
+          className="gallery-reels-poster"
+        />
+        <div aria-hidden="true" className="gallery-reels-media-layer" />
+
+        {/* Previous: overlays the stage's top edge (an "upward" cue) on
+            mobile, and its left edge (vertically centered) on desktop —
+            same button, same handler, repositioned/reskinned via CSS.
+            Anchored to the stage itself (not a wider wrapper) so it tracks
+            the video's actual edges at every breakpoint, including the
+            768–959px range where the theatre is still single-column but
+            the stage is already capped and centered narrower than it. */}
+        <button
+          type="button"
+          onClick={onPrev}
+          disabled={disablePrev}
+          aria-label="Previous reel"
+          className="gallery-reels-cue gallery-reels-cue--prev"
+        >
+          <span aria-hidden="true" className="gallery-reels-cue-icon gallery-reels-cue-icon--up">
+            ↑
+          </span>
+          <span aria-hidden="true" className="gallery-reels-cue-icon gallery-reels-cue-icon--side">
+            ‹
+          </span>
+        </button>
+
+        {/* Next: desktop-only overlay on the stage's right edge. On mobile
+            the down control lives in the theatre navigation row below
+            instead (see ReelNavigation), so this stays hidden there. */}
+        <button
+          type="button"
+          onClick={onNext}
+          disabled={disableNext}
+          aria-label="Next reel"
+          className="gallery-reels-cue gallery-reels-cue--next"
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+
+        {isEmbedding ? (
           <>
-            <img
-              src={video.thumbnail}
-              alt={video.title}
-              loading={featured ? "eager" : "lazy"}
-              onError={handleImageFallback}
-              className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            <iframe
+              src={embedProps.src}
+              title={embedProps.title}
+              scrolling="no"
+              allow={embedProps.allow}
+              allowFullScreen
+              onLoad={() => setEmbedStatus("ready")}
+              onError={() => setEmbedStatus("error")}
+              className={`gallery-reel-embed${embedStatus === "ready" ? " is-ready" : ""}`}
             />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 z-10 bg-gradient-to-t from-coffee-950/90 via-coffee-950/20 to-transparent"
-            />
-            {thumb ? (
-              <button
-                type="button"
-                onClick={handleAction}
-                aria-label={`Select ${video.title} video`}
-                aria-pressed={isSelected}
-                className="absolute inset-0 z-20 grid place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
-              >
-                <span
-                  className="gallery-reel-select-chip"
-                  data-label={isSelected ? "Selected" : "View"}
-                >
-                  ▶
-                </span>
-              </button>
-            ) : playable ? (
-              <button
-                type="button"
-                onClick={handleAction}
-                aria-label={`Play video: ${video.title}`}
-                className="absolute inset-0 z-20 grid place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
-              >
-                <span className="gallery-reel-play-button">
-                  <span className="gallery-reel-play" aria-hidden="true">
-                    ▶
-                  </span>
-                  <span>Play video</span>
-                </span>
-              </button>
-            ) : featured ? (
-              <div
-                className="absolute inset-0 z-20 grid place-items-center"
-                aria-label={previewLabel}
-              >
-                <span
-                  className="gallery-reel-preview-label"
-                  data-label={previewLabel}
-                  aria-hidden="true"
-                >
-                  ▶
-                </span>
-              </div>
-            ) : (
-              <div className="absolute inset-0 z-20 grid place-items-center">
-                <span className="inline-flex items-center rounded-full border border-cream-50/20 bg-coffee-950/65 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-cream-100/80 backdrop-blur-sm">
-                  Video unavailable
-                </span>
+            {embedStatus === "loading" && (
+              <div className="gallery-reel-loading" role="status" aria-live="polite">
+                <span className="gallery-reel-spinner" aria-hidden="true" />
+                <span>Loading video…</span>
               </div>
             )}
-            {/* Caption overlay */}
-            <div className="gallery-reel-meta">
-              <p className="text-[9px] font-semibold uppercase tracking-widest text-gold-300/85">
-                {isSelected ? "Now selected" : video.label ?? video.location}
-              </p>
-              <p
-                className={[
-                  "mt-0.5 font-serif leading-snug text-cream-50",
-                  featured ? "text-base sm:text-lg" : "text-xs sm:text-sm",
-                ].join(" ")}
-              >
-                {video.title}
-              </p>
-            </div>
+            {embedStatus === "error" && (
+              <div className="gallery-reel-error">
+                <p>We couldn&rsquo;t load this video.</p>
+                <a
+                  href={video.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="gallery-reel-error-link"
+                >
+                  Open original video
+                </a>
+              </div>
+            )}
           </>
+        ) : playable ? (
+          <button
+            type="button"
+            onClick={onPlay}
+            aria-label={`Play ${video.title}`}
+            className="absolute inset-0 z-20 grid place-items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
+          >
+            <span className="gallery-reels-play-btn" aria-hidden="true">
+              ▶
+            </span>
+          </button>
+        ) : (
+          <div className="absolute inset-0 z-20 grid place-items-center">
+            <span
+              className="gallery-reel-preview-label"
+              data-label="Preview only"
+              aria-hidden="true"
+            >
+              ▶
+            </span>
+          </div>
         )}
       </div>
+
+      <div className="gallery-reels-details">
+        {/* Row 1: platform label + position counter */}
+        <div className="gallery-reels-meta">
+          <span className="gallery-reels-platform">
+            {video.label ?? video.location}
+          </span>
+          <span className="gallery-reels-counter">
+            {index + 1} / {total}
+          </span>
+        </div>
+
+        {/* Row 2: title, description, source link — centered vertically on desktop */}
+        <div className="gallery-reels-copy">
+          <h2 className="gallery-reels-title">{video.title}</h2>
+
+          {video.description && (
+            <p className="gallery-reels-description">{video.description}</p>
+          )}
+
+          <div className="gallery-reels-source">
+            {!playable && (
+              <span className="gallery-reels-badge">Preview only</span>
+            )}
+            <a
+              href={video.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gallery-reels-source-link"
+            >
+              Open original ↗
+            </a>
+          </div>
+        </div>
+
+        {/* Row 3: Previous/Next */}
+        <ReelNavigation
+          onPrev={onPrev}
+          onNext={onNext}
+          disablePrev={disablePrev}
+          disableNext={disableNext}
+        />
+      </div>
     </article>
+  );
+}
+
+// Previous/Next controls integrated into each reel's information panel.
+function ReelNavigation({ onPrev, onNext, disablePrev, disableNext }) {
+  return (
+    <div className="gallery-reels-navigation">
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={disablePrev}
+        aria-label="Previous reel"
+        className="gallery-reels-nav-button gallery-reels-nav-button--prev"
+      >
+        <span aria-hidden="true">‹</span>
+        <span>Previous</span>
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={disableNext}
+        aria-label="Next reel"
+        className="gallery-reels-nav-button gallery-reels-nav-button--next"
+      >
+        <span className="gallery-reels-nav-label">Next</span>
+        <span aria-hidden="true" className="gallery-reels-nav-icon gallery-reels-nav-icon--side">›</span>
+        <span aria-hidden="true" className="gallery-reels-nav-icon gallery-reels-nav-icon--down">↓</span>
+      </button>
+    </div>
   );
 }
 
@@ -554,8 +626,6 @@ function EmptyState({ query }) {
 // Page
 // ---------------------------------------------------------------------------
 export default function GalleryPage() {
-  const shouldReduceMotion = useReducedMotion();
-
   const [mode, setMode]           = useState("photos");
   const [search, setSearch]       = useState("");
   const [playingId, setPlayingId] = useState(null);
@@ -563,22 +633,19 @@ export default function GalleryPage() {
     getFirstPlayableVideoIndex(VIDEOS)
   );
 
-  // Shuffled photo order — initialized from PHOTOS, never mutates PHOTOS.
-  const [orderedPhotos, setOrderedPhotos] = useState(() => [...PHOTOS]);
-
   // Lightbox identified by stable photo ID rather than array index.
   const [activePhotoId, setActivePhotoId] = useState(null);
 
   const filteredPhotos = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return orderedPhotos;
-    return orderedPhotos.filter(
+    if (!q) return PHOTOS;
+    return PHOTOS.filter(
       (p) =>
         p.caption.toLowerCase().includes(q) ||
         p.location.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q)
     );
-  }, [search, orderedPhotos]);
+  }, [search]);
 
   const filteredVideos = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -649,33 +716,14 @@ export default function GalleryPage() {
     };
   }, [activePhotoId]);
 
-  // Auto-shuffle every 10 seconds — pauses while the lightbox is open.
-  useEffect(() => {
-    if (activePhotoId !== null) return undefined;
-    const intervalId = window.setInterval(() => {
-      setOrderedPhotos((current) => shufflePhotos(current));
-    }, 10000);
-    return () => window.clearInterval(intervalId);
-  }, [activePhotoId]);
-
   const switchMode = (next) => {
     setMode(next);
     setSearch("");
+    // Stop and unmount any playing video when switching tabs. The previously
+    // selected reel index is preserved (and clamped by safeActiveVideoIndex
+    // below), so coming back to Videos re-selects the same reel and
+    // auto-plays it again via the mode/videoChoices effect below.
     setPlayingId(null);
-    if (next === "videos") {
-      setActiveVideoIndex(getFirstPlayableVideoIndex(VIDEOS));
-    }
-  };
-
-  // Shared layout transition — duration collapses to zero for reduced motion.
-  const layoutTransition = {
-    layout: {
-      duration: shouldReduceMotion ? 0 : 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-    opacity: {
-      duration: shouldReduceMotion ? 0 : 0.25,
-    },
   };
 
   const featured   = filteredPhotos[0];
@@ -684,39 +732,113 @@ export default function GalleryPage() {
     filteredVideos.length > 0
       ? Math.min(activeVideoIndex, filteredVideos.length - 1)
       : 0;
-  const selectedVideo = filteredVideos[safeActiveVideoIndex];
-  const videoChoices  = filteredVideos;
+  const videoChoices = filteredVideos;
+  const activeVideo = videoChoices[safeActiveVideoIndex];
+
+  // Move to a different reel. Because only one ReelFeedItem is ever mounted
+  // (keyed on the video id), the previous reel's iframe is fully unmounted
+  // the instant the index changes — this always auto-plays (muted) the
+  // newly selected reel, matching the Reels-style browsing experience.
+  const changeActiveVideo = (nextIndex) => {
+    if (nextIndex < 0 || nextIndex >= videoChoices.length) return;
+    const nextVideo = videoChoices[nextIndex];
+    setActiveVideoIndex(nextIndex);
+    setPlayingId(nextVideo ? nextVideo.id : null);
+  };
+
+  // Vertical swipe navigation for the single reel theatre on mobile. Only
+  // fires on touches that start outside the embedded iframe (cross-origin
+  // touch events never bubble to this parent handler), so the on-stage
+  // Previous/Next cues remain the reliable fallback for swipes that begin
+  // on the video itself.
+  const touchStartRef = useRef(null);
+
+  const handleReelTouchStart = (event) => {
+    const touch = event.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleReelTouchEnd = (event) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) return;
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    // Require a predominantly vertical gesture of at least 50px so
+    // horizontal swipes and ordinary taps are ignored.
+    if (Math.abs(deltaY) < 50 || Math.abs(deltaY) <= Math.abs(deltaX)) return;
+    if (deltaY < 0) changeActiveVideo(safeActiveVideoIndex + 1);
+    else changeActiveVideo(safeActiveVideoIndex - 1);
+  };
+
+  const handleReelTouchCancel = () => {
+    touchStartRef.current = null;
+  };
+
+  // Auto-play (muted) the resolved reel whenever the Videos tab is opened or
+  // the filtered results change (e.g. a new search) — matches the same
+  // Reels-style behavior as navigating between reels via changeActiveVideo.
+  useEffect(() => {
+    if (mode !== "videos") return;
+    const defaultVideo = videoChoices[safeActiveVideoIndex];
+    setPlayingId(defaultVideo ? defaultVideo.id : null);
+  }, [mode, videoChoices]);
+
+  // Keyboard navigation for the reel theatre, active only while Videos is shown.
+  useEffect(() => {
+    if (mode !== "videos") return undefined;
+
+    const isInteractiveTarget = (target) => {
+      if (!target) return false;
+      if (target.isContentEditable) return true;
+      const tag = target.tagName;
+      return ["INPUT", "TEXTAREA", "SELECT", "BUTTON", "A", "IFRAME"].includes(tag);
+    };
+
+    const handleKeyDown = (event) => {
+      if (isInteractiveTarget(event.target)) return;
+
+      if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === "ArrowRight") {
+        if (safeActiveVideoIndex < videoChoices.length - 1) {
+          event.preventDefault();
+          changeActiveVideo(safeActiveVideoIndex + 1);
+        }
+      } else if (event.key === "ArrowUp" || event.key === "PageUp" || event.key === "ArrowLeft") {
+        if (safeActiveVideoIndex > 0) {
+          event.preventDefault();
+          changeActiveVideo(safeActiveVideoIndex - 1);
+        }
+      } else if (event.key === "Escape") {
+        setPlayingId(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mode, safeActiveVideoIndex, videoChoices]);
 
   return (
     <>
-    <main className="gallery-page-shell min-h-screen bg-warm-cream bg-heritage pb-20 pt-28 sm:pt-32 md:pt-36">
+    <main className="gallery-page-shell min-h-screen bg-warm-cream bg-heritage pb-20 pt-32 sm:pt-36 md:pt-40">
       <div className="container-page">
 
-        {/* Toolbar */}
-        <div className="gallery-board-toolbar">
-
-          {/* Page title + shuffle button */}
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">Gallery</p>
-              <h1 className="mt-1 font-serif text-2xl text-coffee-900 sm:text-3xl">
-                Frames of the Archipelago
-              </h1>
-            </div>
-            {mode === "photos" && (
-              <button
-                type="button"
-                aria-label="Shuffle gallery photos"
-                onClick={() => setOrderedPhotos((current) => shufflePhotos(current))}
-                className="mb-0.5 shrink-0 self-end rounded-full border border-cream-200 bg-white/80 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-coffee-800 shadow-warm transition hover:border-gold-400/60 hover:bg-cream-50 hover:text-gold-700"
-              >
-                Shuffle gallery
-              </button>
-            )}
+        {/* Page header + toolbar */}
+        <div
+          className={`gallery-page-header${
+            mode === "videos" ? " gallery-page-header--video" : ""
+          }`}
+        >
+          <div className="gallery-page-heading">
+            <p className="eyebrow">Gallery</p>
+            <h1 className="mt-1 font-serif text-2xl text-coffee-900 sm:text-3xl">
+              Frames of the Archipelago
+            </h1>
           </div>
 
-          {/* Tab group + search */}
-          <div className="gallery-filter-toolbar">
+          <div
+            className={`gallery-toolbar${mode === "videos" ? " gallery-toolbar--video" : ""}`}
+          >
             <div className="gallery-tab-group" role="tablist" aria-label="Gallery mode">
               <button
                 type="button"
@@ -743,6 +865,7 @@ export default function GalleryPage() {
                 <span className="gallery-tab-label">Videos</span>
               </button>
             </div>
+
             <input
               type="search"
               className="gallery-search"
@@ -761,7 +884,8 @@ export default function GalleryPage() {
                     )
                   : VIDEOS;
                 setSearch(nextSearch);
-                setPlayingId(null);
+                // playingId is resynced to the new default video by the
+                // mode/videoChoices effect once filteredVideos recomputes.
                 setActiveVideoIndex(getFirstPlayableVideoIndex(nextVideos));
               }}
               aria-label={`Search ${mode}`}
@@ -776,79 +900,51 @@ export default function GalleryPage() {
           ) : (
             <div className="gallery-photo-experience">
               {featured && (
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={featured.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: shouldReduceMotion ? 0 : 0.35 }}
-                  >
-                    <FeaturedPhoto
-                      photo={featured}
-                      onOpen={() => setActivePhotoId(featured.id)}
-                    />
-                  </motion.div>
-                </AnimatePresence>
+                <FeaturedPhoto
+                  photo={featured}
+                  onOpen={() => setActivePhotoId(featured.id)}
+                />
               )}
               {restPhotos.length > 0 && (
                 <div className="gallery-grid">
-                  <AnimatePresence>
-                    {restPhotos.map((p) => (
-                      <motion.div
-                        key={p.id}
-                        layout
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.98 }}
-                        transition={layoutTransition}
-                      >
-                        <MemoryCard
-                          photo={p}
-                          onOpen={() => setActivePhotoId(p.id)}
-                        />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
+                  {restPhotos.map((photo) => (
+                    <MemoryCard
+                      key={photo.id}
+                      photo={photo}
+                      onOpen={() => setActivePhotoId(photo.id)}
+                    />
+                  ))}
                 </div>
               )}
             </div>
           )
         )}
 
-        {/* Video mode — unified reel board */}
+        {/* Video mode — single active reel theatre, normal document flow so
+            the theatre contributes its natural height and the footer always
+            begins right after it (no nested scroll container). */}
         {mode === "videos" && (
           filteredVideos.length === 0 ? (
             <EmptyState query={search} />
           ) : (
-            <div className="gallery-reel-stage">
-              {selectedVideo && (
-                <ReelCard
-                  video={selectedVideo}
-                  variant="featured"
-                  playing={playingId === selectedVideo.id}
-                  onPlay={() => setPlayingId(selectedVideo.id)}
-                  isSelected
-                />
-              )}
-
-              {videoChoices.length > 1 && (
-                <div className="gallery-reel-thumbs">
-                  {videoChoices.map((video, index) => (
-                    <ReelCard
-                      key={video.id}
-                      video={video}
-                      variant="thumb"
-                      playing={false}
-                      isSelected={safeActiveVideoIndex === index}
-                      onSelect={() => {
-                        setActiveVideoIndex(index);
-                        setPlayingId(null);
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
+            <div
+              className="gallery-reels-viewer"
+              onTouchStart={handleReelTouchStart}
+              onTouchEnd={handleReelTouchEnd}
+              onTouchCancel={handleReelTouchCancel}
+            >
+              <ReelFeedItem
+                key={activeVideo.id}
+                video={activeVideo}
+                index={safeActiveVideoIndex}
+                total={videoChoices.length}
+                playing={playingId === activeVideo.id}
+                onPlay={() => setPlayingId(activeVideo.id)}
+                onPrev={() => changeActiveVideo(safeActiveVideoIndex - 1)}
+                onNext={() => changeActiveVideo(safeActiveVideoIndex + 1)}
+                disablePrev={safeActiveVideoIndex === 0}
+                disableNext={safeActiveVideoIndex === videoChoices.length - 1}
+              />
             </div>
           )
         )}
