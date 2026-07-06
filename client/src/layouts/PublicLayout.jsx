@@ -239,19 +239,28 @@ export default function PublicLayout() {
                   className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
                 />
                 <p className="mt-2 text-xs text-cream-200/70">
-                  A subsidiary of SHLT HIGH LIGHT TOURS
+                  Heritage Homecoming A Division of High Light Tours Inc
                 </p>
 
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                <div className="mt-5 flex flex-nowrap items-center justify-center gap-4 md:justify-start">
                   {[
                     {
-                      src: "/footer/dot-logo-1.png",
-                      alt: "Department of Tourism Philippines",
+                      src: "/footer/aita-logo2025.png",
+                      alt: "AITA",
+                      className:
+                        "h-14 w-auto shrink-0 object-contain opacity-90",
                     },
-                    { src: "/footer/aita-logo2025.png", alt: "AITA" },
+                    {
+                      src: "/images/logo-images/dot-quality-seal-transparent.png",
+                      alt: "Department of Tourism Quality Seal",
+                      className:
+                        "h-16 w-auto shrink-0 object-contain opacity-90",
+                    },
                     {
                       src: "/footer/ptaa-logo-transparent-clean.png",
                       alt: "PTAA",
+                      className:
+                        "h-12 w-auto shrink-0 object-contain opacity-90",
                     },
                   ].map((logo) => (
                     <img
@@ -259,7 +268,7 @@ export default function PublicLayout() {
                       src={logo.src}
                       alt={logo.alt}
                       loading="lazy"
-                      className="h-8 w-auto object-contain opacity-90 lg:h-9"
+                      className={logo.className}
                     />
                   ))}
                 </div>
