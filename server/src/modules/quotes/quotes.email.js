@@ -186,7 +186,7 @@ function buildAdminHtml(quote) {
     buildRow("Province", quote.province),
     buildRow("Source / Package", quote.source),
     buildRow("Package Style", quote.packageStyle),
-    buildRow("Group Size", quote.groupSize ? String(quote.groupSize) : ""),
+    buildRow("Number of People", quote.groupSize ? String(quote.groupSize) : ""),
     buildRow("Travel Dates", travelDates),
   ]);
 
@@ -241,7 +241,7 @@ function buildAdminQuoteEmail(quote, adminEmail) {
     `Destination: ${formatValue(quote.destination)}`,
     `Province: ${formatValue(quote.province)}`,
     `Package Style: ${formatValue(quote.packageStyle)}`,
-    `Group Size: ${formatValue(quote.groupSize)}`,
+    `Number of People: ${formatValue(quote.groupSize)}`,
     `Travel Dates: ${travelDates}`,
     programsText,
     "",
@@ -271,7 +271,7 @@ function buildClientHtml(quote) {
     buildRow("Phone", quote.phone),
     buildRow("Destination", formatValue(quote.destination)),
     buildRow("Package Style", quote.packageStyle),
-    buildRow("Group Size", quote.groupSize ? String(quote.groupSize) : ""),
+    buildRow("Number of People", quote.groupSize ? String(quote.groupSize) : ""),
     buildRow("Travel Dates", travelDates),
   ]);
 
@@ -331,7 +331,7 @@ function buildClientQuoteEmail(quote) {
     `Phone: ${formatValue(quote.phone)}`,
     `Destination: ${formatValue(quote.destination)}`,
     `Package Style: ${formatValue(quote.packageStyle)}`,
-    `Group Size: ${formatValue(quote.groupSize)}`,
+    `Number of People: ${formatValue(quote.groupSize)}`,
     `Travel Dates: ${travelDates}`,
     "",
     "YOUR MESSAGE",

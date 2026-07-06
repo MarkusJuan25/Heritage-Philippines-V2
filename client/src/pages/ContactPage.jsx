@@ -6,7 +6,7 @@ import { createContactInquiry } from "../services/contactService";
 const CONTACT = {
   phone: "+63 (2) 8373-3212 | +63 (2) 8373-3305",
   viber: "+63 931 007 6374",
-  email: "cs@heritagephilippines.com",
+  email: "info@heritagephilippines.com",
   address: [
     "Unit 603, 6th Floor",
     "West Insula Condominium",
