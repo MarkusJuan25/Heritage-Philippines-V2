@@ -325,9 +325,10 @@ function MemoryCard({ photo, onOpen }) {
   );
 }
 
-// The single active reel: portrait media stage on the left (or on top, on
-// narrow screens) and an information panel with navigation on the right (or
-// below). Mounts an iframe only once this reel has been explicitly played.
+// The single active reel: portrait media stage (with overlaid Previous/Next
+// controls) on the left (or on top, on narrow screens) and an information
+// panel on the right (or below). Mounts an iframe only once this reel has
+// been explicitly played.
 function ReelFeedItem({
   video,
   index,
@@ -366,13 +367,10 @@ function ReelFeedItem({
         />
         <div aria-hidden="true" className="gallery-reels-media-layer" />
 
-        {/* Previous: overlays the stage's top edge (an "upward" cue) on
-            mobile, and its left edge (vertically centered) on desktop —
-            same button, same handler, repositioned/reskinned via CSS.
-            Anchored to the stage itself (not a wider wrapper) so it tracks
-            the video's actual edges at every breakpoint, including the
-            768–959px range where the theatre is still single-column but
-            the stage is already capped and centered narrower than it. */}
+        {/* Previous/Next: overlay the stage's left and right edges,
+            vertically centered, at every viewport width. Anchored to the
+            stage itself (not a wider wrapper) so they track the video's
+            actual edges at every breakpoint. */}
         <button
           type="button"
           onClick={onPrev}
@@ -380,17 +378,9 @@ function ReelFeedItem({
           aria-label="Previous reel"
           className="gallery-reels-cue gallery-reels-cue--prev"
         >
-          <span aria-hidden="true" className="gallery-reels-cue-icon gallery-reels-cue-icon--up">
-            ↑
-          </span>
-          <span aria-hidden="true" className="gallery-reels-cue-icon gallery-reels-cue-icon--side">
-            ‹
-          </span>
+          <span aria-hidden="true">{"\u2039"}</span>
         </button>
 
-        {/* Next: desktop-only overlay on the stage's right edge. On mobile
-            the down control lives in the theatre navigation row below
-            instead (see ReelNavigation), so this stays hidden there. */}
         <button
           type="button"
           onClick={onNext}
@@ -398,7 +388,7 @@ function ReelFeedItem({
           aria-label="Next reel"
           className="gallery-reels-cue gallery-reels-cue--next"
         >
-          <span aria-hidden="true">›</span>
+          <span aria-hidden="true">{"\u203A"}</span>
         </button>
 
         {isEmbedding ? (
@@ -490,45 +480,8 @@ function ReelFeedItem({
             </a>
           </div>
         </div>
-
-        {/* Row 3: Previous/Next */}
-        <ReelNavigation
-          onPrev={onPrev}
-          onNext={onNext}
-          disablePrev={disablePrev}
-          disableNext={disableNext}
-        />
       </div>
     </article>
-  );
-}
-
-// Previous/Next controls integrated into each reel's information panel.
-function ReelNavigation({ onPrev, onNext, disablePrev, disableNext }) {
-  return (
-    <div className="gallery-reels-navigation">
-      <button
-        type="button"
-        onClick={onPrev}
-        disabled={disablePrev}
-        aria-label="Previous reel"
-        className="gallery-reels-nav-button gallery-reels-nav-button--prev"
-      >
-        <span aria-hidden="true">‹</span>
-        <span>Previous</span>
-      </button>
-      <button
-        type="button"
-        onClick={onNext}
-        disabled={disableNext}
-        aria-label="Next reel"
-        className="gallery-reels-nav-button gallery-reels-nav-button--next"
-      >
-        <span className="gallery-reels-nav-label">Next</span>
-        <span aria-hidden="true" className="gallery-reels-nav-icon gallery-reels-nav-icon--side">›</span>
-        <span aria-hidden="true" className="gallery-reels-nav-icon gallery-reels-nav-icon--down">↓</span>
-      </button>
-    </div>
   );
 }
 

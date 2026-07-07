@@ -1280,15 +1280,16 @@
 }
 
 /* Previous/Next overlay cues. One .gallery-reels-cue element per direction,
-   repositioned and reskinned per breakpoint (see @media blocks below)
-   rather than duplicated. Anchored to .gallery-reels-stage itself (not a
-   wider wrapper) so they track the video's actual edges at every width,
-   including 768–959px where the theatre is single-column but the stage is
-   already capped and centered narrower than it. Sits above the iframe
-   (z-index 40) and its loading/error overlays (z-index 50) so it stays
-   clickable regardless of embed state — the reliable fallback for swipes
-   that start on the video itself and never reach the parent's touch
-   handlers (cross-origin iframe touch events don't bubble out). */
+   positioned identically at every viewport width (see
+   .gallery-reels-cue--prev / --next below) rather than duplicated.
+   Anchored to .gallery-reels-stage itself (not a wider wrapper) so they
+   track the video's actual edges at every width, including 768–959px
+   where the theatre is single-column but the stage is already capped and
+   centered narrower than it. Sits above the iframe (z-index 40) and its
+   loading/error overlays (z-index 50) so it stays clickable regardless of
+   embed state — the reliable fallback for swipes that start on the video
+   itself and never reach the parent's touch handlers (cross-origin iframe
+   touch events don't bubble out). */
 .gallery-reels-cue {
   position: absolute;
   z-index: 60;
@@ -1331,48 +1332,19 @@
   }
 }
 
-/* Mobile: Previous overlays the stage's top edge as an "upward" cue, clear
-   of Facebook's own bottom-aligned controls. Next has no overlay here —
-   it lives in the theatre navigation row below the stage instead (see
-   .gallery-reels-navigation), so it stays hidden in this wrapper. */
+/* Previous/Next overlay both sides of the stage, vertically centered, at
+   every viewport width. */
 .gallery-reels-cue--prev {
-  top: 0.6rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.gallery-reels-cue-icon--side {
-  display: none;
+  top: 50%;
+  left: 0.6rem;
+  transform: translateY(-50%);
 }
 
 .gallery-reels-cue--next {
-  display: none;
-}
-
-/* Desktop/tablet: Previous/Next move beside the stage, vertically centered
-   relative to the video, and Previous swaps its icon from an up arrow to a
-   side chevron. */
-@media (min-width: 768px) {
-  .gallery-reels-cue--prev {
-    top: 50%;
-    left: 0.6rem;
-    transform: translateY(-50%);
-  }
-
-  .gallery-reels-cue-icon--up {
-    display: none;
-  }
-
-  .gallery-reels-cue-icon--side {
-    display: inline;
-  }
-
-  .gallery-reels-cue--next {
-    display: flex;
-    top: 50%;
-    right: 0.6rem;
-    transform: translateY(-50%);
-  }
+  top: 50%;
+  right: 0.6rem;
+  display: flex;
+  transform: translateY(-50%);
 }
 
 /* Media stage: compact portrait 9:16 frame, same cap on mobile and desktop.
@@ -1446,14 +1418,14 @@
   }
 }
 
-/* Information panel: three deliberate rows — platform/counter on top,
-   title/description/source link centered in the middle, navigation pinned
-   to the bottom. Grid row sizing (not margin-top: auto) drives the layout,
-   so it works the same whether the panel is short (mobile) or stretched
-   tall to match the media column (desktop). */
+/* Information panel: two deliberate rows — platform/counter on top, and
+   title/description/source link filling the rest. Grid row sizing (not
+   margin-top: auto) drives the layout, so it works the same whether the
+   panel is short (mobile) or stretched tall to match the media column
+   (desktop). */
 .gallery-reels-details {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   gap: 1rem;
   min-width: 0;
   color: #fff6ea;
@@ -1543,104 +1515,6 @@
 .gallery-reels-source-link:focus-visible {
   background: rgba(217, 166, 58, 0.3);
   border-color: rgba(217, 166, 58, 0.9);
-}
-
-/* Previous/Next controls: the bottom row of the details grid. Mobile-only —
-   the desktop .gallery-reels-cue arrows beside the stage are sufficient
-   there, so this row is hidden at 768px and up (see @media below). JSX
-   stays unconditional; visibility is CSS-only so mobile keeps working. */
-.gallery-reels-navigation {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.gallery-reels-nav-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  flex: 1 1 0;
-  padding: 0.6rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(217, 188, 124, 0.4);
-  background: rgba(255, 246, 218, 0.06);
-  color: #f5edda;
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
-}
-
-.gallery-reels-nav-button:hover:not(:disabled),
-.gallery-reels-nav-button:focus-visible {
-  background: rgba(217, 166, 58, 0.85);
-  border-color: rgba(217, 166, 58, 0.95);
-  color: #211106;
-}
-
-.gallery-reels-nav-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(217, 166, 58, 0.45);
-}
-
-.gallery-reels-nav-button:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-/* Mobile: Previous is dropped from this row — the "up" cue overlaid on the
-   stage above covers that direction (see .gallery-reels-cue--prev). Only
-   Next remains, as a compact downward control; this row is the theatre's
-   dedicated navigation row beneath the media stage. */
-.gallery-reels-nav-icon--down {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .gallery-reels-navigation {
-    justify-content: flex-end;
-  }
-
-  .gallery-reels-nav-button--prev {
-    display: none;
-  }
-
-  .gallery-reels-nav-button--next {
-    flex: 0 0 2.75rem;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0;
-    gap: 0;
-    border-radius: 9999px;
-  }
-
-  .gallery-reels-nav-button--next .gallery-reels-nav-label,
-  .gallery-reels-nav-button--next .gallery-reels-nav-icon--side {
-    display: none;
-  }
-
-  .gallery-reels-nav-button--next .gallery-reels-nav-icon--down {
-    display: inline;
-    font-size: 1.1rem;
-    line-height: 1;
-  }
-}
-
-/* Desktop/tablet: the side .gallery-reels-cue arrows are the only reel
-   navigation shown — drop this row so the two systems don't duplicate. */
-@media (min-width: 768px) {
-  .gallery-reels-navigation {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gallery-reels-nav-button {
-    transition: none;
-  }
 }
 
 .gallery-reel-embed {
