@@ -248,7 +248,7 @@ export default function PublicLayout() {
                   className="mx-auto mt-2 block h-px w-10 bg-gold-400/60 md:mx-0"
                 />
                 <p className="mt-2 text-xs text-cream-200/70">
-                  Heritage Homecoming A Division of High Light Tours Inc
+                  Heritage Homecoming A Division of SHLT High Light Tours Inc
                 </p>
 
                 <div className="mt-5 flex flex-nowrap items-center justify-center gap-4 md:justify-start">
@@ -343,7 +343,7 @@ export default function PublicLayout() {
               />
               <address className="mt-3 text-sm not-italic leading-relaxed text-cream-200/80">
                 <span className="block font-semibold text-cream-100">
-                  SHLT HIGH LIGHT TOURS
+                  SHLT HIGH LIGHT TOURS INC.
                 </span>
                 Unit 603, 6th Floor, West Insula Condominium
                 <br />

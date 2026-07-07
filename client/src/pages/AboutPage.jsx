@@ -80,7 +80,7 @@ export default function AboutPage() {
               most authentic, we are here to build that with you.
             </p>
             <p className="mt-4 text-base leading-relaxed text-coffee-800/90">
-              Heritage Philippines is supported by High Light Tours Inc., a
+              Heritage Philippines is supported by SHLT High Light Tours Inc., a
               licensed Philippine travel agency, ensuring full travel-care
               coverage — from ticketing and hotel arrangements to visa guidance
               and insurance coordination.
@@ -110,7 +110,7 @@ export default function AboutPage() {
                 Travel support by
               </p>
               <p className="mt-1 text-sm font-semibold text-coffee-900">
-                High Light Tours Inc.
+                SHLT High Light Tours Inc.
               </p>
               <p className="mt-1 text-xs leading-relaxed text-coffee-700/70">
                 Licensed Philippine travel agency · ticketing · hotel &amp;
@@ -242,7 +242,7 @@ export default function AboutPage() {
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-cream-100/80">
             Heritage Philippines journeys are supported by{" "}
             <strong className="font-semibold text-cream-100">
-              High Light Tours Inc.
+              SHLT High Light Tours Inc.
             </strong>
             , a licensed Philippine travel agency. This means your travel care
             is covered end-to-end — from itinerary planning and ticketing, to
