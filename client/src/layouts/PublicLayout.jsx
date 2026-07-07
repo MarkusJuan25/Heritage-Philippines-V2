@@ -251,16 +251,16 @@ export default function PublicLayout() {
                         "h-14 w-auto shrink-0 object-contain opacity-90",
                     },
                     {
-                      src: "/images/logo-images/dot-quality-seal-transparent.png",
+                      src: "/images/logo-images/dot-logo-1-new.png",
                       alt: "Department of Tourism Quality Seal",
                       className:
-                        "h-16 w-auto shrink-0 object-contain opacity-90",
+                        "h-20 w-auto shrink-0 object-contain opacity-90",
                     },
                     {
                       src: "/footer/ptaa-logo-transparent-clean.png",
                       alt: "PTAA",
                       className:
-                        "h-12 w-auto shrink-0 object-contain opacity-90",
+                        "h-14 w-auto shrink-0 object-contain opacity-90",
                     },
                   ].map((logo) => (
                     <img
