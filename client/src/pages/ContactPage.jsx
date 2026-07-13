@@ -198,9 +198,6 @@ export default function ContactPage() {
                     </span>
                   ))}
                 </address>
-                <p className="relative mt-2 text-xs text-coffee-700/60">
-                  By appointment — our team is often on the road with guests.
-                </p>
               </div>
 
               <div className="card-warm p-5">
