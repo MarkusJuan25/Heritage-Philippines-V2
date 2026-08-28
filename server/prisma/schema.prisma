@@ -1,14 +1,14 @@
-// Heritage Philippines V2 — initial Prisma schema
+// Heritage Philippines V2 - initial Prisma schema
 // Models cover the planned surface: auth (User, RefreshToken),
 // quote pipeline (QuoteRequest), catalog (Package), and bookings (Booking).
-// Fields are intentionally lean — extend per feature as work lands.
+// Fields are intentionally lean - extend per feature as work lands.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,13 +16,6 @@ enum UserRole {
   USER
   MEMBER
   ADMIN
-}
-
-enum QuoteStatus {
-  NEW
-  CONTACTED
-  CONVERTED
-  CLOSED
 }
 
 enum BookingStatus {
@@ -33,65 +26,97 @@ enum BookingStatus {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  passwordHash  String
-  fullName      String?
-  role          UserRole       @default(USER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String?
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   refreshTokens RefreshToken[]
-  quotes        QuoteRequest[]
   bookings      Booking[]
 }
 
 model RefreshToken {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  revokedAt  DateTime?
-  createdAt  DateTime @default(now())
+  id        String    @id @default(cuid())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
 
   @@index([userId])
 }
 
 model Package {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  title       String
-  summary     String?
-  description String?
-  priceCents  Int?
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  summary      String?
+  description  String? @db.Text
+  priceCents   Int?
   durationDays Int?
-  isPublished Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  isPublished  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  bookings    Booking[]
+  bookings Booking[]
 }
 
+// Field names mirror quotes.validation.js and quotes.repository.js so the
+// repository can swap from in-memory to Prisma with minimal changes.
 model QuoteRequest {
-  id              String      @id @default(cuid())
-  referenceNo     String      @unique
-  fullName        String
-  email           String
-  contactNumber   String?
-  numberOfPax     Int?
-  startDate       DateTime?
-  endDate         DateTime?
-  message         String?
+  id               String   @id @default(cuid())
+  // Core client fields - all required by the public POST /api/quotes contract
+  name             String
+  email            String
+  phone            String   @default("")
+  destination      String
+  // Optional trip detail fields - match Zod .default("") strings in validation
+  province         String   @default("")
+  packageStyle     String   @default("")
+  source           String   @default("website")
+  // groupSize is coerced to Int by Zod; null when not provided
+  groupSize        Int?
+  // Dates stored as YYYY-MM-DD strings; change to DateTime when validation tightens
+  startDate        String   @default("")
+  endDate          String   @default("")
+  message          String? @db.Text
+  // Passthrough JSON from the frontend My Journey widget
   selectedPrograms Json?
-  status          QuoteStatus @default(NEW)
-  user            User?       @relation(fields: [userId], references: [id])
-  userId          String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  // Workflow state - plain string keeps it flexible for admin dashboard later
+  status           String   @default("received")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   @@index([email])
   @@index([status])
+  @@index([createdAt])
+}
+
+model ContactInquiry {
+  id                 String   @id
+  status             String   @default("received")
+  name               String
+  email              String
+  phone              String
+  countryCode        String   @default("")
+  inquiryType        String   @default("")
+  destination        String   @default("")
+  startDate          String   @default("")
+  endDate            String   @default("")
+  message            String   @db.Text
+  consent            Boolean
+  source             String   @default("contact-page")
+  notificationStatus String   @default("pending")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Booking {

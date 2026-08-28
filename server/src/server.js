@@ -3,7 +3,7 @@ import { app } from "./app.js";
 import { env } from "./config/env.js";
 
 const server = app.listen(env.port, () => {
-  console.log(`[server] listening on http://localhost:${env.port}`);
+  console.log(`[server] listening on port ${env.port} (${env.nodeEnv})`);
 });
 
 const shutdown = (signal) => {
