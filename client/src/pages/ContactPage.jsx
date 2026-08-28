@@ -5,7 +5,8 @@ import { createContactInquiry } from "../services/contactService";
 // TODO: Confirm official public contact details before deployment.
 const CONTACT = {
   phone: "+63 (2) 8373-3212 | +63 (2) 8373-3305",
-  viber: "+63 931 007 6374",
+  viber: "+63 906 310 3211",
+  whatsapp: "+63 931 007 6374",
   email: "info@heritagephilippines.com",
   address: [
     "Unit 603, 6th Floor",
@@ -170,9 +171,16 @@ export default function ContactPage() {
               </div>
 
               <div className="card-warm p-5">
-                <span className="eyebrow">Viber / WhatsApp</span>
+                <span className="eyebrow">Viber</span>
                 <p className="relative mt-2 text-sm text-coffee-800/90">
                   {CONTACT.viber}
+                </p>
+              </div>
+
+              <div className="card-warm p-5">
+                <span className="eyebrow">WhatsApp</span>
+                <p className="relative mt-2 text-sm text-coffee-800/90">
+                  {CONTACT.whatsapp}
                 </p>
               </div>
 
@@ -291,10 +299,10 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  {/* Phone / Viber / WhatsApp — country code + number row */}
+                  {/* Mobile / Contact Number — country code + number row */}
                   <div className="md:col-span-2">
                     <label htmlFor="contactNumber" className="field-label">
-                      Phone / Viber / WhatsApp{" "}
+                      Mobile / Contact Number{" "}
                       <span aria-hidden="true" className="text-gold-500">*</span>
                     </label>
                     <div className="flex flex-col gap-2 sm:flex-row">
