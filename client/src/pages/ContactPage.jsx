@@ -14,7 +14,7 @@ const CONTACT = {
     "135 West Avenue, Quezon City 1105",
     "Metro Manila, Philippines",
   ],
-  hours: ["9:00 a.m – 6:00 p.m", "Monday–Friday except holidays"],
+  hours: ["8:00 a.m – 6:00 p.m", "Monday–Friday except holidays"],
 };
 
 const COUNTRY_CODES = [
